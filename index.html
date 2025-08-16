@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" data-beasties-container>
+  <head>
+    <title>My app</title>
+    <meta charset="UTF-8">
+    <base href="/">
+  <style>*{margin:0;padding:0}html{scroll-behavior:smooth}body{background-color:#212121;font-family:Helvetica,sans-serif;letter-spacing:-1px;color:#fff}</style><link rel="stylesheet" href="styles.css" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="styles.css"></noscript></head>
+  <body>
+  <h1>Список машин</h1>
+  <div id="cars-list" class="cars-container"></div>
+
+  <script>
+    const API_BASE = "https://cars-api-ur5t.onrender.com";
+ // локально
+    // потом заменить на https://cars-api.onrender.com
+
+    async function loadCars() {
+      try {
+        const res = await fetch(`${API_BASE}/api/cars`);
+        const cars = await res.json();
+
+        const list = document.getElementById("cars-list");
+        list.innerHTML = "";
+
+        cars.forEach(c => {
+          const item = document.createElement("div");
+          item.className = "car-card";
+          item.innerHTML = `
+            <img src="${c.imageUrl}" alt="${c.brand} ${c.model}">
+            <h3>${c.brand} ${c.model} (${c.year})</h3>
+            <p>${c.description}</p>
+            <strong>$${c.price.toLocaleString()}</strong>
+          `;
+          list.appendChild(item);
+        });
+
+      } catch (err) {
+        console.error("Ошибка загрузки:", err);
+      }
+    }
+
+    loadCars();
+  </script>
+</body>
+</html>
