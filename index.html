@@ -1,58 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>My app</title>
+    <title>Car Shop</title>
     <meta charset="UTF-8">
     <base href="/" />
-    <style>
-      * { margin: 0; padding: 0; }
-      html { scroll-behavior: smooth; }
-      body {
-        background-color: #212121;
-        font-family: Helvetica, sans-serif;
-        letter-spacing: -1px;
-        color: #fff;
-      }
-      .header { display: flex; align-items: center; padding: 20px; }
-      .header img { height: 60px; }
-      .cars-container { display: grid; gap: 20px; padding: 20px; }
-      .car-card { background: #333; padding: 15px; border-radius: 8px; }
-      .car-card img { max-width: 100%; display: block; margin-bottom: 10px; }
-      .main-banner { width: 100%; margin: 20px 0; }
-      .order-section { padding: 40px; text-align: center; }
-      .order-section img { max-width: 400px; display: block; margin: 0 auto 20px; }
-    </style>
-    <link
-      rel="stylesheet"
-      href="styles.css"
-      media="print"
-      onload="this.media='all'"
-    />
-    <noscript><link rel="stylesheet" href="styles.css" /></noscript>
+    <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <!-- 🔹 Логотип -->
+    <!-- Header -->
     <div class="header">
       <img src="images/logo.png" alt="Logo" />
-      <h1 style="margin-left: 15px;">Список машин</h1>
+      <h1>Список машин</h1>
     </div>
 
-    <!-- 🔹 Баннер -->
+    <!-- Banner -->
     <img src="images/main-car.png" alt="Main car" class="main-banner" />
 
-    <!-- 🔹 Список автомобилей -->
+    <!-- Cars -->
     <div id="cars-list" class="cars-container"></div>
 
-    <!-- 🔹 Блок заказа -->
+    <!-- Order section -->
     <div class="order-section">
       <img src="images/order-car.png" alt="Order car" />
       <h2>Закажи свою машину прямо сейчас!</h2>
+      <button id="order-btn">Сделать заказ</button>
     </div>
 
     <script>
       const API_BASE = "https://cars-api-ur5t.onrender.com";
-      // локально:
-      // const API_BASE = "http://localhost:8080";
 
       async function loadCars() {
         try {
@@ -70,6 +45,7 @@
               <h3>${c.brand} ${c.model} (${c.year})</h3>
               <p>${c.description}</p>
               <strong>$${c.price.toLocaleString()}</strong>
+              <button class="buy-btn">Заказать</button>
             `;
             list.appendChild(item);
           });
