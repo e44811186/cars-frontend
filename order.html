@@ -2,21 +2,46 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Заказ авто</title>
+  <title>Заказать авто</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div class="container order">
-    <h2>Заказ автомобиля</h2>
-    <form id="order-form" class="order-form">
-      <input type="text" name="name" placeholder="Ваше имя" required>
-      <input type="text" name="phone" placeholder="Телефон" required>
-      <select name="car" required>
-        <option value="">Выберите авто</option>
-      </select>
-      <button type="submit" class="button">Отправить</button>
-    </form>
-  </div>
-  <script src="order.js"></script>
+  <header>
+    <h1>Забронировать автомобиль</h1>
+    <a href="index.html" class="button">Вернуться к списку</a>
+  </header>
+
+  <form id="orderForm" class="order-form">
+    <input type="text" id="car" placeholder="Автомобиль" readonly required>
+    <input type="text" id="name" placeholder="Ваше имя" required>
+    <input type="text" id="phone" placeholder="+7(___)__-__-___" required>
+    <button type="submit" class="button">Отправить заказ</button>
+  </form>
+
+  <script>
+    // Заполняем автомобиль из query параметра
+    const urlParams = new URLSearchParams(window.location.search);
+    const carName = urlParams.get('car');
+    if(carName) document.getElementById('car').value = carName;
+
+    // Маска телефона
+    const phoneInput = document.getElementById('phone');
+    phoneInput.addEventListener('input', (e) => {
+      let x = e.target.value.replace(/\D/g, '').substring(0,10);
+      let formatted = '+7(';
+      if(x.length > 0) formatted += x.substring(0,3);
+      if(x.length >= 4) formatted += ')' + x.substring(3,5);
+      if(x.length >= 6) formatted += '-' + x.substring(5,7);
+      if(x.length >= 8) formatted += '-' + x.substring(7,10);
+      e.target.value = formatted;
+    });
+
+    // Submit
+    document.getElementById('orderForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      alert(`Заказ отправлен!\nАвто: ${document.getElementById('car').value}\nИмя: ${document.getElementById('name').value}\nТелефон: ${document.getElementById('phone').value}`);
+      e.target.reset();
+    });
+  </script>
 </body>
 </html>
