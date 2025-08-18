@@ -2,25 +2,16 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Админ - заявки</title>
+  <title>Список машин</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div class="container">
-    <h2>Список заявок</h2>
-    <table border="1" cellpadding="10" id="orders-table">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Имя</th>
-          <th>Телефон</th>
-          <th>Машина</th>
-          <th>Дата</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
-  </div>
-  <script src="admin.js"></script>
+  <h1>Наши машины</h1>
+  <div id="cars-list" class="cars-container"></div>
+
+  <a href="order.html" class="button">Заказать авто</a>
+  <a href="admin.html" class="button">Админка</a>
+
+  <script src="main.js"></script>
 </body>
 </html>
