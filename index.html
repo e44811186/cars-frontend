@@ -2,35 +2,25 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Список машин</title>
+  <title>Админ - заявки</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <header>
-    <h1>Наш автопарк</h1>
-    <nav>
-      <a href="order.html" class="button">Заказать авто</a>
-      <a href="admin.html" class="button">Админка</a>
-    </nav>
-  </header>
-
-  <section id="cars-list" class="cars-container">
-    <!-- Пример карточки авто -->
-    <div class="car">
-      <img src="images/car1.png" alt="BMW M4">
-      <h3>BMW M4 Competition</h3>
-      <p>Спорткар 2023 года, мощность 510 л.с., аренда от $200/сутки</p>
-      <a href="order.html?car=BMW M4 Competition" class="button">Заказать</a>
-    </div>
-
-    <div class="car">
-      <img src="images/car2.png" alt="Audi R8">
-      <h3>Audi R8</h3>
-      <p>Эксклюзивный спорткар 2022 года, мощность 620 л.с., аренда от $300/сутки</p>
-      <a href="order.html?car=Audi R8" class="button">Заказать</a>
-    </div>
-
-    <!-- Добавь столько карточек, сколько нужно -->
-  </section>
+  <div class="container">
+    <h2>Список заявок</h2>
+    <table border="1" cellpadding="10" id="orders-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Имя</th>
+          <th>Телефон</th>
+          <th>Машина</th>
+          <th>Дата</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+  <script src="admin.js"></script>
 </body>
 </html>
