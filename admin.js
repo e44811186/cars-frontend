@@ -1,39 +1,23 @@
-const form = document.getElementById('addCarForm');
-const carsList = document.getElementById('admin-cars-list');
+const API_BASE = "https://cars-api-ur5t.onrender.com";
 
-let cars = [];
+async function loadOrders() {
+  const res = await fetch(`${API_BASE}/api/orders`);
+  const orders = await res.json();
 
-function renderCars() {
-  carsList.innerHTML = '';
-  cars.forEach((car, idx) => {
-    const div = document.createElement('div');
-    div.className = 'car';
-    div.innerHTML = `
-      <img src="${car.imageUrl}" alt="${car.brand} ${car.model}">
-      <h3>${car.brand} ${car.model}</h3>
-      <p>${car.description}</p>
-      <button class="button" data-idx="${idx}">Удалить</button>
+  const tbody = document.querySelector("#orders-table tbody");
+  tbody.innerHTML = "";
+  orders.forEach(o => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${o.id}</td>
+      <td>${o.name}</td>
+      <td>${o.phone}</td>
+      <td>${o.carName}</td>
+      <td>${new Date(o.createdAt).toLocaleString()}</td>
     `;
-    const btn = div.querySelector('button');
-    btn.addEventListener('click', () => {
-      cars.splice(idx,1);
-      renderCars();
-    });
-    carsList.appendChild(div);
+    tbody.appendChild(tr);
   });
 }
 
-form.addEventListener('submit', (e) => {
-  e.preventDefault();
-  const car = {
-    brand: document.getElementById('brand').value,
-    model: document.getElementById('model').value,
-    year: document.getElementById('year').value,
-    price: document.getElementById('price').value,
-    imageUrl: document.getElementById('imageUrl').value,
-    description: document.getElementById('description').value
-  };
-  cars.push(car);
-  renderCars();
-  e.target.reset();
-});
+loadOrders();
+
