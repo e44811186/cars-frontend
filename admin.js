@@ -1,23 +1,26 @@
-const API_BASE = "https://cars-api-ur5t.onrender.com";
+const API_BASE = "/api/cars";
 
-async function loadOrders() {
-  const res = await fetch(`${API_BASE}/api/orders`);
-  const orders = await res.json();
-
-  const tbody = document.querySelector("#orders-table tbody");
-  tbody.innerHTML = "";
-  orders.forEach(o => {
-    const tr = document.createElement("tr");
-    tr.innerHTML = `
-      <td>${o.id}</td>
-      <td>${o.name}</td>
-      <td>${o.phone}</td>
-      <td>${o.carName}</td>
-      <td>${new Date(o.createdAt).toLocaleString()}</td>
-    `;
-    tbody.appendChild(tr);
-  });
-}
-
-loadOrders();
-
+document.getElementById('adminForm').addEventListener('submit', async e=>{
+  e.preventDefault();
+  const car = {
+    brand: document.getElementById('brand').value,
+    model: document.getElementById('model').value,
+    year: +document.getElementById('year').value,
+    price: +document.getElementById('price').value,
+    imageUrl: document.getElementById('imageUrl').value,
+    description: document.getElementById('description').value
+  };
+  try {
+    const res = await fetch(API_BASE, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify(car)
+    });
+    if(res.ok) {
+      alert('Авто добавлено!');
+      e.target.reset();
+    } else {
+      alert('Ошибка при добавлении авто');
+    }
+  } catch(err) { console.error(err); alert('Ошибка при добавлении'); }
+});
