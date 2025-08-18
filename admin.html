@@ -1,26 +1,21 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <title>Админ - заявки</title>
-  <link rel="stylesheet" href="styles.css">
+<meta charset="UTF-8" />
+<title>Admin</title>
+<link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div class="container">
-    <h2>Список заявок</h2>
-    <table border="1" cellpadding="10" id="orders-table">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Имя</th>
-          <th>Телефон</th>
-          <th>Машина</th>
-          <th>Дата</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
-  </div>
+  <h1>Админка — добавление авто</h1>
+  <form id="adminForm">
+    <input type="text" placeholder="Марка" id="brand" required />
+    <input type="text" placeholder="Модель" id="model" required />
+    <input type="number" placeholder="Год" id="year" required />
+    <input type="number" placeholder="Цена" id="price" required />
+    <input type="text" placeholder="Ссылка на изображение" id="imageUrl" required />
+    <input type="text" placeholder="Описание" id="description" required />
+    <button type="submit" class="button">Добавить авто</button>
+  </form>
   <script src="admin.js"></script>
 </body>
 </html>
