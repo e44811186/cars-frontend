@@ -1,4 +1,4 @@
-const API_BASE = "/api/cars";
+const API_BASE = "https://cars-api-ur5t.onrender.com";
 
 document.getElementById('adminForm').addEventListener('submit', async e=>{
   e.preventDefault();
