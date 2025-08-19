@@ -1,4 +1,4 @@
-/* Базовые стили */
+/* Основные стили */
 body {
   font-family: Arial, sans-serif;
   background: #121212;
@@ -11,14 +11,11 @@ h1, h3 {
   color: #f8ff23;
 }
 
-/* Контейнер */
 .container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 15px;
 }
 
-/* Кнопки */
 .button {
   width: 344px;
   height: 69px;
@@ -26,7 +23,7 @@ h1, h3 {
   text-align: center;
   box-sizing: border-box;
   background-color: #f8ff23;
-  color: #000;
+  color: #000000;
   outline: 0;
   text-decoration: none;
   display: block;
@@ -36,7 +33,7 @@ h1, h3 {
 }
 
 .button:hover:not(:disabled) {
-  background-color: #fff;
+  background-color: #ffffff;
 }
 
 .button:disabled {
@@ -46,14 +43,28 @@ h1, h3 {
 }
 
 .button.white-button {
-  background-color: #fff;
+  background-color: #ffffff;
 }
 
 .button.white-button:hover {
   background-color: #f8ff23;
 }
 
-/* Header */
+.main {
+  overflow: hidden;
+  position: relative;
+}
+
+.black-block {
+  position: absolute;
+  width: 477px;
+  height: 910px;
+  top: 0;
+  background-color: #000000;
+  z-index: -2;
+  right: calc(50% - 780px);
+}
+
 .header {
   padding: 46px 0;
 }
@@ -77,8 +88,6 @@ h1, h3 {
   list-style: none;
   display: flex;
   gap: 65px;
-  padding: 0;
-  margin: 0;
 }
 
 .menu ul a {
@@ -97,15 +106,10 @@ h1, h3 {
 .phone {
   font-size: 14px;
   font-weight: bold;
-  color: #fff;
+  color: #ffffff;
   text-decoration: none;
   cursor: pointer;
-}
-
-/* Main */
-.main {
-  overflow: hidden;
-  position: relative;
+  letter-spacing: normal;
 }
 
 .main-content {
@@ -143,20 +147,8 @@ h1, h3 {
   z-index: -1;
 }
 
-/* Черный блок */
-.black-block {
-  position: absolute;
-  width: 477px;
-  height: 910px;
-  top: 0;
-  right: calc(50% - 780px);
-  background-color: #000;
-  z-index: -2;
-}
-
-/* Cars */
 .cars {
-  background-color: #000;
+  background-color: #000000;
   padding: 130px 0;
 }
 
@@ -182,19 +174,18 @@ h1, h3 {
   flex-direction: column;
   row-gap: 15px;
   list-style: none;
-  padding: 0;
-  margin: 0;
 }
 
 .cars-filter ul li {
   width: 127px;
   padding: 16px;
   text-align: center;
-  border: 1px solid #fff;
+  border: 1px solid white;
   font-size: 16px;
-  color: #fff;
+  color: #ffffff;
   box-sizing: border-box;
   cursor: pointer;
+  outline: none;
 }
 
 .cars-filter ul li.active,
@@ -209,7 +200,6 @@ h1, h3 {
   row-gap: 30px;
 }
 
-/* Car article */
 .car {
   background-color: #212121;
   padding: 20px;
@@ -235,6 +225,7 @@ h1, h3 {
 .car-details p {
   font-size: 16px;
   line-height: 120%;
+  letter-spacing: normal;
   color: #d4d4d4;
   height: 100px;
 }
@@ -248,7 +239,6 @@ h1, h3 {
   display: flex;
   justify-content: space-between;
   margin-bottom: 20px;
-  padding: 0;
 }
 
 .car-period {
@@ -273,7 +263,6 @@ h1, h3 {
   width: 100%;
 }
 
-/* Order */
 .order {
   padding-top: 150px;
   padding-bottom: 130px;
@@ -313,13 +302,17 @@ h1, h3 {
   width: 344px;
 }
 
+::placeholder {
+  color: #d4d4d4;
+}
+
 .order-form input {
   width: 100%;
   height: 68px;
   padding: 24px 20px;
   box-sizing: border-box;
-  color: #fff;
-  border: 1px solid #fff;
+  color: #ffffff;
+  border: 1px solid #ffffff;
   background-color: transparent;
   margin-bottom: 15px;
   font-size: 16px;
@@ -330,7 +323,6 @@ h1, h3 {
   border-color: red;
 }
 
-/* Footer */
 .footer {
   padding: 47px 0;
   border-top: 1px solid #5f5f5f;
@@ -345,6 +337,48 @@ h1, h3 {
 .rights {
   font-size: 14px;
   line-height: 90%;
+  letter-spacing: normal;
   font-weight: bold;
   text-transform: uppercase;
+}
+
+/* Адаптив */
+@media (max-width: 1200px) {
+  .main-image { right: -200px; max-width: 400px; }
+  .cars-content { flex-direction: column; }
+  .cars-filter {
+    margin-right: 0;
+    margin-bottom: 30px;
+    position: relative;
+    top: auto;
+    width: 100%;
+    display: flex;
+    overflow-x: auto;
+  }
+  .cars-filter ul { flex-direction: row; gap: 10px; }
+  .cars-filter ul li {
+    flex: 0 0 auto;
+    width: auto;
+    padding: 10px 15px;
+    font-size: 14px;
+  }
+  .cars-items { row-gap: 20px; }
+  .car { flex-direction: column; align-items: center; }
+  .car img { max-width: 100%; }
+  .car-details { margin-left: 0; margin-top: 15px; align-items: center; }
+  .car-details h4 { font-size: 24px; text-align: center; }
+  .car-details p { height: auto; text-align: center; }
+  .car-action ul { flex-direction: column; gap: 10px; align-items: center; }
+  .order img { position: static; max-width: 100%; margin-bottom: 30px; }
+  .order form { margin-left: 0; max-width: 100%; }
+}
+
+@media (max-width: 768px) {
+  .main-info h1 { font-size: 40px; }
+  .main-info p { font-size: 18px; max-width: 100%; }
+  .button { width: 100%; font-size: 18px; height: auto; padding: 15px; }
+  .order-form input { height: 50px; padding: 15px; font-size: 14px; }
+  .cars h2 { font-size: 40px; }
+  .order h3 { font-size: 40px; }
+  .order p { font-size: 18px; }
 }
