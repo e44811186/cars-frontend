@@ -1,4 +1,5 @@
-const API_BASE = "https://cars-api-ur5t.onrender.com";
+const API_BASE = "https://cars-api-ur5t.onrender.com/api/cars
+";
 
 async function loadCars() {
   try {
