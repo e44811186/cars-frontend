@@ -17,16 +17,23 @@ document.getElementById("order-form").addEventListener("submit", async (e) => {
   const formData = new FormData(e.target);
   const data = Object.fromEntries(formData.entries());
 
+  // Преобразуем значение carId в число
+  data.carId = Number(data.car);
+
   try {
     const res = await fetch(`${API_BASE}/api/orders`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data)
     });
+
+    if (!res.ok) throw new Error("Сервер вернул ошибку");
+
     const result = await res.json();
-    alert(result.message || "Заявка отправлена!");
+    alert("Заявка отправлена!");
     e.target.reset();
   } catch (err) {
+    console.error(err);
     alert("Ошибка отправки");
   }
 });
