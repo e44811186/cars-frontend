@@ -84,7 +84,10 @@ async function loadCars() {
 function attachPhoneMask(input) {
   input.addEventListener("input", function () {
     let value = this.value.replace(/\D/g, "");
-    if (!value) return (this.value = "");
+    if (!value) {
+      this.value = "";
+      return;
+    }
     value = value.substring(0, 11);
 
     let formatted = "+";
@@ -122,7 +125,3 @@ document.addEventListener("DOMContentLoaded", () => {
   attachOrderSubmit();
   loadCars();
 });
-
-}
-
-loadCars();
