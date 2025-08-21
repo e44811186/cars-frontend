@@ -1,127 +1,86 @@
-const API_ROOT = "https://cars-api-ur5t.onrender.com";
-const CARS_URL = `${API_ROOT}/api/cars`;
-
-const brandsList = document.getElementById("brands-list");
-const carsList = document.getElementById("cars-list");
-const orderForm = document.getElementById("orderForm");
-const carInput = document.getElementById("car");
-const nameInput = document.getElementById("name");
-const phoneInput = document.getElementById("phone");
-
-let allCars = [];
-
-const buildPrices = (base) => [Math.round(base), Math.round(base * 0.95), Math.round(base * 0.9)];
-
-function createCarArticle(car) {
-  const prices = buildPrices(car.price);
-  const article = document.createElement("article");
-  article.className = "car";
-  article.innerHTML = `
-    <img src="${car.imageUrl}" alt="${car.brand} ${car.model}" loading="lazy" />
-    <div class="car-details">
-      <h4>${car.brand} ${car.model} (${car.year})</h4>
-      <p>${car.description}</p>
-      <div class="car-action">
-        <ul>
-          ${["на 1 сутки", "на 1-3 суток", "на 3+ суток"]
-            .map(
-              (p, i) => `
-            <li>
-              <div class="car-period">${p}</div>
-              <div class="car-price">${prices[i].toLocaleString()} $ ${i > 0 ? "<span>/сут</span>" : ""}</div>
-            </li>`
-            )
-            .join("")}
-        </ul>
-        <a href="#order" class="button white-button" data-title="${car.brand} ${car.model}">Забронировать</a>
-      </div>
-    </div>
-  `;
-
-  article.querySelector("a.white-button").addEventListener("click", () => {
-    carInput.value = `${car.brand} ${car.model}`;
-  });
-
-  return article;
-}
-
-function renderCars(cars) {
-  carsList.innerHTML = "";
-  cars.forEach((c) => carsList.appendChild(createCarArticle(c)));
-}
-
-function renderBrands() {
-  brandsList.innerHTML = "";
-  const uniq = ["Все марки", ...Array.from(new Set(allCars.map((c) => c.brand)))];
-
-  uniq.forEach((brand, idx) => {
-    const li = document.createElement("li");
-    li.textContent = brand;
-    if (idx === 0) li.classList.add("active");
-    li.addEventListener("click", () => {
-      Array.from(brandsList.children).forEach((el) => el.classList.remove("active"));
-      li.classList.add("active");
-      renderCars(brand === "Все марки" ? allCars : allCars.filter((c) => c.brand === brand));
-      document.getElementById("cars-content").scrollIntoView({ behavior: "instant" });
-    });
-    brandsList.appendChild(li);
-  });
-}
-
-async function loadCars() {
-  try {
-    const res = await fetch(CARS_URL, { headers: { Accept: "application/json" } });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    allCars = await res.json();
-    renderBrands();
-    renderCars(allCars);
-  } catch (err) {
-    console.error("Ошибка загрузки авто:", err);
-    carsList.innerHTML = `<div style="color:#f88">Не удалось загрузить автомобили. Попробуйте обновить страницу.</div>`;
-  }
-}
-
-function attachPhoneMask(input) {
-  input.addEventListener("input", function () {
-    let value = this.value.replace(/\D/g, "");
-    if (!value) {
-      this.value = "";
-      return;
-    }
-    value = value.substring(0, 11);
-
-    let formatted = "+";
-    if (value[0] === "7" || value[0] === "8") {
-      formatted += "7 ";
-      value = value.substring(1);
-    } else {
-      formatted += value[0] || "7";
-      value = value.substring(1);
-    }
-    if (value.length > 0) formatted += "(" + value.substring(0, 3);
-    if (value.length >= 4) formatted += ") " + value.substring(3, 6);
-    if (value.length >= 7) formatted += "-" + value.substring(6, 8);
-    if (value.length >= 9) formatted += "-" + value.substring(8, 10);
-
-    this.value = formatted;
-  });
-}
-
-function attachOrderSubmit() {
-  orderForm.addEventListener("submit", (e) => {
-    e.preventDefault();
-    const car = carInput.value.trim();
-    const name = nameInput.value.trim();
-    const phone = phoneInput.value.trim();
-    if (!car || !name || !phone) return;
-
-    alert(`Заявка отправлена!\nАвто: ${car}\nИмя: ${name}\nТелефон: ${phone}`);
-    orderForm.reset();
-  });
-}
-
 document.addEventListener("DOMContentLoaded", () => {
-  attachPhoneMask(phoneInput);
-  attachOrderSubmit();
+  const burger = document.getElementById("burger");
+  const menu = document.querySelector(".menu");
+
+  burger.addEventListener("click", () => {
+    burger.classList.toggle("active");
+    menu.classList.toggle("active");
+  });
+
+  menu.querySelectorAll("a").forEach((link) => {
+    link.addEventListener("click", () => {
+      burger.classList.remove("active");
+      menu.classList.remove("active");
+    });
+  });
+
+  // Маска для телефона
+  const phoneInput = document.getElementById("phone");
+  phoneInput.addEventListener("input", () => {
+    phoneInput.value = phoneInput.value
+      .replace(/[^\d+]/g, "")
+      .replace(/(\+?\d{1,3})(\d{3})(\d{3})(\d{2})(\d{2}).*/, "$1 $2-$3-$4-$5");
+  });
+
+  // Загрузка авто
+  const API_BASE = "https://cars-api-ur5t.onrender.com";
+  const carsList = document.getElementById("cars-list");
+  const filters = document.getElementById("filters");
+
+  const carsFilter = [
+    "Все марки",
+    "Lamborghini",
+    "Ferrari",
+    "Porsche",
+    "BMW",
+    "Mercedes",
+    "Chevrolet",
+    "Audi",
+    "Ford",
+  ];
+
+  carsFilter.forEach((name, index) => {
+    const li = document.createElement("li");
+    li.textContent = name;
+    if (index === 0) li.classList.add("active");
+    li.addEventListener("click", () => {
+      document.querySelectorAll("#filters li").forEach((el) => el.classList.remove("active"));
+      li.classList.add("active");
+      loadCars(name === "Все марки" ? "" : name);
+    });
+    filters.appendChild(li);
+  });
+
+  function loadCars(filter = "") {
+    fetch(`${API_BASE}/cars?filter=${filter}`)
+      .then((res) => res.json())
+      .then((cars) => {
+        carsList.innerHTML = "";
+        cars.forEach((car) => {
+          const article = document.createElement("article");
+          article.classList.add("car");
+          article.innerHTML = `
+            <img src="${car.image}" alt="${car.title}" />
+            <div class="car-details">
+              <h4>${car.title}</h4>
+              <p>${car.text}</p>
+              <div class="car-action">
+                <ul>
+                  <li><div class="car-period">на 1 сутки</div><div class="car-price">${car.prices[0]} $</div></li>
+                  <li><div class="car-period">на 1-3 суток</div><div class="car-price">${car.prices[1]} $/сут</div></li>
+                  <li><div class="car-period">на 3+ суток</div><div class="car-price">${car.prices[2]} $/сут</div></li>
+                </ul>
+                <a href="#order" class="button white-button" onclick="document.getElementById('car').value='${car.title}'">Забронировать</a>
+              </div>
+            </div>
+          `;
+          carsList.appendChild(article);
+        });
+      })
+      .catch(() => {
+        carsList.innerHTML = "<p>Ошибка загрузки автомобилей</p>";
+      });
+  }
+
   loadCars();
 });
