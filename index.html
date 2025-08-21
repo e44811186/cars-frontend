@@ -1,23 +1,34 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <title>Car Rent</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Car Rental</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <main class="main">
+  <main class="main"> 
     <header class="header">
       <div class="container">
-        <div class="logo"><img src="images/logo.png" alt="Logo"></div>
+        <div class="logo">
+          <img src="images/logo.png" alt="Logo" />
+        </div>
+
+        <!-- Кнопка-гамбургер -->
+        <button class="burger" id="burger" aria-label="Меню">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+
         <nav class="menu">
           <ul>
             <li><a href="#cars">НАШ автопарк</a></li>
             <li><a href="#order">Забронировать</a></li>
           </ul>
         </nav>
-        <a href="tel:+79883641120" class="phone">+7 988 364 112 0</a>
+
+        <a href="tel:+971523898989" class="phone">+971 52 389 89 89</a>
       </div>
     </header>
 
@@ -25,11 +36,13 @@
       <div class="container">
         <div class="main-info">
           <h1>Покорите дороги за рулём легендарных автомобилей!</h1>
-          <p>От эксклюзивных спорткаров до гоночных шедевров — выбирайте мечту,
-          садитесь за руль и ощутите мощь премиального авто на полную!</p>
+          <p>
+            От эксклюзивных спорткаров до гоночных шедевров — выбирайте мечту,
+            садитесь за руль и ощутите мощь премиального авто на полную!
+          </p>
           <a href="#cars" class="button">Посмотреть автомобили</a>
         </div>
-        <img src="images/main-car.png" alt="main car" class="main-image">
+        <img src="images/main-car.png" alt="main car" class="main-image" />
       </div>
     </section>
 
@@ -41,7 +54,7 @@
       <h2>Выберите автомобиль</h2>
       <div class="cars-content" id="cars-content">
         <aside class="cars-filter">
-          <ul id="brands-list"></ul>
+          <ul id="filters"></ul>
         </aside>
         <div class="cars-items" id="cars-list"></div>
       </div>
@@ -50,14 +63,17 @@
 
   <section class="order" id="order">
     <div class="container">
-      <img src="images/order-car.png" alt="order car">
-      <form id="orderForm">
+      <img src="images/order-car.png" alt="order car" />
+      <form id="order-form">
         <h3>Забронируйте автомобиль</h3>
-        <p>Заполните контактные данные, и мы перезвоним вам для подтверждения бронирования</p>
+        <p>
+          Заполните контактные данные, и мы перезвоним вам для обсуждения деталей
+          и подтверждения бронирования
+        </p>
         <div class="order-form">
-          <input type="text" placeholder="Автомобиль" required readonly id="car">
-          <input type="text" placeholder="Ваше имя" required id="name">
-          <input type="text" placeholder="Ваш телефон" required minlength="10" id="phone">
+          <input type="text" placeholder="Автомобиль" required readonly id="car" />
+          <input type="text" placeholder="Ваше имя" required id="name" />
+          <input type="text" placeholder="Ваш телефон" required id="phone" minlength="10" />
           <button class="button" type="submit" id="order-action">Забронировать</button>
         </div>
       </form>
@@ -66,117 +82,13 @@
 
   <footer class="footer">
     <div class="container">
-      <div class="logo"><img src="images/logo.png" alt="Logo"></div>
+      <div class="logo">
+        <img src="images/logo.png" alt="Logo" />
+      </div>
       <div class="rights">Все права защищены</div>
     </div>
   </footer>
 
-  <script>
-    const API_BASE = "https://cars-api-ur5t.onrender.com/api/cars";
-    let allCars = [];
-    const brandsList = document.getElementById("brands-list");
-    const carsList = document.getElementById("cars-list");
-
-    function buildPrices(base) {
-      return [Math.round(base), Math.round(base*0.95), Math.round(base*0.9)];
-    }
-
-    function createCarArticle(car) {
-      const prices = buildPrices(car.price);
-      const article = document.createElement('article');
-      article.className = 'car';
-      article.innerHTML = `
-        <img src="${car.imageUrl}" alt="car">
-        <div class="car-details">
-          <h4>${car.brand} ${car.model} (${car.year})</h4>
-          <p>${car.description}</p>
-          <div class="car-action">
-            <ul>
-              ${["на 1 сутки","на 1-3 суток","на 3+ суток"].map((p,i)=>`
-                <li>
-                  <div class="car-period">${p}</div>
-                  <div class="car-price">${prices[i]} $ ${i>0?'<span>/сут</span>':''}</div>
-                </li>`).join('')}
-            </ul>
-            <a href="#order" class="button white-button" data-title="${car.brand} ${car.model}">Забронировать</a>
-          </div>
-        </div>
-      `;
-      article.querySelector('a.white-button').addEventListener('click', () => {
-        document.getElementById('car').value = car.brand + ' ' + car.model;
-      });
-      return article;
-    }
-
-    function renderCars(cars) {
-      carsList.innerHTML = '';
-      cars.forEach(c => carsList.appendChild(createCarArticle(c)));
-    }
-
-    function renderBrands() {
-      brandsList.innerHTML = '';
-      const uniq = ["Все марки", ...Array.from(new Set(allCars.map(c => c.brand)))];
-      uniq.forEach((brand, idx) => {
-        const li = document.createElement('li');
-        li.textContent = brand;
-        if(idx === 0) li.classList.add('active');
-        li.addEventListener('click', () => {
-          Array.from(brandsList.children).forEach(el => el.classList.remove('active'));
-          li.classList.add('active');
-          renderCars(brand === 'Все марки' ? allCars : allCars.filter(c=>c.brand===brand));
-          document.getElementById('cars-content').scrollIntoView({behavior:'instant'});
-        });
-        brandsList.appendChild(li);
-      });
-    }
-
-    async function loadCars() {
-      try {
-        const res = await fetch(API_BASE);
-        allCars = await res.json();
-        renderBrands();
-        renderCars(allCars);
-      } catch(err) { console.error(err); }
-    }
-
-    document.getElementById('orderForm').addEventListener('submit', e => {
-      e.preventDefault();
-      const car = document.getElementById('car').value.trim();
-      const name = document.getElementById('name').value.trim();
-      const phone = document.getElementById('phone').value.trim();
-      if(!car || !name || !phone) return;
-      alert(`Заявка отправлена!\nАвто: ${car}\nИмя: ${name}\nТелефон: ${phone}`);
-      e.target.reset();
-    });
-
-    loadCars();
-    const phoneInput = document.getElementById('phone');
-
-phoneInput.addEventListener('input', function(e) {
-  let value = this.value.replace(/\D/g, ''); // оставляем только цифры
-  if (!value) return this.value = '';
-
-  // ограничим максимум 11 цифр (для +7)
-  value = value.substring(0, 11);
-
-  // формируем маску
-  let formatted = '+';
-  if (value[0] === '7' || value[0] === '8') {
-    formatted += '7 ';
-    value = value.substring(1);
-  } else {
-    formatted += value[0];
-    value = value.substring(1);
-  }
-
-  if (value.length > 0) formatted += '(' + value.substring(0, 3);
-  if (value.length >= 4) formatted += ') ' + value.substring(3, 6);
-  if (value.length >= 7) formatted += '-' + value.substring(6, 8);
-  if (value.length >= 9) formatted += '-' + value.substring(8, 10);
-
-  this.value = formatted;
-});
-
-  </script>
+  <script src="main.js"></script>
 </body>
 </html>
