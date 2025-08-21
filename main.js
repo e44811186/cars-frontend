@@ -4,7 +4,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const burger = document.getElementById("burger");
   const menu = document.getElementById("menu");
 
-  // Overlay для меню
   const overlay = document.createElement("div");
   overlay.classList.add("menu-overlay");
   document.body.appendChild(overlay);
@@ -13,7 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
     burger.classList.toggle("active");
     menu.classList.toggle("active");
     overlay.classList.toggle("active");
-    // анимация появления пунктов
+
     menu.querySelectorAll("li").forEach((li, i) => {
       li.style.transitionDelay = menu.classList.contains("active") ? `${i*0.1}s` : '0s';
     });
@@ -23,7 +22,6 @@ document.addEventListener("DOMContentLoaded", () => {
   overlay.addEventListener("click", toggleMenu);
   menu.querySelectorAll("a").forEach(link => link.addEventListener("click", toggleMenu));
 
-  // Маска телефона
   const phoneInput = document.getElementById("phone");
   phoneInput.addEventListener("input", function() {
     let value = this.value.replace(/\D/g,'').substring(0,11);
@@ -37,7 +35,7 @@ document.addEventListener("DOMContentLoaded", () => {
     this.value = formatted;
   });
 
-  // Работа с авто
+  // --- Авто ---
   let allCars = [];
   const brandsList = document.getElementById("brands-list");
   const carsList = document.getElementById("cars-list");
@@ -65,18 +63,29 @@ document.addEventListener("DOMContentLoaded", () => {
         </div>
       </div>
     `;
-    // Анимация fade-in
-    article.style.opacity = 0;
-    setTimeout(()=>article.style.opacity=1,100);
     article.querySelector('a.white-button').addEventListener('click', () => {
       document.getElementById('car').value = car.brand+' '+car.model;
     });
+
+    // --- Анимация появления ---
+    article.style.opacity = 0;
+    article.style.transform = 'translateY(30px)';
+    article.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+
     return article;
   }
 
   function renderCars(cars){
     carsList.innerHTML='';
-    cars.forEach(c => carsList.appendChild(createCarArticle(c)));
+    cars.forEach((c, idx) => {
+      const article = createCarArticle(c);
+      carsList.appendChild(article);
+      // Плавное появление по очереди
+      setTimeout(() => {
+        article.style.opacity = 1;
+        article.style.transform = 'translateY(0)';
+      }, idx * 150);
+    });
   }
 
   function renderBrands(){
