@@ -1,21 +1,25 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <title>Car Rent</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Car Rental</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <main class="main">
+  <main class="main"> 
     <header class="header">
       <div class="container">
-        <div class="logo"><img src="images/logo.png" alt="Logo"></div>
+        <div class="logo">
+          <img src="images/logo.png" alt="Logo" />
+        </div>
+
+        <!-- Кнопка-гамбургер -->
         <button class="burger" id="burger" aria-label="Меню">
-  <span></span>
-  <span></span>
-  <span></span>
-</button>
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
 
         <nav class="menu">
           <ul>
@@ -23,7 +27,8 @@
             <li><a href="#order">Забронировать</a></li>
           </ul>
         </nav>
-        <a href="tel:+79883641120" class="phone">+7 988 364 112 0</a>
+
+        <a href="tel:+971523898989" class="phone">+971 52 389 89 89</a>
       </div>
     </header>
 
@@ -31,11 +36,13 @@
       <div class="container">
         <div class="main-info">
           <h1>Покорите дороги за рулём легендарных автомобилей!</h1>
-          <p>От эксклюзивных спорткаров до гоночных шедевров — выбирайте мечту,
-          садитесь за руль и ощутите мощь премиального авто на полную!</p>
+          <p>
+            От эксклюзивных спорткаров до гоночных шедевров — выбирайте мечту,
+            садитесь за руль и ощутите мощь премиального авто на полную!
+          </p>
           <a href="#cars" class="button">Посмотреть автомобили</a>
         </div>
-        <img src="images/main-car.png" alt="main car" class="main-image">
+        <img src="images/main-car.png" alt="main car" class="main-image" />
       </div>
     </section>
 
@@ -47,7 +54,7 @@
       <h2>Выберите автомобиль</h2>
       <div class="cars-content" id="cars-content">
         <aside class="cars-filter">
-          <ul id="brands-list"></ul>
+          <ul id="filters"></ul>
         </aside>
         <div class="cars-items" id="cars-list"></div>
       </div>
@@ -56,14 +63,17 @@
 
   <section class="order" id="order">
     <div class="container">
-      <img src="images/order-car.png" alt="order car">
-      <form id="orderForm">
+      <img src="images/order-car.png" alt="order car" />
+      <form id="order-form">
         <h3>Забронируйте автомобиль</h3>
-        <p>Заполните контактные данные, и мы перезвоним вам для подтверждения бронирования</p>
+        <p>
+          Заполните контактные данные, и мы перезвоним вам для обсуждения деталей
+          и подтверждения бронирования
+        </p>
         <div class="order-form">
-          <input type="text" placeholder="Автомобиль" required readonly id="car">
-          <input type="text" placeholder="Ваше имя" required id="name">
-          <input type="text" placeholder="Ваш телефон" required minlength="10" id="phone">
+          <input type="text" placeholder="Автомобиль" required readonly id="car" />
+          <input type="text" placeholder="Ваше имя" required id="name" />
+          <input type="text" placeholder="Ваш телефон" required id="phone" minlength="10" />
           <button class="button" type="submit" id="order-action">Забронировать</button>
         </div>
       </form>
@@ -72,12 +82,13 @@
 
   <footer class="footer">
     <div class="container">
-      <div class="logo"><img src="images/logo.png" alt="Logo"></div>
+      <div class="logo">
+        <img src="images/logo.png" alt="Logo" />
+      </div>
       <div class="rights">Все права защищены</div>
     </div>
   </footer>
 
-  <script src="main.js" defer></script>
-
+  <script src="main.js"></script>
 </body>
 </html>
