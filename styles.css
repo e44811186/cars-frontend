@@ -341,6 +341,75 @@ h1, h3 {
   font-weight: bold;
   text-transform: uppercase;
 }
+/* Гамбургер */
+.burger {
+  display: none;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 30px;
+  height: 22px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  z-index: 1001; /* выше меню */
+}
+
+.burger span {
+  display: block;
+  height: 3px;
+  width: 100%;
+  background: #f8ff23;
+  border-radius: 2px;
+  transition: 0.3s;
+}
+
+/* Анимация при активном состоянии */
+.burger.active span:nth-child(1) {
+  transform: rotate(45deg) translate(5px, 5px);
+}
+.burger.active span:nth-child(2) {
+  opacity: 0;
+}
+.burger.active span:nth-child(3) {
+  transform: rotate(-45deg) translate(5px, -5px);
+}
+
+/* Мобильное меню */
+@media (max-width: 768px) {
+  .burger {
+    display: flex;
+    margin-left: auto;
+  }
+
+  .menu {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 70%;
+    height: 100%;
+    background: #000;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: right 0.3s ease;
+    z-index: 1000;
+  }
+
+  .menu.active {
+    right: 0;
+  }
+
+  .menu ul {
+    flex-direction: column;
+    gap: 30px;
+  }
+
+  .menu ul a {
+    font-size: 20px;
+  }
+}
+
 
 /* Адаптив */
 @media (max-width: 1200px) {
