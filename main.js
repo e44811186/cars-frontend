@@ -6,11 +6,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const overlay = document.querySelector(".menu-overlay");
 
   function toggleMenu() {
-    if(window.innerWidth > 768) return; // Только мобильный
     burger.classList.toggle("active");
     menu.classList.toggle("active");
     overlay.classList.toggle("active");
-    document.body.classList.toggle("no-scroll");
+    if(window.innerWidth <= 768){
+      document.body.classList.toggle("no-scroll");
+    }
   }
 
   burger.addEventListener("click", toggleMenu);
@@ -31,7 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
     this.value = formatted;
   });
 
-  // Авто
+  // --- Авто ---
   let allCars = [];
   const brandsList = document.getElementById("brands-list");
   const carsList = document.getElementById("cars-list");
@@ -63,9 +64,10 @@ document.addEventListener("DOMContentLoaded", () => {
       document.getElementById('car').value = car.brand+' '+car.model;
       document.getElementById('order').scrollIntoView({behavior:'smooth'});
     });
+    // Анимация
     article.style.opacity = 0;
     article.style.transform = 'translateY(30px)';
-    article.style.transition = 'opacity .5s, transform .5s';
+    article.style.transition = 'opacity 0.5s, transform 0.5s';
     return article;
   }
 
@@ -74,7 +76,10 @@ document.addEventListener("DOMContentLoaded", () => {
     cars.forEach((c, idx) => {
       const article = createCarArticle(c);
       carsList.appendChild(article);
-      setTimeout(() => { article.style.opacity=1; article.style.transform='translateY(0)';}, idx*150);
+      setTimeout(() => {
+        article.style.opacity = 1;
+        article.style.transform = 'translateY(0)';
+      }, idx * 150);
     });
   }
 
