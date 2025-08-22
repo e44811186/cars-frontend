@@ -63,7 +63,11 @@ h1, h3 { color: #f8ff23; margin: 0; }
 .main-info { max-width: 755px; }
 .main-info h1 { font-size: 80px; line-height: 1; margin-bottom: 40px; font-weight: 400; }
 .main-info p { font-size: 24px; line-height: 1.2; color: #d4d4d4; max-width: 440px; margin-bottom: 60px; }
-.main-image { position: absolute; top: 78px; right: -576px; z-index: -1; width: min(900px, 90vw); height: auto; transition: transform .5s ease; }
+.main-image {
+  position: absolute;
+  top: 78px;
+  right: -576px;
+  z-index: -1;
 
 /* Cars */
 .cars { background: #000; padding: 130px 0; }
