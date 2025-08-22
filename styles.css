@@ -363,7 +363,7 @@ h1, h3 {
 @media(max-width:768px){
   /* ==== Бургер ==== */
 .burger { display: none; margin-left: auto; background: none; border: 0; cursor: pointer; padding: 0; }
-.burger span { display: block; width: 20px; height: 3px; background: #f8ff23; border-radius: 2px; transition: transform .3s, opacity .3s; }
+.burger span { display: block; width: 30px; height: 3px; background: #f8ff23; border-radius: 2px; transition: transform .3s, opacity .3s; }
 .burger span + span { margin-top: 6px; }
 .burger.active span:nth-child(1) { transform: translateY(9px) rotate(45deg); }
 .burger.active span:nth-child(2) { opacity: 0; }
@@ -380,8 +380,8 @@ h1, h3 {
   .menu ul{flex-direction:column; gap:25px;}
   .menu li{opacity:0; transform:translateX(20px); transition:all .3s ease;}
   .menu.active li{opacity:1; transform:translateX(0);}
-  .phone{margin-left:10px;}
-  .main-info h1 { font-size: 40px; }
+  .phone{margin-left:15px;}
+  .main-info h1 { font-size: 30px; }
   .main-info p { font-size: 18px; max-width: 100%; }
   .button { width: 100%; font-size: 18px; height: auto; padding: 15px; }
   .order-form input { height: 50px; padding: 15px; font-size: 14px; }
