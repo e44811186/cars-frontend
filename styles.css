@@ -11,6 +11,10 @@ body {
 h1, h3 { color: #f8ff23; margin: 0; }
 .container { max-width: 1200px; margin: 0 auto; padding: 0 15px; }
 a { color: inherit; text-decoration: none; }
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
 
 /* Кнопки */
 .button {
