@@ -1,26 +1,25 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <title>Car Rent</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="preload" as="image" href="images/main-car.png" />
-  <link rel="stylesheet" href="styles.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+  <div class="menu-overlay"></div>
+
   <main class="main">
     <header class="header">
       <div class="container">
-        <div class="logo">
-          <img src="images/logo.png" alt="Logo" width="129" height="40" />
-        </div>
+        <div class="logo"><img src="images/logo.png" alt="Logo"></div>
 
-        <!-- Гамбургер (виден только на мобилке) -->
-        <button class="burger" id="burger" aria-label="Открыть меню" aria-controls="menu" aria-expanded="false">
+        <!-- Бургер -->
+        <button class="burger" id="burger">
           <span></span><span></span><span></span>
         </button>
 
-        <nav class="menu" id="menu" aria-label="Главное меню">
+        <nav class="menu" id="menu">
           <ul>
             <li><a href="#cars">НАШ автопарк</a></li>
             <li><a href="#order">Забронировать</a></li>
@@ -36,16 +35,13 @@
         <div class="main-info">
           <h1>Покорите дороги за рулём легендарных автомобилей!</h1>
           <p>От эксклюзивных спорткаров до гоночных шедевров — выбирайте мечту,
-            садитесь за руль и ощутите мощь премиального авто на полную!</p>
+          садитесь за руль и ощутите мощь премиального авто на полную!</p>
           <a href="#cars" class="button">Посмотреть автомобили</a>
         </div>
-
-        <!-- Баннер (lazy убирать не стал для LCP; оставил размеры) -->
-        <img src="images/main-car.png" alt="main car" class="main-image" width="900" height="520" />
+        <img src="images/main-car.png" alt="main car" class="main-image">
       </div>
+      <div class="black-block"></div>
     </section>
-
-    <div class="black-block" aria-hidden="true"></div>
   </main>
 
   <section class="cars" id="cars">
@@ -62,14 +58,14 @@
 
   <section class="order" id="order">
     <div class="container">
-      <img src="images/order-car.png" alt="order car" width="640" height="360" loading="lazy" />
+      <img src="images/order-car.png" alt="order car">
       <form id="orderForm">
         <h3>Забронируйте автомобиль</h3>
         <p>Заполните контактные данные, и мы перезвоним вам для подтверждения бронирования</p>
         <div class="order-form">
-          <input type="text" placeholder="Автомобиль" required readonly id="car" />
-          <input type="text" placeholder="Ваше имя" required id="name" />
-          <input type="text" placeholder="Ваш телефон" required minlength="10" id="phone" />
+          <input type="text" placeholder="Автомобиль" readonly required id="car">
+          <input type="text" placeholder="Ваше имя" required id="name">
+          <input type="text" placeholder="Ваш телефон" required minlength="10" id="phone">
           <button class="button" type="submit" id="order-action">Забронировать</button>
         </div>
       </form>
@@ -78,60 +74,11 @@
 
   <footer class="footer">
     <div class="container">
-      <div class="logo">
-        <img src="images/logo.png" alt="Logo" width="129" height="40" />
-      </div>
+      <div class="logo"><img src="images/logo.png" alt="Logo"></div>
       <div class="rights">Все права защищены</div>
     </div>
   </footer>
 
-  <!-- Оверлей для меню (рендерим один раз; по стилям активен только на мобиле) -->
-  <div class="menu-overlay" id="menuOverlay" hidden></div>
-
-  <script src="main.js" defer></script>
-  <script>
-    // Простая логика открытия/закрытия меню — без затемнения на desktop
-    (function () {
-      const burger = document.getElementById('burger');
-      const menu = document.getElementById('menu');
-      const overlay = document.getElementById('menuOverlay');
-
-      function closeMenu() {
-        menu.classList.remove('active');
-        burger.classList.remove('active');
-        burger.setAttribute('aria-expanded', 'false');
-        overlay.classList.remove('active');
-        overlay.setAttribute('hidden', '');
-        document.body.classList.remove('no-scroll');
-      }
-
-      function openMenu() {
-        menu.classList.add('active');
-        burger.classList.add('active');
-        burger.setAttribute('aria-expanded', 'true');
-        overlay.classList.add('active');
-        overlay.removeAttribute('hidden');
-        document.body.classList.add('no-scroll');
-      }
-
-      burger.addEventListener('click', () => {
-        if (menu.classList.contains('active')) closeMenu(); else openMenu();
-      });
-
-      overlay.addEventListener('click', closeMenu);
-
-      // Закрывать меню при клике по пунктам (только на мобильной ширине)
-      menu.addEventListener('click', (e) => {
-        if (e.target.tagName === 'A' && window.matchMedia('(max-width: 768px)').matches) {
-          closeMenu();
-        }
-      });
-
-      // На ресайз — если вышли за мобилку, гарантированно закрыть
-      window.addEventListener('resize', () => {
-        if (!window.matchMedia('(max-width: 768px)').matches) closeMenu();
-      });
-    })();
-  </script>
+  <script src="main.js"></script>
 </body>
 </html>
