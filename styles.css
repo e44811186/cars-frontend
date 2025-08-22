@@ -344,6 +344,19 @@ h1, h3 {
 
 /* ==== Адаптив ==== */
 @media (max-width:1200px){
+  /* ==== Бургер ==== */
+.burger { display: none; margin-left: auto; background: none; border: 0; cursor: pointer; padding: 0; }
+.burger span { display: block; width: 30px; height: 3px; background: #f8ff23; border-radius: 2px; transition: transform .3s, opacity .3s; }
+.burger span + span { margin-top: 6px; }
+.burger.active span:nth-child(1) { transform: translateY(9px) rotate(45deg); }
+.burger.active span:nth-child(2) { opacity: 0; }
+.burger.active span:nth-child(3) { transform: translateY(-9px) rotate(-45deg); }
+  /* ==== Overlay ==== */
+.menu-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,.6);
+  opacity: 0; visibility: hidden; transition: opacity .3s; z-index: 5;
+}
+.menu-overlay.active { opacity: 1; visibility: visible; }
   .main-image { right:-200px; max-width:400px; }
   .cars-content { flex-direction:column; }
   .cars-filter { margin:0 0 30px; position:relative; top:auto; width:100%; display:flex; overflow-x:auto; }
@@ -360,6 +373,19 @@ h1, h3 {
 }
 
 @media(max-width:768px){
+  /* ==== Бургер ==== */
+.burger { display: none; margin-left: auto; background: none; border: 0; cursor: pointer; padding: 0; }
+.burger span { display: block; width: 30px; height: 3px; background: #f8ff23; border-radius: 2px; transition: transform .3s, opacity .3s; }
+.burger span + span { margin-top: 6px; }
+.burger.active span:nth-child(1) { transform: translateY(9px) rotate(45deg); }
+.burger.active span:nth-child(2) { opacity: 0; }
+.burger.active span:nth-child(3) { transform: translateY(-9px) rotate(-45deg); }
+/* ==== Overlay ==== */
+.menu-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,.6);
+  opacity: 0; visibility: hidden; transition: opacity .3s; z-index: 5;
+}
+.menu-overlay.active { opacity: 1; visibility: visible; }
   .burger{display:inline-block;}
   .menu{display:none;}
   .menu.active{display:flex; flex-direction:column; position:fixed; top:0; right:0; height:100vh; width:260px; padding:100px 20px; background:#121212; z-index:10; box-shadow:-6px 0 20px rgba(0,0,0,.4);}
