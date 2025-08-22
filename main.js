@@ -1,118 +1,91 @@
-document.addEventListener("DOMContentLoaded", () => {
-  const API_BASE = "https://cars-api-ur5t.onrender.com/api/cars";
+const API_BASE = "https://cars-api-ur5t.onrender.com/api/cars";
+let allCars = [];
+const brandsList = document.getElementById("brands-list");
+const carsList = document.getElementById("cars-list");
 
-  const burger = document.getElementById("burger");
-  const menu = document.getElementById("menu");
-  const overlay = document.querySelector(".menu-overlay");
-
-  function toggleMenu() {
-    if(window.innerWidth > 768) return; // Только мобильный
-    burger.classList.toggle("active");
-    menu.classList.toggle("active");
-    overlay.classList.toggle("active");
-    document.body.classList.toggle("no-scroll");
-  }
-
-  burger.addEventListener("click", toggleMenu);
-  overlay.addEventListener("click", toggleMenu);
-  menu.querySelectorAll("a").forEach(link => link.addEventListener("click", toggleMenu));
-
-  // Телефон
-  const phoneInput = document.getElementById("phone");
-  phoneInput.addEventListener("input", function() {
-    let value = this.value.replace(/\D/g,'').substring(0,11);
-    let formatted = '+';
-    if(value[0]==='7'||value[0]==='8'){ formatted+='7 '; value=value.substring(1);}
-    else{ formatted+=value[0]; value=value.substring(1);}
-    if(value.length>0) formatted+='('+value.substring(0,3);
-    if(value.length>=4) formatted+=') '+value.substring(3,6);
-    if(value.length>=7) formatted+='-'+value.substring(6,8);
-    if(value.length>=9) formatted+='-'+value.substring(8,10);
-    this.value = formatted;
-  });
-
-  // Авто
-  let allCars = [];
-  const brandsList = document.getElementById("brands-list");
-  const carsList = document.getElementById("cars-list");
-
-  function buildPrices(base){ return [Math.round(base), Math.round(base*0.95), Math.round(base*0.9)]; }
-
-  function createCarArticle(car){
-    const prices = buildPrices(car.price);
-    const article = document.createElement('article');
-    article.className = 'car';
-    article.innerHTML = `
-      <img src="${car.imageUrl}" alt="car">
-      <div class="car-details">
-        <h4>${car.brand} ${car.model} (${car.year})</h4>
-        <p>${car.description}</p>
-        <div class="car-action">
-          <ul>
-            ${["на 1 сутки","на 1-3 суток","на 3+ суток"].map((p,i)=>`
-              <li>
-                <div class="car-period">${p}</div>
-                <div class="car-price">${prices[i]} $ ${i>0?'<span>/сут</span>':''}</div>
-              </li>`).join('')}
-          </ul>
-          <a href="#order" class="button white-button" data-title="${car.brand} ${car.model}">Забронировать</a>
-        </div>
+function buildPrices(base){
+  return [Math.round(base), Math.round(base*0.95), Math.round(base*0.9)];
+}
+function createCarArticle(car){
+  const prices = buildPrices(car.price);
+  const article = document.createElement("article");
+  article.className = "car";
+  article.innerHTML=`
+    <img src="${car.imageUrl}" alt="${car.brand} ${car.model}" loading="lazy">
+    <div class="car-details">
+      <h4>${car.brand} ${car.model} (${car.year})</h4>
+      <p>${car.description}</p>
+      <div class="car-action">
+        <ul>
+          ${["на 1 сутки","на 1-3 суток","на 3+ суток"].map((p,i)=>`
+          <li>
+            <div class="car-period">${p}</div>
+            <div class="car-price">${prices[i]} $ ${i>0?'<span>/сут</span>':''}</div>
+          </li>`).join("")}
+        </ul>
+        <a href="#order" class="button white-button" data-title="${car.brand} ${car.model}">Забронировать</a>
       </div>
-    `;
-    article.querySelector('a.white-button').addEventListener('click', () => {
-      document.getElementById('car').value = car.brand+' '+car.model;
-      document.getElementById('order').scrollIntoView({behavior:'smooth'});
-    });
-    article.style.opacity = 0;
-    article.style.transform = 'translateY(30px)';
-    article.style.transition = 'opacity .5s, transform .5s';
-    return article;
-  }
-
-  function renderCars(cars){
-    carsList.innerHTML='';
-    cars.forEach((c, idx) => {
-      const article = createCarArticle(c);
-      carsList.appendChild(article);
-      setTimeout(() => { article.style.opacity=1; article.style.transform='translateY(0)';}, idx*150);
-    });
-  }
-
-  function renderBrands(){
-    brandsList.innerHTML='';
-    const uniq = ["Все марки", ...Array.from(new Set(allCars.map(c=>c.brand)))];
-    uniq.forEach((brand,idx)=>{
-      const li = document.createElement('li');
-      li.textContent = brand;
-      if(idx===0) li.classList.add('active');
-      li.addEventListener('click', ()=>{
-        Array.from(brandsList.children).forEach(el=>el.classList.remove('active'));
-        li.classList.add('active');
-        renderCars(brand==='Все марки'?allCars:allCars.filter(c=>c.brand===brand));
-        document.getElementById('cars-content').scrollIntoView({behavior:'instant'});
-      });
-      brandsList.appendChild(li);
-    });
-  }
-
-  async function loadCars(){
-    try{
-      const res = await fetch(API_BASE);
-      allCars = await res.json();
-      renderBrands();
-      renderCars(allCars);
-    } catch(err){ console.error(err);}
-  }
-
-  document.getElementById('orderForm').addEventListener('submit', e=>{
-    e.preventDefault();
-    const car = document.getElementById('car').value.trim();
-    const name = document.getElementById('name').value.trim();
-    const phone = document.getElementById('phone').value.trim();
-    if(!car || !name || !phone) return;
-    alert(`Заявка отправлена!\nАвто: ${car}\nИмя: ${name}\nТелефон: ${phone}`);
-    e.target.reset();
+    </div>`;
+  article.querySelector("a.white-button").addEventListener("click",()=>{
+    document.getElementById("car").value = car.brand+" "+car.model;
   });
+  return article;
+}
+function renderCars(cars){
+  carsList.innerHTML=""; cars.forEach(c=>carsList.appendChild(createCarArticle(c)));
+}
+function renderBrands(){
+  brandsList.innerHTML="";
+  const uniq=["Все марки",...new Set(allCars.map(c=>c.brand))];
+  uniq.forEach((brand,idx)=>{
+    const li=document.createElement("li");
+    li.textContent=brand;
+    if(idx===0) li.classList.add("active");
+    li.addEventListener("click",()=>{
+      [...brandsList.children].forEach(el=>el.classList.remove("active"));
+      li.classList.add("active");
+      renderCars(brand==="Все марки"?allCars:allCars.filter(c=>c.brand===brand));
+      document.getElementById("cars-content").scrollIntoView({behavior:"instant"});
+    });
+    brandsList.appendChild(li);
+  });
+}
+async function loadCars(){
+  try{
+    const res=await fetch(API_BASE);
+    allCars=await res.json();
+    renderBrands(); renderCars(allCars);
+  }catch(e){console.error(e);}
+}
+loadCars();
 
-  loadCars();
+/* форма */
+document.getElementById("orderForm").addEventListener("submit",e=>{
+  e.preventDefault();
+  const car=document.getElementById("car").value.trim();
+  const name=document.getElementById("name").value.trim();
+  const phone=document.getElementById("phone").value.trim();
+  if(!car||!name||!phone) return;
+  alert(`Заявка отправлена!\nАвто: ${car}\nИмя: ${name}\nТелефон: ${phone}`);
+  e.target.reset();
 });
+
+/* маска телефона */
+const phoneInput=document.getElementById("phone");
+phoneInput.addEventListener("input",function(){
+  let v=this.value.replace(/\D/g,""); if(!v) return this.value="";
+  v=v.substring(0,11);
+  let f="+";
+  if(v[0]==="7"||v[0]==="8"){f+="7 "; v=v.substring(1);} else {f+=v[0]; v=v.substring(1);}
+  if(v.length>0) f+="("+v.substring(0,3);
+  if(v.length>=4) f+=") "+v.substring(3,6);
+  if(v.length>=7) f+="-"+v.substring(6,8);
+  if(v.length>=9) f+="-"+v.substring(8,10);
+  this.value=f;
+});
+
+/* бургер */
+const burger=document.getElementById("burger");
+const menu=document.getElementById("menu");
+burger.addEventListener("click",()=>menu.classList.toggle("show"));
+menu.querySelectorAll("a").forEach(a=>a.addEventListener("click",()=>menu.classList.remove("show")));
