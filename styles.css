@@ -344,53 +344,26 @@ h1, h3 {
 
 /* ==== Адаптив ==== */
 @media (max-width:1200px){
-  /* ==== Бургер ==== */
-.burger { display: none; margin-left: auto; background: none; border: 0; cursor: pointer; padding: 0; }
-.burger span { display: block; width: 30px; height: 3px; background: #f8ff23; border-radius: 2px; transition: transform .3s, opacity .3s; }
-.burger span + span { margin-top: 6px; }
-.burger.active span:nth-child(1) { transform: translateY(9px) rotate(45deg); }
-.burger.active span:nth-child(2) { opacity: 0; }
-.burger.active span:nth-child(3) { transform: translateY(-9px) rotate(-45deg); }
-  /* ==== Overlay ==== */
-.menu-overlay {
-  position: fixed; inset: 0; background: rgba(0,0,0,.6);
-  opacity: 0; visibility: hidden; transition: opacity .3s; z-index: 5;
-}
-.menu-overlay.active { opacity: 1; visibility: visible; }
-  .main-image { right: -200px; max-width: 400px; }
-  .cars-content { flex-direction: column; }
-  .cars-filter {
-    margin-right: 0;
-    margin-bottom: 30px;
-    position: relative;
-    top: auto;
-    width: 100%;
-    display: flex;
-    overflow-x: auto;
-  }
-  .cars-filter ul { flex-direction: row; gap: 10px; }
-  .cars-filter ul li {
-    flex: 0 0 auto;
-    width: auto;
-    padding: 10px 15px;
-    font-size: 14px;
-  }
-  .cars-items { row-gap: 20px; }
-  .car { flex-direction: column; align-items: center; }
-  .car img { max-width: 100%; }
-  .car-details { margin-left: 0; margin-top: 15px; align-items: center; }
-  .car-details h4 { font-size: 24px; text-align: center; }
-  .car-details p { height: auto; text-align: center; }
-  .car-action ul { flex-direction: column; gap: 10px; align-items: center; }
-  .order img { position: static; max-width: 100%; margin-bottom: 30px; }
-  .order form { margin-left: 0; max-width: 100%; }
+.main-image { right:-200px; max-width:400px; }
+  .cars-content { flex-direction:column; }
+  .cars-filter { margin:0 0 30px; position:relative; top:auto; width:100%; display:flex; overflow-x:auto; }
+  .cars-filter ul { flex-direction:row; gap:10px; }
+  .cars-filter ul li { flex:0 0 auto; width:auto; padding:10px 15px; font-size:14px; }
+  .cars-items { gap:20px; }
+  .car { flex-direction:column; align-items:center; }
+  .car-details { align-items:center; text-align:center; }
+  .car-details h4 { font-size:24px; }
+  .car-details p { max-height:none; }
+  .car-action ul { flex-direction:column; align-items:center; gap:10px; }
+  .order img { position:static; max-width:100%; margin-bottom:30px; }
+  .order form { margin-left:0; max-width:100%; }
 }
 
 
 @media(max-width:768px){
   /* ==== Бургер ==== */
 .burger { display: none; margin-left: auto; background: none; border: 0; cursor: pointer; padding: 0; }
-.burger span { display: block; width: 30px; height: 3px; background: #f8ff23; border-radius: 2px; transition: transform .3s, opacity .3s; }
+.burger span { display: block; width: 20px; height: 3px; background: #f8ff23; border-radius: 2px; transition: transform .3s, opacity .3s; }
 .burger span + span { margin-top: 6px; }
 .burger.active span:nth-child(1) { transform: translateY(9px) rotate(45deg); }
 .burger.active span:nth-child(2) { opacity: 0; }
@@ -402,6 +375,12 @@ h1, h3 {
 }
 .menu-overlay.active { opacity: 1; visibility: visible; }
 .burger{display:inline-block;}
+ .menu{display:none;}
+  .menu.active{display:flex; flex-direction:column; position:fixed; top:0; right:0; height:100vh; width:260px; padding:100px 20px; background:#121212; z-index:10; box-shadow:-6px 0 20px rgba(0,0,0,.4);}
+  .menu ul{flex-direction:column; gap:25px;}
+  .menu li{opacity:0; transform:translateX(20px); transition:all .3s ease;}
+  .menu.active li{opacity:1; transform:translateX(0);}
+  .phone{margin-left:10px;}
   .main-info h1 { font-size: 40px; }
   .main-info p { font-size: 18px; max-width: 100%; }
   .button { width: 100%; font-size: 18px; height: auto; padding: 15px; }
