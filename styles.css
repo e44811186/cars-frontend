@@ -1,286 +1,284 @@
-/* ====== Базовые стили ====== */
+/* Сброс */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 body {
   font-family: Arial, sans-serif;
-  background: #121212;
-  color: #fff;
-  margin: 0;
-  padding: 0;
-}
-h1, h2, h3, h4 {
-  margin: 0 0 20px;
-}
-h1, h3 {
-  color: #f8ff23;
-}
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 15px;
-}
-img {
-  max-width: 100%;
-  display: block;
-}
-
-/* ====== Кнопки ====== */
-.button {
-  width: 344px;
-  height: 69px;
-  padding: 20px;
-  text-align: center;
-  box-sizing: border-box;
-  background: #f8ff23;
-  color: #000;
-  font-size: 24px;
-  border: 0;
-  display: block;
-  cursor: pointer;
-  text-decoration: none;
-  border-radius: 8px;
-  transition: background 0.2s;
-}
-.button:hover {
+  line-height: 1.5;
+  color: #222;
   background: #fff;
 }
-.button.white-button {
-  background: #fff;
-}
-.button.white-button:hover {
-  background: #f8ff23;
-}
 
-/* ====== Шапка ====== */
-.header {
-  padding: 20px 0;
-  position: relative;
-  z-index: 10;
-}
-.header .container {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-.logo img {
-  max-width: 129px;
-}
-.phone {
-  color: #f8ff23;
-  font-weight: bold;
+a {
   text-decoration: none;
+  color: inherit;
 }
 
-/* ====== Меню ====== */
-.menu {
-  margin-left: 100px;
-  margin-right: auto;
-}
-.menu ul {
+ul {
   list-style: none;
-  display: flex;
-  gap: 65px;
-  padding: 0;
-  margin: 0;
-}
-.menu ul a {
-  font-size: 14px;
-  font-weight: bold;
-  text-transform: uppercase;
-  color: #a8ae16;
-  text-decoration: none;
-}
-.menu ul a:hover {
-  color: #f8ff23;
 }
 
-/* ====== Бургер ====== */
+/* Шапка */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 30px;
+  position: relative;
+  z-index: 1000;
+}
+
+.logo {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+nav {
+  display: flex;
+}
+
+nav ul {
+  display: flex;
+  gap: 20px;
+}
+
+nav ul li a {
+  padding: 8px 12px;
+  transition: color .3s;
+}
+
+nav ul li a:hover {
+  color: #f04;
+}
+
+/* Бургер */
 .burger {
   display: none;
   flex-direction: column;
-  gap: 5px;
   cursor: pointer;
+  gap: 5px;
 }
+
 .burger span {
   width: 25px;
   height: 3px;
-  background: #fff;
+  background: #333;
+  border-radius: 2px;
 }
 
-/* ====== Затемняющий блок (только фон, без overlay) ====== */
-.black-block {
-  position: absolute;
-  width: 477px;
-  height: 910px;
-  top: 0;
-  right: calc(50% - 780px);
-  background: #000;
-  z-index: -2;
+/* Оверлей */
+.menu-overlay {
+  display: none;
 }
 
-/* ====== Главный блок ====== */
-.main {
+.menu-overlay.active {
+  display: block;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,.6);
+  z-index: 900;
+}
+
+/* Герой */
+.hero {
   position: relative;
+  padding: 80px 30px;
+  text-align: center;
+  background: #f5f5f5;
 }
-.main-content {
-  padding: 50px 0;
-}
-.main-info {
+
+.main-image {
+  position: absolute;
+  top: 78px;
+  right: -576px;
+  z-index: -1;
   max-width: 600px;
 }
-.main-info h1 {
-  font-size: 36px;
-  margin-bottom: 20px;
-}
-.main-info p {
-  font-size: 18px;
-  margin-bottom: 20px;
-}
-.main-image {
-  margin-top: 20px;
+
+/* Автопарк */
+.cars {
+  padding: 60px 30px;
 }
 
-/* ====== Автопарк ====== */
-.cars {
-  padding: 50px 0;
-}
 .cars h2 {
   text-align: center;
-  margin-bottom: 30px;
-}
-.cars-content {
-  display: flex;
-  gap: 30px;
-}
-.cars-filter {
-  flex: 0 0 200px;
-}
-.cars-filter ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-.cars-filter li {
-  padding: 10px;
-  cursor: pointer;
-  border-bottom: 1px solid #333;
-}
-.cars-filter li.active {
-  background: #f8ff23;
-  color: #000;
-}
-.cars-items {
-  flex: 1;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 20px;
-}
-.car {
-  background: #1e1e1e;
-  padding: 15px;
-  border-radius: 8px;
-}
-.car img {
-  border-radius: 8px;
-  margin-bottom: 15px;
-}
-.car-details h4 {
-  margin: 0 0 10px;
-}
-.car-action ul {
-  list-style: none;
-  padding: 0;
-  margin: 0 0 10px;
-}
-.car-action li {
-  display: flex;
-  justify-content: space-between;
-  padding: 5px 0;
-  border-bottom: 1px solid #333;
-}
-.car-action .car-price {
-  font-weight: bold;
+  margin-bottom: 20px;
 }
 
-/* ====== Бронирование ====== */
-.order {
-  padding: 50px 0;
-}
-.order .container {
+.brands {
   display: flex;
-  gap: 30px;
-  align-items: center;
+  flex-wrap: wrap;
+  gap: 15px;
+  justify-content: center;
+  margin-bottom: 30px;
 }
-.order img {
+
+.brands li {
+  padding: 8px 16px;
+  background: #eee;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background .3s;
+}
+
+.brands li.active,
+.brands li:hover {
+  background: #f04;
+  color: #fff;
+}
+
+.cars-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill,minmax(300px,1fr));
+  gap: 20px;
+}
+
+.car {
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,.1);
+  transition: transform .3s;
+}
+
+.car:hover {
+  transform: translateY(-5px);
+}
+
+.car img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.car-details {
+  padding: 15px;
+}
+
+.car-details h4 {
+  margin-bottom: 8px;
+}
+
+.car-action ul {
+  display: flex;
+  justify-content: space-between;
+  margin: 15px 0;
+}
+
+.car-action li {
+  text-align: center;
+}
+
+.car-period {
+  font-size: 14px;
+  color: #555;
+}
+
+.car-price {
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.button {
+  display: inline-block;
+  padding: 10px 20px;
+  background: #f04;
+  color: #fff;
+  border-radius: 6px;
+  transition: background .3s;
+}
+
+.button:hover {
+  background: #d03;
+}
+
+/* Бронирование */
+.order {
+  position: relative;
+  padding: 60px 30px;
+  background: #fafafa;
+}
+
+.order h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.order form {
   max-width: 400px;
-  border-radius: 8px;
-}
-.order-form {
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
   gap: 15px;
 }
-.order-form input {
-  padding: 10px;
+
+.order input,
+.order button {
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
   font-size: 16px;
-  border: 1px solid #333;
-  border-radius: 5px;
 }
 
-/* ====== Футер ====== */
-.footer {
-  padding: 30px 0;
-  background: #000;
+.order button {
+  background: #f04;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+
+.order button:hover {
+  background: #d03;
+}
+
+.order img {
+  position: absolute;
+  top: -25px;
+  left: -530px;
+  max-width: 500px;
+  z-index: -1;
+}
+
+/* Футер */
+footer {
+  padding: 30px;
   text-align: center;
-}
-.footer .logo img {
-  margin: 0 auto 10px;
-}
-.footer .rights {
-  font-size: 14px;
-  color: #aaa;
+  background: #222;
+  color: #fff;
 }
 
-/* ====== Адаптив ====== */
-@media (max-width: 992px) {
-  .menu ul {
-    gap: 30px;
-  }
-}
-
+/* Мобилка */
 @media (max-width: 768px) {
+  nav {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    background: #fff;
+    height: 100%;
+    width: 250px;
+    flex-direction: column;
+    padding: 60px 20px;
+    transition: right .3s;
+    z-index: 1000;
+  }
+
+  nav.active {
+    right: 0;
+  }
+
   .burger {
     display: flex;
   }
-  .menu {
+
+  .main-image {
     display: none;
-    position: absolute;
-    top: 70px;
-    left: 0;
-    width: 100%;
-    background: #000;
-    padding: 20px 0;
   }
-  .menu ul {
-    flex-direction: column;
-    align-items: center;
-    gap: 20px;
-  }
-  .menu.show {
-    display: block;
-  }
-  .button {
-    width: 100%;
-    font-size: 18px;
-    padding: 15px;
-    height: auto;
-  }
-  .cars-content {
-    flex-direction: column;
-  }
-  .order .container {
-    flex-direction: column;
-    text-align: center;
-  }
+
   .order img {
-    max-width: 100%;
+    display: none;
   }
 }
