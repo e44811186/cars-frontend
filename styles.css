@@ -1,187 +1,123 @@
 /* ==== Базовые ==== */
 * { box-sizing: border-box; }
-html, body { height: 100%; }
-body {
-  font-family: Arial, sans-serif;
-  background: #121212;
-  color: #fff;
-  margin: 0;
-  overflow-x: hidden;
-}
+html, body { height: 100%; margin: 0; font-family: Arial, sans-serif; background: #121212; color: #fff; }
 h1, h3 { color: #f8ff23; margin: 0; }
 .container { max-width: 1200px; margin: 0 auto; padding: 0 15px; }
-a { color: inherit; }
+a { color: inherit; text-decoration: none; }
 
-/* Кнопки */
+/* ==== Кнопки ==== */
 .button {
-  width: 344px;
-  height: 69px;
-  padding: 20px;
-  text-align: center;
-  background-color: #f8ff23;
-  color: #000;
-  border: 0;
-  cursor: pointer;
-  font-size: 24px;
-  text-decoration: none;
-  display: block;
-  transition: background .3s ease, transform .2s ease;
+  width: 344px; height: 69px; padding: 20px;
+  text-align: center; background: #f8ff23; color: #000;
+  border: none; cursor: pointer; font-size: 24px;
+  display: block; transition: background .3s, transform .2s;
 }
 .button:hover:not(:disabled) { background: #fff; transform: translateY(-3px); }
 .button:disabled { cursor: not-allowed; color: gray; background: #343434; }
 .button.white-button { background: #fff; }
 .button.white-button:hover { background: #f8ff23; }
 
-/* ==== Header & меню ==== */
+/* ==== Header ==== */
 .header { padding: 46px 0; position: relative; z-index: 5; }
 .header .container { display: flex; align-items: center; gap: 24px; }
 .logo img { display: block; max-width: 129px; height: auto; }
-
 .menu { margin-left: auto; }
 .menu ul { list-style: none; display: flex; gap: 65px; padding: 0; margin: 0; }
-.menu ul a {
-  font-size: 14px; color: #a8ae16; font-weight: bold; text-decoration: none;
-  text-transform: uppercase; transition: color .3s ease;
-}
+.menu ul a { font-size: 14px; font-weight: bold; text-transform: uppercase; color: #a8ae16; transition: color .3s; }
 .menu ul a:hover { color: #f8ff23; }
+.phone { margin-left: 24px; font-size: 14px; font-weight: bold; white-space: nowrap; }
 
-.phone {
-  margin-left: 24px;
-  font-size: 14px; font-weight: bold; text-decoration: none; white-space: nowrap;
-}
-
-/* Бургер (скрыт на desktop) */
-.burger { display: none; margin-left: auto; background: none; border: 0; padding: 0; cursor: pointer; }
-.burger span {
-  display: block; width: 30px; height: 3px; background: #f8ff23; border-radius: 2px; transition: transform .3s, opacity .3s;
-}
+/* ==== Бургер ==== */
+.burger { display: none; margin-left: auto; background: none; border: 0; cursor: pointer; padding: 0; }
+.burger span { display: block; width: 30px; height: 3px; background: #f8ff23; border-radius: 2px; transition: transform .3s, opacity .3s; }
 .burger span + span { margin-top: 6px; }
 .burger.active span:nth-child(1) { transform: translateY(9px) rotate(45deg); }
 .burger.active span:nth-child(2) { opacity: 0; }
 .burger.active span:nth-child(3) { transform: translateY(-9px) rotate(-45deg); }
 
-/* Оверлей — по умолчанию выключен.
-   Активируем ТОЛЬКО на мобильных через медиа-запрос (чтобы desktop не затемнялся). */
-.menu-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.6); opacity: 0; visibility: hidden; transition: opacity .3s ease; z-index: 9; }
+/* ==== Overlay ==== */
+.menu-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,.6);
+  opacity: 0; visibility: hidden; transition: opacity .3s; z-index: 5;
+}
 .menu-overlay.active { opacity: 1; visibility: visible; }
 
 /* ==== Hero ==== */
 .main { position: relative; overflow: hidden; }
-.black-block {
-  position: absolute; width: 477px; height: 910px; top: 0; right: calc(50% - 780px);
-  background: #000; z-index: -2;
-}
-.main-content { padding: 100px 0 175px; }
-.main-content .container { position: relative; }
+.black-block { position: absolute; width: 477px; height: 910px; top:0; right: calc(50% - 780px); background: #000; z-index: -2; }
+.main-content { padding: 100px 0 175px; position: relative; }
 .main-info { max-width: 755px; }
 .main-info h1 { font-size: 80px; line-height: 1; margin-bottom: 40px; font-weight: 400; }
-.main-info p { font-size: 24px; line-height: 1.2; color: #d4d4d4; max-width: 440px; margin: 0 0 60px; }
-.main-image {
-  position: absolute; top: 78px; right: -576px; z-index: -1;
-  width: min(900px, 90vw); height: auto; transition: transform .5s ease;
-}
+.main-info p { font-size: 24px; line-height: 1.2; color: #d4d4d4; margin-bottom: 60px; max-width: 440px; }
+.main-image { position: absolute; top: 78px; right: -576px; z-index: -1; width: min(900px,90vw); height: auto; transition: transform .5s ease; }
 
 /* ==== Cars ==== */
 .cars { background: #000; padding: 130px 0; }
 .cars h2 { font-size: 65px; font-weight: 400; }
 .cars-content { display: flex; gap: 24px; padding-top: 60px; }
-
 .cars-filter { margin-right: 53px; align-self: flex-start; position: sticky; top: 20px; }
 .cars-filter ul { list-style: none; display: flex; flex-direction: column; gap: 15px; padding: 0; margin: 0; }
-.cars-filter ul li {
-  width: 127px; padding: 16px; text-align: center; border: 1px solid #fff; font-size: 16px;
-  color: #fff; cursor: pointer; transition: color .3s, border-color .3s;
-}
+.cars-filter ul li { width: 127px; padding: 16px; text-align: center; border: 1px solid #fff; font-size: 16px; color: #fff; cursor: pointer; transition: color .3s, border-color .3s; }
 .cars-filter ul li.active, .cars-filter ul li:hover { color: #f8ff23; border-color: #f8ff23; }
-
 .cars-items { display: flex; flex-direction: column; gap: 30px; width: 100%; }
-.car {
-  background: #212121; padding: 20px; display: flex; gap: 24px;
-  opacity: 0; transform: translateY(30px); transition: opacity .5s, transform .5s;
-}
+.car { background: #212121; padding: 20px; display: flex; gap: 24px; opacity: 0; transform: translateY(30px); transition: opacity .5s, transform .5s; }
 .car.show { opacity: 1; transform: translateY(0); }
-.car img { max-width: 568px; width: 100%; height: auto; display: block; }
-.car-details { display: flex; flex-direction: column; gap: 12px; flex: 1; }
+.car img { width: 100%; max-width: 568px; height: auto; display: block; object-fit: cover; }
+.car-details { display: flex; flex-direction: column; gap: 12px; flex:1; }
 .car-details h4 { font-size: 30px; margin: 0 0 8px; }
 .car-details p { font-size: 16px; line-height: 1.2; color: #d4d4d4; max-height: 100px; overflow: hidden; }
 .car-action { margin-top: auto; }
-.car-action ul { list-style: none; display: flex; justify-content: space-between; gap: 16px; margin: 0 0 20px; padding: 0; }
-.car-period { font-size: 16px; color: #d4d4d4; margin-bottom: 5px; }
-.car-price { font-size: 24px; }
-.car-price span { font-size: 16px; color: #d4d4d4; }
-.car-action .button { width: 100%; }
+.car-action ul { display: flex; justify-content: space-between; gap:16px; margin:0 0 20px; padding:0; list-style:none; }
+.car-action .button { width:100%; }
 
 /* ==== Order ==== */
 .order { padding: 150px 0 130px; position: relative; }
 .order .container { position: relative; }
-.order img { position: absolute; top: -25px; left: -530px; width: min(640px, 60vw); height: auto; transition: transform .5s ease; }
-.order form { margin-left: 714px; max-width: 486px; }
-.order h3 { font-size: 65px; font-weight: 400; margin: 0 0 40px; }
-.order p { font-size: 24px; line-height: 1.2; color: #d4d4d4; margin: 0 0 60px; max-width: 455px; }
-.order-form { width: 344px; }
-.order-form input {
-  width: 100%; height: 68px; padding: 24px 20px; color: #fff; background: transparent;
-  border: 1px solid #fff; margin-bottom: 15px; font-size: 16px; outline: none; transition: border .3s;
-}
-.order-form input.error { border-color: red; }
-::placeholder { color: #d4d4d4; }
+.order img { position: absolute; top:-25px; left:-530px; width:min(640px,60vw); height:auto; transition: transform .5s ease; }
+.order form { margin-left:714px; max-width:486px; }
+.order h3 { font-size:65px; font-weight:400; margin:0 0 40px; }
+.order p { font-size:24px; line-height:1.2; color:#d4d4d4; margin:0 0 60px; max-width:455px; }
+.order-form { width:344px; }
+.order-form input { width:100%; height:68px; padding:24px 20px; color:#fff; background:transparent; border:1px solid #fff; margin-bottom:15px; font-size:16px; outline:none; transition:border .3s; }
+.order-form input.error { border-color:red; }
+::placeholder { color:#d4d4d4; }
 
 /* ==== Footer ==== */
-.footer { padding: 47px 0; border-top: 1px solid #5f5f5f; }
-.footer .container { display: flex; justify-content: space-between; align-items: center; }
-.rights { font-size: 14px; font-weight: bold; text-transform: uppercase; }
+.footer { padding:47px 0; border-top:1px solid #5f5f5f; }
+.footer .container { display:flex; justify-content:space-between; align-items:center; }
+.rights { font-size:14px; font-weight:bold; text-transform:uppercase; }
 
 /* ==== Адаптив ==== */
-@media (max-width: 1200px) {
-  .main-image { right: -200px; max-width: 400px; }
-  .cars-content { flex-direction: column; }
-  .cars-filter {
-    margin: 0 0 30px; position: relative; top: auto; width: 100%;
-    display: flex; overflow-x: auto; -webkit-overflow-scrolling: touch;
-  }
-  .cars-filter ul { flex-direction: row; gap: 10px; }
-  .cars-filter ul li { flex: 0 0 auto; width: auto; padding: 10px 15px; font-size: 14px; }
-  .cars-items { gap: 20px; }
-  .car { flex-direction: column; align-items: center; }
-  .car img { max-width: 100%; }
-  .car-details { align-items: center; text-align: center; }
-  .car-details h4 { font-size: 24px; }
-  .car-details p { max-height: none; }
-  .car-action ul { flex-direction: column; align-items: center; gap: 10px; }
-  .order img { position: static; max-width: 100%; margin-bottom: 30px; }
-  .order form { margin-left: 0; max-width: 100%; }
+@media (max-width:1200px){
+  .main-image { right:-200px; max-width:400px; }
+  .cars-content { flex-direction:column; }
+  .cars-filter { margin:0 0 30px; position:relative; top:auto; width:100%; display:flex; overflow-x:auto; }
+  .cars-filter ul { flex-direction:row; gap:10px; }
+  .cars-filter ul li { flex:0 0 auto; width:auto; padding:10px 15px; font-size:14px; }
+  .cars-items { gap:20px; }
+  .car { flex-direction:column; align-items:center; }
+  .car-details { align-items:center; text-align:center; }
+  .car-details h4 { font-size:24px; }
+  .car-details p { max-height:none; }
+  .car-action ul { flex-direction:column; align-items:center; gap:10px; }
+  .order img { position:static; max-width:100%; margin-bottom:30px; }
+  .order form { margin-left:0; max-width:100%; }
 }
 
-@media (max-width: 768px) {
-  /* Бургер включаем, меню по умолчанию прячем */
-  .burger { display: inline-block; }
-  .menu { display: none; }
-  .menu.active {
-    display: flex;
-    position: fixed; top: 0; right: 0;
-    background: #121212; height: 100vh; width: 260px;
-    padding: 100px 20px; z-index: 10;
-    box-shadow: -6px 0 20px rgba(0,0,0,.4);
-  }
-  .menu ul { flex-direction: column; gap: 25px; }
-  .menu li { opacity: 0; transform: translateX(20px); transition: all .3s ease; }
-  .menu.active li { opacity: 1; transform: translateX(0); }
-  .phone { margin-left: 0; }
-
-  /* Оверлей активен только на мобилке */
-  .menu-overlay { display: block; }
-
-  /* Hero */
-  .main-info h1 { font-size: 40px; }
-  .main-info p { font-size: 18px; max-width: 100%; }
-  .button { width: 100%; font-size: 18px; height: auto; padding: 15px; }
-
-  /* Order form */
-  .order-form input { height: 50px; padding: 15px; font-size: 14px; }
-  .cars h2 { font-size: 40px; }
-  .order h3 { font-size: 40px; }
-  .order p { font-size: 18px; }
+@media(max-width:768px){
+  .burger{display:inline-block;}
+  .menu{display:none;}
+  .menu.active{display:flex; flex-direction:column; position:fixed; top:0; right:0; height:100vh; width:260px; padding:100px 20px; background:#121212; z-index:10; box-shadow:-6px 0 20px rgba(0,0,0,.4);}
+  .menu ul{flex-direction:column; gap:25px;}
+  .menu li{opacity:0; transform:translateX(20px); transition:all .3s ease;}
+  .menu.active li{opacity:1; transform:translateX(0);}
+  .phone{margin-left:0;}
+  .main-info h1{font-size:40px;}
+  .main-info p{font-size:18px;}
+  .button{width:100%; font-size:18px; height:auto; padding:15px;}
+  .order-form input{height:50px; padding:15px; font-size:14px;}
+  .cars h2{font-size:40px;}
+  .order h3{font-size:40px;}
+  .order p{font-size:18px;}
 }
-
-/* Блокировка скролла при открытом меню на мобиле */
 .no-scroll { overflow: hidden; }
