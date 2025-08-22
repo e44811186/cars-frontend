@@ -7,17 +7,17 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div class="menu-overlay"></div>
-
   <main class="main">
     <header class="header">
       <div class="container">
         <div class="logo"><img src="images/logo.png" alt="Logo"></div>
 
-        <!-- Бургер -->
-        <button class="burger" id="burger">
-          <span></span><span></span><span></span>
-        </button>
+        <!-- Гамбургер -->
+        <div class="burger" id="burger">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
 
         <nav class="menu" id="menu">
           <ul>
@@ -40,8 +40,9 @@
         </div>
         <img src="images/main-car.png" alt="main car" class="main-image">
       </div>
-      <div class="black-block"></div>
     </section>
+
+    <div class="black-block"></div>
   </main>
 
   <section class="cars" id="cars">
@@ -63,7 +64,7 @@
         <h3>Забронируйте автомобиль</h3>
         <p>Заполните контактные данные, и мы перезвоним вам для подтверждения бронирования</p>
         <div class="order-form">
-          <input type="text" placeholder="Автомобиль" readonly required id="car">
+          <input type="text" placeholder="Автомобиль" required readonly id="car">
           <input type="text" placeholder="Ваше имя" required id="name">
           <input type="text" placeholder="Ваш телефон" required minlength="10" id="phone">
           <button class="button" type="submit" id="order-action">Забронировать</button>
@@ -78,6 +79,8 @@
       <div class="rights">Все права защищены</div>
     </div>
   </footer>
+
+  <div class="menu-overlay"></div>
 
   <script src="main.js"></script>
 </body>
