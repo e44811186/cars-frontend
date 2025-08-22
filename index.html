@@ -2,79 +2,56 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Car Rent</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <main class="main">
-    <header class="header">
-      <div class="container">
-        <div class="logo"><img src="images/logo.png" alt="Logo"></div>
-
-        <!-- бургер -->
-        <div class="burger" id="burger">
-          <span></span><span></span><span></span>
-        </div>
-
-        <nav class="menu" id="menu">
-          <ul>
-            <li><a href="#cars">НАШ автопарк</a></li>
-            <li><a href="#order">Забронировать</a></li>
-          </ul>
-        </nav>
-        <a href="tel:+79883641120" class="phone">+7 988 364 112 0</a>
-      </div>
-    </header>
-
-    <section class="main-content">
-      <div class="container">
-        <div class="main-info">
-          <h1>Покорите дороги за рулём легендарных автомобилей!</h1>
-          <p>От эксклюзивных спорткаров до гоночных шедевров — выбирайте мечту,
-          садитесь за руль и ощутите мощь премиального авто на полную!</p>
-          <a href="#cars" class="button">Посмотреть автомобили</a>
-        </div>
-        <img src="images/main-car.webp" alt="main car" class="main-image" loading="lazy">
-      </div>
-    </section>
-
-    <div class="black-block"></div>
-  </main>
-
-  <section class="cars" id="cars">
-    <div class="container">
-      <h2>Выберите автомобиль</h2>
-      <div class="cars-content" id="cars-content">
-        <aside class="cars-filter">
-          <ul id="brands-list"></ul>
-        </aside>
-        <div class="cars-items" id="cars-list"></div>
-      </div>
+  <!-- Шапка -->
+  <header>
+    <div class="logo">CarRent</div>
+    <nav id="menu">
+      <ul>
+        <li><a href="#cars-content">Наш автопарк</a></li>
+        <li><a href="#order">Бронирование</a></li>
+        <li><a href="#contacts">Контакты</a></li>
+      </ul>
+    </nav>
+    <div id="burger" class="burger">
+      <span></span><span></span><span></span>
     </div>
+    <div class="menu-overlay"></div>
+  </header>
+
+  <!-- Главный баннер -->
+  <section class="hero">
+    <h1>Аренда авто премиум-класса</h1>
+    <p>Быстро. Удобно. Выгодно.</p>
+    <img src="images/banner.png" alt="banner" class="main-image">
   </section>
 
-  <section class="order" id="order">
-    <div class="container">
-      <img src="images/order-car.webp" alt="order car" loading="lazy">
-      <form id="orderForm">
-        <h3>Забронируйте автомобиль</h3>
-        <p>Заполните контактные данные, и мы перезвоним вам для подтверждения бронирования</p>
-        <div class="order-form">
-          <input type="text" placeholder="Автомобиль" required readonly id="car">
-          <input type="text" placeholder="Ваше имя" required id="name">
-          <input type="text" placeholder="Ваш телефон" required minlength="10" id="phone">
-          <button class="button" type="submit" id="order-action">Забронировать</button>
-        </div>
-      </form>
-    </div>
+  <!-- Автопарк -->
+  <section id="cars-content" class="cars">
+    <h2>Наш автопарк</h2>
+    <ul id="brands-list" class="brands"></ul>
+    <div id="cars-list" class="cars-list"></div>
   </section>
 
-  <footer class="footer">
-    <div class="container">
-      <div class="logo"><img src="images/logo.png" alt="Logo"></div>
-      <div class="rights">Все права защищены</div>
-    </div>
+  <!-- Бронирование -->
+  <section id="order" class="order">
+    <h2>Забронировать авто</h2>
+    <form id="orderForm">
+      <input type="text" id="car" placeholder="Выбранное авто" readonly>
+      <input type="text" id="name" placeholder="Ваше имя" required>
+      <input type="text" id="phone" placeholder="+7 (___) ___-__-__" required>
+      <button type="submit" class="button">Отправить</button>
+    </form>
+    <img src="images/order.png" alt="order">
+  </section>
+
+  <!-- Контакты -->
+  <footer id="contacts">
+    <p>© 2025 CarRent. Все права защищены.</p>
   </footer>
 
   <script src="script.js"></script>
