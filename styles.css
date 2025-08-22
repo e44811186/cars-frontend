@@ -86,7 +86,7 @@ a { color: inherit; text-decoration: none; }
 
 /* Order */
 .order { padding: 150px 0 130px; position: relative; }
-.order img { position: absolute; top: -25px; left: -530px; width: min(640px, 60vw); height: auto; transition: transform .5s ease; }
+.order img { position: absolute; top: -25px; left: -530px; }
 .order form { margin-left: 714px; max-width: 486px; }
 .order h3 { font-size: 65px; font-weight: 400; margin: 0 0 40px; }
 .order p { font-size: 24px; line-height: 1.2; color: #d4d4d4; margin: 0 0 60px; max-width: 455px; }
