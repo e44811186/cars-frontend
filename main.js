@@ -1,7 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
   const API_BASE = "https://cars-api-ur5t.onrender.com/api/cars";
 
-  // ===== Гамбургер и меню =====
   const burger = document.getElementById("burger");
   const menu = document.getElementById("menu");
   const overlay = document.querySelector(".menu-overlay");
@@ -19,7 +18,6 @@ document.addEventListener("DOMContentLoaded", () => {
   overlay.addEventListener("click", toggleMenu);
   menu.querySelectorAll("a").forEach(link => link.addEventListener("click", toggleMenu));
 
-  // ===== Телефон =====
   const phoneInput = document.getElementById("phone");
   phoneInput.addEventListener("input", function () {
     let value = this.value.replace(/\D/g, '').substring(0, 11);
@@ -33,7 +31,6 @@ document.addEventListener("DOMContentLoaded", () => {
     this.value = formatted;
   });
 
-  // ===== IntersectionObserver для lazy load =====
   const lazyObserver = new IntersectionObserver((entries, observer) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
@@ -45,14 +42,11 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }, { rootMargin: "0px 0px 200px 0px" });
 
-  // ===== Авто =====
   let allCars = [];
   const brandsList = document.getElementById("brands-list");
   const carsList = document.getElementById("cars-list");
 
-  function buildPrices(base) {
-    return [Math.round(base), Math.round(base * 0.95), Math.round(base * 0.9)];
-  }
+  function buildPrices(base) { return [Math.round(base), Math.round(base * 0.95), Math.round(base * 0.9)]; }
 
   function createCarArticle(car) {
     const prices = buildPrices(car.price);
@@ -75,17 +69,11 @@ document.addEventListener("DOMContentLoaded", () => {
         </div>
       </div>
     `;
-
-    // Lazy load картинок
     lazyObserver.observe(article.querySelector('img.lazy'));
-
-    // Кнопка "Забронировать"
     article.querySelector('a.white-button').addEventListener('click', () => {
       document.getElementById('car').value = car.brand + ' ' + car.model;
       document.getElementById('order').scrollIntoView({ behavior: 'smooth' });
     });
-
-    // Анимация появления
     article.style.opacity = 0;
     article.style.transform = 'translateY(30px)';
     article.style.transition = 'opacity 0.5s, transform 0.5s';
@@ -97,10 +85,7 @@ document.addEventListener("DOMContentLoaded", () => {
     cars.forEach((c, idx) => {
       const article = createCarArticle(c);
       carsList.appendChild(article);
-      setTimeout(() => {
-        article.style.opacity = 1;
-        article.style.transform = 'translateY(0)';
-      }, idx * 100); // быстрее по сравнению с 150
+      setTimeout(() => { article.style.opacity = 1; article.style.transform = 'translateY(0)'; }, idx * 100);
     });
   }
 
@@ -127,12 +112,9 @@ document.addEventListener("DOMContentLoaded", () => {
       allCars = await res.json();
       renderBrands();
       renderCars(allCars);
-    } catch (err) {
-      console.error(err);
-    }
+    } catch (err) { console.error(err); }
   }
 
-  // ===== Форма заказа =====
   document.getElementById('orderForm').addEventListener('submit', e => {
     e.preventDefault();
     const car = document.getElementById('car').value.trim();
