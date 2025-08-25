@@ -47,6 +47,24 @@
     <textarea placeholder="Описание" id="description" required></textarea> <!-- ✅ заменил input -->
     <button type="submit" class="button">Добавить авто</button>
   </form>
+   <div class="search-box">
+    🔍 <input type="text" id="searchInput" placeholder="Поиск по марке или модели...">
+  </div>
+   <h2>Список авто</h2>
+  <table id="carsTable">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Марка</th>
+        <th>Модель</th>
+        <th>Год</th>
+        <th>Цена</th>
+        <th>Фото</th>
+        <th>Действия</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
   <script src="admin.js"></script>
 </body>
 </html>
