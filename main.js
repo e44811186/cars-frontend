@@ -62,7 +62,7 @@ document.addEventListener("DOMContentLoaded", () => {
             ${["на 1 сутки", "на 1-3 суток", "на 3+ суток"].map((p, i) => `
               <li>
                 <div class="car-period">${p}</div>
-                <div class="car-price">${prices[i]} P ${i > 0 ? '<span>/сут</span>' : ''}</div>
+                <div class="car-price">${prices[i]}P ${i > 0 ? '<span>/сут</span>' : ''}</div>
               </li>`).join('')}
           </ul>
           <a href="#order" class="button white-button" data-title="${car.brand} ${car.model}">Забронировать</a>
