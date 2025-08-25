@@ -13,7 +13,22 @@
       margin: 0;
       padding: 0;
     }
+.contacts {
+      padding: 100px 0;
+      text-align: center;
+    }
 
+    .contacts h1 {
+      font-size: 50px;
+      margin-bottom: 40px;
+      color: #f8ff23;
+    }
+
+    .contacts p {
+      font-size: 20px;
+      color: #d4d4d4;
+      margin-bottom: 15px;
+    }
     /* Хедер / Меню */
     .header {
       padding: 20px 40px;
@@ -111,6 +126,10 @@
     .back-button:hover {
       background-color: #fff;
     }
+    iframe {
+      margin-top: 30px;
+      border-radius: 12px;
+    }
 
     /* Адаптив */
     @media (max-width: 768px) {
@@ -166,7 +185,14 @@
       </ul>
     </nav>
   </header>
-
+  <section class="contacts">
+      <div class="container">
+<h1>Наши контакты</h1>
+        <p>Телефон: <a href="tel:+79883641120">+7 988 364 112 0</a></p>
+        <p>Email: <a href="mailto:info@example.com">info@example.com</a></p>
+        <p>Адрес: г. Москва, ул. Примерная, д. 1</p>
+        </div>
+    </section>
   <h1>Наши менеджеры</h1>
 
   <div class="managers">
@@ -184,8 +210,20 @@
       <p>Email: maria.smirnova@example.com</p>
     </div>
   </div>
-
+<iframe 
+          src="https://www.google.com/maps/embed?pb=!1m18!..." 
+          width="100%" 
+          height="400" 
+          style="border:0;" 
+          allowfullscreen="" 
+          loading="lazy">
+        </iframe>
   <a href="index.html" class="back-button">← На главную</a>
-
+<footer class="footer">
+    <div class="container">
+      <div class="logo"><img src="images/logo.png" alt="Logo"></div>
+      <div class="rights">Все права защищены</div>
+    </div>
+  </footer>
 </body>
 </html>
