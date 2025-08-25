@@ -37,7 +37,7 @@ h1, h3 { color: #f8ff23;}
 .car-details h4 { font-size: 30px; line-height: 120%; margin-bottom: 20px;}
 .car-details p { font-size: 16px; line-height: 120%; letter-spacing: normal; color: #d4d4d4; height: 100px;}
 .car-action { margin-top: auto;}
-.car-action ul { list-style: none; display: flex; justify-content: space-between; margin-bottom: 20px;}
+.car-action ul { padding: 5px; list-style: none; display: flex; justify-content: space-between; margin-bottom: 20px;}
 .car-period { font-size: 16px; line-height: 120%; color: #d4d4d4; margin-bottom: 5px;}
 .car-price { font-size: 24px; line-height: 120%;}
 .car-price span { font-size: 16px; line-height: 120%; color: #d4d4d4;}
