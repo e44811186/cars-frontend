@@ -27,7 +27,7 @@ h1, h3 { color: #f8ff23;}
 .cars-content { display: flex; padding-top: 60px;}
 .cars-filter { margin-right: 77px; align-self: flex-start; position: sticky; top: 20px;}
 .cars-filter ul { display: flex; flex-direction: column; row-gap: 15px; list-style: none;}
-.cars-filter ul li { width: 127px; padding: 16px; text-align: center; border: 1px solid white; font-size: 16px; color: #ffffff; box-sizing: border-box; cursor: pointer; outline: none;}
+.cars-filter ul li { border-radius: 10px; width: 127px; padding: 16px; text-align: center; border: 1px solid white; font-size: 16px; color: #ffffff; box-sizing: border-box; cursor: pointer; outline: none;}
 .cars-filter ul li.active,
 .cars-filter ul li:hover { color: #f8ff23; border-color: #f8ff23;}
 .cars-items { display: flex; flex-direction: column; row-gap: 30px;}
