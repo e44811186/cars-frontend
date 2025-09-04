@@ -27,9 +27,13 @@ function renderCars(cars) {
       <td>${car.model}</td>
       <td>${car.year}</td>
       <td>${car.price}</td>
-      <td><img src="${car.imageUrl}" alt="${car.brand}" class="preview"></td>
+      <td>
+        ${car.images && car.images.length > 0
+          ? car.images.map(img => `<img src="${img}" class="preview" alt="">`).join('')
+          : '—'}
+      </td>
       <td class="actions">
-        <button onclick="editCar(${car.id}, '${car.brand}', '${car.model}', ${car.year}, ${car.price}, '${car.imageUrl}', '${car.description}')">✏️ Редактировать</button>
+        <button onclick="editCar(${car.id}, '${car.brand}', '${car.model}', ${car.year}, ${car.price}, ${JSON.stringify(car.images)}, '${car.description.replace(/'/g, "\\'")}')">✏️ Редактировать</button>
         <button onclick="deleteCar(${car.id})">🗑 Удалить</button>
       </td>
     `;
@@ -45,8 +49,11 @@ form.addEventListener('submit', async e => {
     model: document.getElementById('model').value,
     year: +document.getElementById('year').value,
     price: +document.getElementById('price').value,
-    imageUrl: document.getElementById('imageUrl').value,
-    description: document.getElementById('description').value
+    description: document.getElementById('description').value,
+    images: document.getElementById('imageUrls').value
+      .split("\n")
+      .map(s => s.trim())
+      .filter(s => s.length > 0)
   };
 
   const id = document.getElementById('carId').value;
@@ -98,13 +105,13 @@ async function deleteCar(id) {
   }
 }
 
-function editCar(id, brand, model, year, price, imageUrl, description) {
+function editCar(id, brand, model, year, price, images, description) {
   document.getElementById('carId').value = id;
   document.getElementById('brand').value = brand;
   document.getElementById('model').value = model;
   document.getElementById('year').value = year;
   document.getElementById('price').value = price;
-  document.getElementById('imageUrl').value = imageUrl;
+  document.getElementById('imageUrls').value = images ? images.join("\n") : "";
   document.getElementById('description').value = description;
 }
 
