@@ -5,7 +5,7 @@
   <title>Admin</title>
   <link rel="stylesheet" href="styles.css">
   <style>
-    input, button { margin: 5px 0; padding: 8px; }
+    input, button, textarea { margin: 5px 0; padding: 8px; }
     table { border-collapse: collapse; width: 100%; margin-top: 20px; }
     table, th, td { border: 1px solid #ccc; }
     th, td { padding: 10px; text-align: left; }
@@ -13,35 +13,12 @@
     img.preview { max-width: 100px; border-radius: 6px; }
     .search-box { margin: 20px 0; }
     .search-box input { width: 300px; padding: 8px; }
-    body {
-      font-family: Arial, sans-serif;
-      padding: 20px;
-    }
-    form {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      max-width: 400px;
-    }
-    input, textarea, button {
-      padding: 10px;
-      font-size: 16px;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-    }
-    textarea {
-      min-height: 100px; /* ✅ описание стало большим */
-      resize: vertical;  /* ✅ можно тянуть вниз */
-    }
-    button {
-      background: #007bff;
-      color: white;
-      border: none;
-      cursor: pointer;
-    }
-    button:hover {
-      background: #0056b3;
-    }
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    form { display: flex; flex-direction: column; gap: 10px; max-width: 400px; }
+    input, textarea, button { padding: 10px; font-size: 16px; border-radius: 6px; border: 1px solid #ccc; }
+    textarea { min-height: 100px; resize: vertical; }
+    button { background: #007bff; color: white; border: none; cursor: pointer; }
+    button:hover { background: #0056b3; }
   </style>
 </head>
 <body>
@@ -52,14 +29,16 @@
     <input type="text" placeholder="Модель" id="model" required />
     <input type="number" placeholder="Год" id="year" required />
     <input type="number" placeholder="Цена" id="price" required />
-    <input type="text" placeholder="Ссылка на изображение" id="imageUrl" required />
-    <textarea placeholder="Описание" id="description" required></textarea> <!-- ✅ заменил input -->
+    <textarea placeholder="Ссылки на изображения (по одной в строке)" id="imageUrls" required></textarea>
+    <textarea placeholder="Описание" id="description" required></textarea>
     <button type="submit" class="button">Добавить авто</button>
   </form>
-   <div class="search-box">
+
+  <div class="search-box">
     🔍 <input type="text" id="searchInput" placeholder="Поиск по марке или модели...">
   </div>
-   <h2>Список авто</h2>
+
+  <h2>Список авто</h2>
   <table id="carsTable">
     <thead>
       <tr>
