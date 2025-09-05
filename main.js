@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", () => { 
   const API_BASE = "https://cars-api-ur5t.onrender.com/api/cars";
 
   const burger = document.getElementById("burger");
@@ -35,7 +35,9 @@ document.addEventListener("DOMContentLoaded", () => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
         const img = entry.target;
-        img.src = img.dataset.src;
+        if (img.dataset && img.dataset.src) {   // проверяем наличие src
+          img.src = img.dataset.src;
+        }
         img.classList.remove('lazy');
         observer.unobserve(img);
       }
@@ -46,22 +48,25 @@ document.addEventListener("DOMContentLoaded", () => {
   const brandsList = document.getElementById("brands-list");
   const carsList = document.getElementById("cars-list");
 
-  function buildPrices(base) { return [Math.round(base), Math.round(base * 0.95), Math.round(base * 0.9)]; }
+  function buildPrices(base) { 
+    return [Math.round(base), Math.round(base * 0.95), Math.round(base * 0.9)]; 
+  }
 
   function createCarArticle(car) {
-  const prices = buildPrices(car.price);
-  const article = document.createElement('article');
-  article.className = 'car';
-  article.innerHTML = `
-    <img data-src="${car.images && car.images.length > 0 ? car.images[0] : ''}" alt="car" class="lazy">
-    <div class="car-details">
-      <h4>${car.brand} ${car.model} (${car.year})</h4>
-      <p>${car.description}</p>
-      <div class="car-action">
-        <ul>
-          ${["на 1 сутки", "на 1-3 суток", "на 3+ суток"].map((p, i) => `
-            <li>
-              <div class="car-period">${p}</div>
+    const prices = buildPrices(car.price);
+    const firstImage = (car.images && car.images.length > 0) ? car.images[0] : '';
+    const article = document.createElement('article');
+    article.className = 'car';
+    article.innerHTML = `
+      <img data-src="${firstImage}" alt="car" class="lazy">
+      <div class="car-details">
+        <h4>${car.brand} ${car.model} (${car.year})</h4>
+        <p>${car.description}</p>
+        <div class="car-action">
+          <ul>
+            ${["на 1 сутки", "на 1-3 суток", "на 3+ суток"].map((p, i) => `
+              <li>
+                <div class="car-period">${p}</div>
                 <div class="car-price">${prices[i]} P${i > 0 ? '<span>/сут</span>' : ''}</div>
               </li>`).join('')}
           </ul>
@@ -85,7 +90,10 @@ document.addEventListener("DOMContentLoaded", () => {
     cars.forEach((c, idx) => {
       const article = createCarArticle(c);
       carsList.appendChild(article);
-      setTimeout(() => { article.style.opacity = 1; article.style.transform = 'translateY(0)'; }, idx * 100);
+      setTimeout(() => { 
+        article.style.opacity = 1; 
+        article.style.transform = 'translateY(0)'; 
+      }, idx * 100);
     });
   }
 
