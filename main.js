@@ -185,7 +185,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // ==== Лайтбокс с зумом и перелистыванием ====
-  const lightbox = document.getElementById('lightbox');
+  
   const lbImg = document.getElementById('lightbox-img');
   const lbStage = document.getElementById('lb-stage');
   const btnClose = document.querySelector('.lb-close');
