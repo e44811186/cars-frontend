@@ -65,6 +65,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let currentIndex = 0;
 
   function openLightbox(images, index = 0) {
+    lightbox.removeAttribute("inert");
     if (!lightbox) return;
     currentImages = images;
     currentIndex = index;
@@ -74,6 +75,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function closeLightbox() {
+    lightbox.setAttribute("inert", "");
     if (!lightbox) return;
     lightbox.classList.remove("active");
     document.body.classList.remove("no-scroll");
