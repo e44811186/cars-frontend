@@ -4,9 +4,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const closeBtn = lightbox.querySelector(".close");
   const nextBtn = lightbox.querySelector(".next");
   const prevBtn = lightbox.querySelector(".prev");
-  closeBtn.addEventListener("click", closeLightbox);
-  nextBtn.addEventListener("click", nextImage);
-  prevBtn.addEventListener("click", prevImage);
 
   // ==== Бургер/меню ====
   const burger = document.getElementById("burger");
@@ -323,7 +320,9 @@ document.addEventListener("DOMContentLoaded", () => {
     if (e.key === '-') setScale(scale / 1.2);
     if (e.key.toLowerCase() === 'r') resetTransform();
   });
-
+closeBtn.addEventListener("click", closeLightbox);
+  nextBtn.addEventListener("click", nextImage);
+  prevBtn.addEventListener("click", prevImage);
   // Старт: загрузка авто
   loadCars();
 });
