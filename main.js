@@ -188,9 +188,7 @@ document.addEventListener("DOMContentLoaded", () => {
   
   const lbImg = document.getElementById('lightbox-img');
   const lbStage = document.getElementById('lb-stage');
-  const btnClose = document.querySelector('.lb-close');
-  const btnPrev = document.querySelector('.lb-prev');
-  const btnNext = document.querySelector('.lb-next');
+  
   const lbIndex = document.getElementById('lb-index');
   const lbCount = document.getElementById('lb-count');
   const btnZoomIn = document.getElementById('lb-zoom-in');
@@ -270,9 +268,9 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // кнопки
-  btnClose.addEventListener('click', closeLightbox);
-  btnPrev.addEventListener('click', (e) => { e.stopPropagation(); show(currentIndex - 1); });
-  btnNext.addEventListener('click', (e) => { e.stopPropagation(); show(currentIndex + 1); });
+  closeBtn.addEventListener('click', closeLightbox);
+  prevBtn.addEventListener('click', (e) => { e.stopPropagation(); show(currentIndex - 1); });
+  nextBtn.addEventListener('click', (e) => { e.stopPropagation(); show(currentIndex + 1); });
 
   // клик по фону — закрыть
   lightbox.addEventListener('click', (e) => {
