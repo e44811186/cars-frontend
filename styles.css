@@ -112,6 +112,7 @@ h1, h3 { color: #f8ff23;}
   font-size: 40px;
   width: 48px;
   height: 48px;
+  z-index: +1;
 }
 
 .lb-counter {
