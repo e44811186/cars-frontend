@@ -52,38 +52,50 @@ document.addEventListener("DOMContentLoaded", () => {
     return [Math.round(base), Math.round(base * 0.95), Math.round(base * 0.9)]; 
   }
 
-  function createCarArticle(car) {
-    const prices = buildPrices(car.price);
-    const firstImage = (car.images && car.images.length > 0) ? car.images[0] : '';
-    const article = document.createElement('article');
-    article.className = 'car';
-    article.innerHTML = `
-      <img data-src="${firstImage}" alt="car" class="lazy">
-      <div class="car-details">
-        <h4>${car.brand} ${car.model} (${car.year})</h4>
-        <p>${car.description}</p>
-        <div class="car-action">
-          <ul>
-            ${["на 1 сутки", "на 1-3 суток", "на 3+ суток"].map((p, i) => `
-              <li>
-                <div class="car-period">${p}</div>
-                <div class="car-price">${prices[i]} P${i > 0 ? '<span>/сут</span>' : ''}</div>
-              </li>`).join('')}
-          </ul>
-          <a href="#order" class="button white-button" data-title="${car.brand} ${car.model}">Забронировать</a>
-        </div>
+ function createCarArticle(car) {
+  const prices = buildPrices(car.price);
+  const firstImage = (car.images && car.images.length > 0) ? car.images[0] : '';
+
+  const article = document.createElement('article');
+  article.className = 'car';
+  article.innerHTML = `
+    <img data-src="${firstImage}" alt="car" class="lazy car-thumbnail">
+    <div class="car-details">
+      <h4>${car.brand} ${car.model} (${car.year})</h4>
+      <p>${car.description}</p>
+      <div class="car-action">
+        <ul>
+          ${["на 1 сутки", "на 1-3 суток", "на 3+ суток"].map((p, i) => `
+            <li>
+              <div class="car-period">${p}</div>
+              <div class="car-price">${prices[i]} P${i > 0 ? '<span>/сут</span>' : ''}</div>
+            </li>`).join('')}
+        </ul>
+        <a href="#order" class="button white-button" data-title="${car.brand} ${car.model}">Забронировать</a>
       </div>
-    `;
-    lazyObserver.observe(article.querySelector('img.lazy'));
-    article.querySelector('a.white-button').addEventListener('click', () => {
-      document.getElementById('car').value = car.brand + ' ' + car.model;
-      document.getElementById('order').scrollIntoView({ behavior: 'smooth' });
-    });
-    article.style.opacity = 0;
-    article.style.transform = 'translateY(30px)';
-    article.style.transition = 'opacity 0.5s, transform 0.5s';
-    return article;
-  }
+    </div>
+  `;
+
+  // lazy load
+  lazyObserver.observe(article.querySelector('img.lazy'));
+
+  // бронирование
+  article.querySelector('a.white-button').addEventListener('click', () => {
+    document.getElementById('car').value = car.brand + ' ' + car.model;
+    document.getElementById('order').scrollIntoView({ behavior: 'smooth' });
+  });
+
+  // галерея
+  article.querySelector('.car-thumbnail').addEventListener('click', () => {
+    openLightbox(car.images || []);
+  });
+
+  article.style.opacity = 0;
+  article.style.transform = 'translateY(30px)';
+  article.style.transition = 'opacity 0.5s, transform 0.5s';
+  return article;
+}
+
 
   function renderCars(cars) {
     carsList.innerHTML = '';
