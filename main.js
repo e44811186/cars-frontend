@@ -107,6 +107,19 @@ document.addEventListener("DOMContentLoaded", () => {
       }
       document.getElementById('order').scrollIntoView({ behavior: 'smooth' });
     });
+     // ==== Отправка формы (демо-алерт) ====
+  const orderForm = document.getElementById('orderForm');
+  if (orderForm) {
+    orderForm.addEventListener('submit', e => {
+      e.preventDefault();
+      const car = document.getElementById('car').value.trim();
+      const name = document.getElementById('name').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+      if (!car || !name || !phone) return;
+      alert(`Заявка отправлена!\nАвто: ${car}\nИмя: ${name}\nТелефон: ${phone}`);
+      e.target.reset();
+    });
+  }
 
     // открытие галереи
     article.querySelector('.car-thumbnail').addEventListener('click', () => {
@@ -161,20 +174,6 @@ document.addEventListener("DOMContentLoaded", () => {
     } catch (err) {
       console.error('Ошибка загрузки авто:', err);
     }
-  }
-
-  // ==== Отправка формы (демо-алерт) ====
-  const orderForm = document.getElementById('orderForm');
-  if (orderForm) {
-    orderForm.addEventListener('submit', e => {
-      e.preventDefault();
-      const car = document.getElementById('car').value.trim();
-      const name = document.getElementById('name').value.trim();
-      const phone = document.getElementById('phone').value.trim();
-      if (!car || !name || !phone) return;
-      alert(`Заявка отправлена!\nАвто: ${car}\nИмя: ${name}\nТелефон: ${phone}`);
-      e.target.reset();
-    });
   }
 
   // ==== Лайтбокс с зумом и перелистыванием ====
