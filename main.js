@@ -265,7 +265,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // кнопки
-  closeBtn.addEventListener('click', closeLightbox);
+ 
   prevBtn.addEventListener('click', (e) => { e.stopPropagation(); show(currentIndex - 1); });
   nextBtn.addEventListener('click', (e) => { e.stopPropagation(); show(currentIndex + 1); });
 
