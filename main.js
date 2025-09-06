@@ -1,5 +1,12 @@
 document.addEventListener("DOMContentLoaded", () => {
   const API_BASE = "https://cars-api-ur5t.onrender.com/api/cars";
+  const lightbox = document.getElementById("lightbox");
+  const closeBtn = lightbox.querySelector(".close");
+  const nextBtn = lightbox.querySelector(".next");
+  const prevBtn = lightbox.querySelector(".prev");
+  closeBtn.addEventListener("click", closeLightbox);
+  nextBtn.addEventListener("click", nextImage);
+  prevBtn.addEventListener("click", prevImage);
 
   // ==== Бургер/меню ====
   const burger = document.getElementById("burger");
