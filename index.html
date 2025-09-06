@@ -53,12 +53,6 @@
           <ul id="brands-list"></ul>
         </aside>
         <div class="cars-items" id="cars-list"></div>
-        <div id="lightbox">
-  <span class="close">&times;</span>
-  <span class="prev">&#10094;</span>
-  <img src="" alt="car photo">
-  <span class="next">&#10095;</span>
-</div>
       </div>
     </div>
   </section>
@@ -86,7 +80,28 @@
     </div>
   </footer>
 
-  <script src="main.js"></script>
+  <!-- Лайтбокс вынесен в конец body, чтобы перекрывать всё -->
+  <div id="lightbox" aria-hidden="true">
+    <button class="lb-btn lb-close" aria-label="Закрыть">&times;</button>
+    <button class="lb-btn lb-prev" aria-label="Предыдущее">&#10094;</button>
 
+    <div class="lb-stage" id="lb-stage">
+      <img id="lightbox-img" alt="Фото авто" draggable="false">
+    </div>
+
+    <button class="lb-btn lb-next" aria-label="Следующее">&#10095;</button>
+
+    <div class="lb-counter">
+      <span id="lb-index">1</span>/<span id="lb-count">1</span>
+    </div>
+
+    <div class="lb-zoom">
+      <button id="lb-zoom-out" aria-label="Уменьшить">−</button>
+      <button id="lb-zoom-in" aria-label="Увеличить">+</button>
+      <button id="lb-zoom-reset" aria-label="Сбросить масштаб">100%</button>
+    </div>
+  </div>
+
+  <script src="main.js"></script>
 </body>
 </html>
