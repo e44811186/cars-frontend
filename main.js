@@ -1,9 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
   const API_BASE = "https://cars-api-ur5t.onrender.com/api/cars";
-  const lightbox = document.getElementById("lightbox");
-  const closeBtn = lightbox.querySelector(".close");
-  const nextBtn = lightbox.querySelector(".next");
-  const prevBtn = lightbox.querySelector(".prev");
 
   // ==== Бургер/меню ====
   const burger = document.getElementById("burger");
@@ -182,10 +178,12 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // ==== Лайтбокс с зумом и перелистыванием ====
-  
+  const lightbox = document.getElementById("lightbox");
   const lbImg = document.getElementById('lightbox-img');
   const lbStage = document.getElementById('lb-stage');
-  
+  const closeBtn = document.querySelector('.lb-close');
+  const nextBtn = document.querySelector('.lb-next');
+  const prevBtn = document.querySelector('.lb-prev');
   const lbIndex = document.getElementById('lb-index');
   const lbCount = document.getElementById('lb-count');
   const btnZoomIn = document.getElementById('lb-zoom-in');
@@ -265,7 +263,9 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // кнопки
- 
+  closeBtn.addEventListener('click', closeLightbox);
+  prevBtn.addEventListener('click', (e) => { e.stopPropagation(); show(currentIndex - 1); });
+  nextBtn.addEventListener('click', (e) => { e.stopPropagation(); show(currentIndex + 1); });
   
 
   // клик по фону — закрыть
@@ -319,9 +319,6 @@ document.addEventListener("DOMContentLoaded", () => {
     if (e.key === '-') setScale(scale / 1.2);
     if (e.key.toLowerCase() === 'r') resetTransform();
   });
-closeBtn.addEventListener("click", closeLightbox);
-  nextBtn.addEventListener("click", nextImage);
-  prevBtn.addEventListener("click", prevImage);
   // Старт: загрузка авто
   loadCars();
 });
