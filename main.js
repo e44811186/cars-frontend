@@ -15,23 +15,27 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  burger.addEventListener("click", toggleMenu);
-  overlay.addEventListener("click", toggleMenu);
-  menu.querySelectorAll("a").forEach(link => link.addEventListener("click", toggleMenu));
+  if (burger && menu && overlay) {
+    burger.addEventListener("click", toggleMenu);
+    overlay.addEventListener("click", toggleMenu);
+    menu.querySelectorAll("a").forEach(link => link.addEventListener("click", toggleMenu));
+  }
 
   // --- Маска телефона ---
   const phoneInput = document.getElementById("phone");
-  phoneInput.addEventListener("input", function () {
-    let value = this.value.replace(/\D/g, '').substring(0, 11);
-    let formatted = '+';
-    if (value[0] === '7' || value[0] === '8') { formatted += '7 '; value = value.substring(1); }
-    else { formatted += value[0]; value = value.substring(1); }
-    if (value.length > 0) formatted += '(' + value.substring(0, 3);
-    if (value.length >= 4) formatted += ') ' + value.substring(3, 6);
-    if (value.length >= 7) formatted += '-' + value.substring(6, 8);
-    if (value.length >= 9) formatted += '-' + value.substring(8, 10);
-    this.value = formatted;
-  });
+  if (phoneInput) {
+    phoneInput.addEventListener("input", function () {
+      let value = this.value.replace(/\D/g, '').substring(0, 11);
+      let formatted = '+';
+      if (value[0] === '7' || value[0] === '8') { formatted += '7 '; value = value.substring(1); }
+      else { formatted += value[0]; value = value.substring(1); }
+      if (value.length > 0) formatted += '(' + value.substring(0, 3);
+      if (value.length >= 4) formatted += ') ' + value.substring(3, 6);
+      if (value.length >= 7) formatted += '-' + value.substring(6, 8);
+      if (value.length >= 9) formatted += '-' + value.substring(8, 10);
+      this.value = formatted;
+    });
+  }
 
   // --- Lazy loading ---
   const lazyObserver = new IntersectionObserver((entries, observer) => {
@@ -49,15 +53,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // --- Lightbox ---
   const lightbox = document.getElementById("lightbox");
-  const lightboxImg = lightbox.querySelector("img");
-  const closeBtn = lightbox.querySelector(".close");
-  const nextBtn = lightbox.querySelector(".next");
-  const prevBtn = lightbox.querySelector(".prev");
+  let lightboxImg, closeBtn, nextBtn, prevBtn;
+  if (lightbox) {
+    lightboxImg = lightbox.querySelector("img");
+    closeBtn = lightbox.querySelector(".close");
+    nextBtn = lightbox.querySelector(".next");
+    prevBtn = lightbox.querySelector(".prev");
+  }
 
   let currentImages = [];
   let currentIndex = 0;
 
   function openLightbox(images, index = 0) {
+    if (!lightbox) return;
     currentImages = images;
     currentIndex = index;
     renderLightbox();
@@ -66,14 +74,14 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function closeLightbox() {
+    if (!lightbox) return;
     lightbox.classList.remove("active");
     document.body.classList.remove("no-scroll");
   }
 
   function renderLightbox() {
-    if (currentImages.length > 0) {
-      lightboxImg.src = currentImages[currentIndex];
-    }
+    if (!lightboxImg || currentImages.length === 0) return;
+    lightboxImg.src = currentImages[currentIndex];
   }
 
   function nextImage() {
@@ -90,18 +98,20 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // --- События lightbox ---
-  closeBtn.addEventListener("click", closeLightbox);
-  nextBtn.addEventListener("click", nextImage);
-  prevBtn.addEventListener("click", prevImage);
+  if (closeBtn && nextBtn && prevBtn) {
+    closeBtn.addEventListener("click", closeLightbox);
+    nextBtn.addEventListener("click", nextImage);
+    prevBtn.addEventListener("click", prevImage);
+  }
 
-  // зум по клику
-  lightboxImg.addEventListener("click", () => {
-    lightboxImg.classList.toggle("zoomed");
-  });
+  if (lightboxImg) {
+    lightboxImg.addEventListener("click", () => {
+      lightboxImg.classList.toggle("zoomed");
+    });
+  }
 
   document.addEventListener("keydown", e => {
-    if (!lightbox.classList.contains("active")) return;
+    if (!lightbox || !lightbox.classList.contains("active")) return;
     if (e.key === "ArrowRight") nextImage();
     if (e.key === "ArrowLeft") prevImage();
     if (e.key === "Escape") closeLightbox();
@@ -122,6 +132,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const article = document.createElement('article');
     article.className = 'car';
+    article.style.opacity = 0;
+    article.style.transform = 'translateY(30px)';
+    article.style.transition = 'opacity 0.5s, transform 0.5s';
+
     article.innerHTML = `
       <img data-src="${firstImage}" alt="car" class="lazy car-thumbnail">
       <div class="car-details">
@@ -132,10 +146,10 @@ document.addEventListener("DOMContentLoaded", () => {
             ${["на 1 сутки", "на 1-3 суток", "на 3+ суток"].map((p, i) => `
               <li>
                 <div class="car-period">${p}</div>
-                <div class="car-price">${prices[i]} P${i > 0 ? '<span>/сут</span>' : ''}</div>
+                <div class="car-price">${prices[i]} ₽${i > 0 ? '<span>/сут</span>' : ''}</div>
               </li>`).join('')}
           </ul>
-          <a href="#order" class="button white-button" data-title="${car.brand} ${car.model}">Забронировать</a>
+          <a href="#order" class="button white-button">Забронировать</a>
         </div>
       </div>
     `;
@@ -192,19 +206,22 @@ document.addEventListener("DOMContentLoaded", () => {
       renderBrands();
       renderCars(allCars);
     } catch (err) {
-      console.error(err);
+      console.error("Ошибка загрузки авто:", err);
     }
   }
 
-  document.getElementById('orderForm').addEventListener('submit', e => {
-    e.preventDefault();
-    const car = document.getElementById('car').value.trim();
-    const name = document.getElementById('name').value.trim();
-    const phone = document.getElementById('phone').value.trim();
-    if (!car || !name || !phone) return;
-    alert(`Заявка отправлена!\nАвто: ${car}\nИмя: ${name}\nТелефон: ${phone}`);
-    e.target.reset();
-  });
+  const orderForm = document.getElementById('orderForm');
+  if (orderForm) {
+    orderForm.addEventListener('submit', e => {
+      e.preventDefault();
+      const car = document.getElementById('car').value.trim();
+      const name = document.getElementById('name').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+      if (!car || !name || !phone) return;
+      alert(`Заявка отправлена!\nАвто: ${car}\nИмя: ${name}\nТелефон: ${phone}`);
+      e.target.reset();
+    });
+  }
 
   loadCars();
 });
