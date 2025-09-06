@@ -266,8 +266,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // кнопки
  
-  prevBtn.addEventListener('click', (e) => { e.stopPropagation(); show(currentIndex - 1); });
-  nextBtn.addEventListener('click', (e) => { e.stopPropagation(); show(currentIndex + 1); });
+  
 
   // клик по фону — закрыть
   lightbox.addEventListener('click', (e) => {
