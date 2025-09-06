@@ -135,3 +135,46 @@ document.addEventListener("DOMContentLoaded", () => {
 
   loadCars();
 });
+// === Lightbox ===
+let currentIndex = 0;
+let currentImages = [];
+
+function openLightbox(images) {
+  currentImages = images;
+  currentIndex = 0;
+  renderLightbox();
+  document.getElementById("lightbox").classList.add("active");
+}
+
+function closeLightbox() {
+  document.getElementById("lightbox").classList.remove("active");
+}
+
+function renderLightbox() {
+  const img = document.querySelector("#lightbox img");
+  if (currentImages.length > 0) {
+    img.src = currentImages[currentIndex];
+  }
+}
+
+function nextImage() {
+  if (currentImages.length > 1) {
+    currentIndex = (currentIndex + 1) % currentImages.length;
+    renderLightbox();
+  }
+}
+
+function prevImage() {
+  if (currentImages.length > 1) {
+    currentIndex = (currentIndex - 1 + currentImages.length) % currentImages.length;
+    renderLightbox();
+  }
+}
+
+// обработка клавиш
+document.addEventListener("keydown", e => {
+  if (!document.getElementById("lightbox").classList.contains("active")) return;
+  if (e.key === "ArrowRight") nextImage();
+  if (e.key === "ArrowLeft") prevImage();
+  if (e.key === "Escape") closeLightbox();
+});
