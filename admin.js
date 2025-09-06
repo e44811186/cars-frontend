@@ -33,11 +33,22 @@ function renderCars(cars) {
           : '—'}
       </td>
       <td class="actions">
-        <button onclick="editCar(${car.id}, '${car.brand}', '${car.model}', ${car.year}, ${car.price}, ${JSON.stringify(car.images)}, '${car.description.replace(/'/g, "\\'")}')">✏️ Редактировать</button>
+        <button class="edit-btn" data-id="${car.id}">✏️ Редактировать</button>
         <button onclick="deleteCar(${car.id})">🗑 Удалить</button>
       </td>
     `;
     carsTable.appendChild(tr);
+
+    // исправляем заполнение формы
+    tr.querySelector(".edit-btn").addEventListener("click", () => {
+      document.getElementById('carId').value = car.id;
+      document.getElementById('brand').value = car.brand;
+      document.getElementById('model').value = car.model;
+      document.getElementById('year').value = car.year;
+      document.getElementById('price').value = car.price;
+      document.getElementById('imageUrls').value = car.images ? car.images.join("\n") : "";
+      document.getElementById('description').value = car.description;
+    });
   });
 }
 
@@ -103,16 +114,6 @@ async function deleteCar(id) {
     console.error(err);
     alert("Ошибка при удалении");
   }
-}
-
-function editCar(id, brand, model, year, price, images, description) {
-  document.getElementById('carId').value = id;
-  document.getElementById('brand').value = brand;
-  document.getElementById('model').value = model;
-  document.getElementById('year').value = year;
-  document.getElementById('price').value = price;
-  document.getElementById('imageUrls').value = images ? images.join("\n") : "";
-  document.getElementById('description').value = description;
 }
 
 searchInput.addEventListener('input', () => {
