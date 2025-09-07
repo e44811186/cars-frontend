@@ -23,7 +23,7 @@ h1, h3 { color: #f8ff23;}
 .main-info p { font-size: 24px; line-height: 120%; color: #d4d4d4; max-width: 440px; margin-bottom: 60px;}
 .main-image { position: absolute; top: 78px; right: -576px; z-index: -1;}
 .cars { background-color: #000000; padding: 130px 0;}
-.cars h2 { font-size: 65px; font-weight: normal;}
+.cars h2 { font-size: 65px; font-weight: normal; text-align: center;}
 .cars-content { display: flex; padding-top: 60px;}
 .cars-filter { margin-right: 77px; align-self: flex-start; position: sticky; top: 20px;}
 .cars-filter ul { display: flex; flex-direction: column; row-gap: 15px; list-style: none;}
