@@ -162,7 +162,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const data = { name, phone, carId: carObj.id };
 
       try {
-        const res = await fetch(`${API_BASE.replace('/cars', '/orders')}`, {
+        const res = await fetch(`${API_BASE.replace('cars', 'orders')}`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(data)
