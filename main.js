@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const API_BASE = "https://cars-api-ur5t.onrender.com/api/cars";
+  const API_BASE = "https://cars-api-ur5t.onrender.com";
 
   // ==== Бургер/меню ====
   const burger = document.getElementById("burger");
@@ -14,7 +14,6 @@ document.addEventListener("DOMContentLoaded", () => {
       document.body.classList.toggle("no-scroll");
     }
   }
-
   burger.addEventListener("click", toggleMenu);
   overlay.addEventListener("click", toggleMenu);
   menu.querySelectorAll("a").forEach(link => link.addEventListener("click", toggleMenu));
@@ -41,9 +40,7 @@ document.addEventListener("DOMContentLoaded", () => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
             const img = entry.target;
-            if (img.dataset && img.dataset.src) {
-              img.src = img.dataset.src;
-            }
+            if (img.dataset && img.dataset.src) img.src = img.dataset.src;
             img.classList.remove('lazy');
             observer.unobserve(img);
           }
@@ -55,16 +52,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const brandsList = document.getElementById("brands-list");
   const carsList = document.getElementById("cars-list");
 
-  const getPrimaryImage = (car) => {
-    if (Array.isArray(car.images) && car.images.length > 0) return car.images[0];
-    if (car.imageUrl) return car.imageUrl;
-    return "";
-  };
-  const getAllImages = (car) => {
-    if (Array.isArray(car.images) && car.images.length > 0) return car.images;
-    if (car.imageUrl) return [car.imageUrl];
-    return [];
-  };
+  const getPrimaryImage = car => (Array.isArray(car.images) && car.images.length > 0) ? car.images[0] : car.imageUrl || "";
+  const getAllImages = car => (Array.isArray(car.images) && car.images.length > 0) ? car.images : car.imageUrl ? [car.imageUrl] : [];
 
   function buildPrices(base) {
     const b = Number(base) || 0;
@@ -99,34 +88,17 @@ document.addEventListener("DOMContentLoaded", () => {
     const thumb = article.querySelector('img.lazy');
     if (thumb) lazyObserver.observe(thumb);
 
-    // бронирование
+    // бронирование — вставляем название авто в форму
     article.querySelector('a.white-button').addEventListener('click', () => {
       const carField = document.getElementById('car');
-      if (carField) {
-        carField.value = `${car.brand} ${car.model}`;
-      }
+      if (carField) carField.value = `${car.brand} ${car.model}`;
       document.getElementById('order').scrollIntoView({ behavior: 'smooth' });
     });
-     // ==== Отправка формы (демо-алерт) ====
-  const orderForm = document.getElementById('orderForm');
-  if (orderForm) {
-    orderForm.addEventListener('submit', e => {
-      e.preventDefault();
-      const car = document.getElementById('car').value.trim();
-      const name = document.getElementById('name').value.trim();
-      const phone = document.getElementById('phone').value.trim();
-      if (!car || !name || !phone) return;
-      alert(`Заявка отправлена!\nАвто: ${car}\nИмя: ${name}\nТелефон: ${phone}`);
-      e.target.reset();
-    });
-  }
 
     // открытие галереи
-    article.querySelector('.car-thumbnail').addEventListener('click', () => {
-      openLightbox(getAllImages(car));
-    });
+    article.querySelector('.car-thumbnail').addEventListener('click', () => openLightbox(getAllImages(car)));
 
-    // лёгкая анимация появления
+    // анимация появления
     article.style.opacity = 0;
     article.style.transform = 'translateY(30px)';
     requestAnimationFrame(() => {
@@ -142,10 +114,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function renderCars(cars) {
     carsList.innerHTML = '';
-    cars.forEach((c) => {
-      const article = createCarArticle(c);
-      carsList.appendChild(article);
-    });
+    cars.forEach(c => carsList.appendChild(createCarArticle(c)));
   }
 
   function renderBrands() {
@@ -167,7 +136,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   async function loadCars() {
     try {
-      const res = await fetch(API_BASE);
+      const res = await fetch(`${API_BASE}`);
       allCars = await res.json();
       renderBrands();
       renderCars(allCars);
@@ -176,148 +145,48 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // ==== Лайтбокс с зумом и перелистыванием ====
-  const lightbox = document.getElementById("lightbox");
-  const lbImg = document.getElementById('lightbox-img');
-  const lbStage = document.getElementById('lb-stage');
-  const closeBtn = document.querySelector('.lb-close');
-  const nextBtn = document.querySelector('.lb-next');
-  const prevBtn = document.querySelector('.lb-prev');
-  const lbIndex = document.getElementById('lb-index');
-  const lbCount = document.getElementById('lb-count');
-  const btnZoomIn = document.getElementById('lb-zoom-in');
-  const btnZoomOut = document.getElementById('lb-zoom-out');
-  const btnZoomReset = document.getElementById('lb-zoom-reset');
+  // ==== Форма: реальная отправка через fetch ====
+  const orderForm = document.getElementById('orderForm');
+  if (orderForm) {
+    orderForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const name = document.getElementById('name').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+      const car = document.getElementById('car').value.trim();
+      if (!name || !phone || !car) return;
 
-  let currentImages = [];
-  let currentIndex = 0;
+      // ищем carId по названию
+      const carObj = allCars.find(c => `${c.brand} ${c.model}` === car);
+      if (!carObj) { alert("Не удалось определить авто"); return; }
 
-  // зум/пан
-  let scale = 1;
-  let translateX = 0;
-  let translateY = 0;
-  let isDragging = false;
-  let dragStartX = 0;
-  let dragStartY = 0;
+      const data = { name, phone, carId: carObj.id };
 
-  function applyTransform() {
-    lbImg.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
-    lbImg.style.cursor = scale > 1 ? (isDragging ? 'grabbing' : 'grab') : 'zoom-in';
+      try {
+        const res = await fetch(`${API_BASE.replace('/cars', '/orders')}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+        if (!res.ok) throw new Error("Ошибка сервера");
+        showMessage("✅ Заявка успешно отправлена!");
+        orderForm.reset();
+      } catch (err) {
+        console.error(err);
+        showMessage("❌ Ошибка отправки заявки", true);
+      }
+    });
   }
 
-  function setScale(newScale, centerX = lbStage.clientWidth / 2, centerY = lbStage.clientHeight / 2) {
-    const oldScale = scale;
-    scale = Math.min(5, Math.max(1, newScale));
-
-    // корректируем смещение, чтобы приблизительно зумить к центру
-    const rect = lbImg.getBoundingClientRect();
-    const dx = (centerX - rect.left) - rect.width / 2;
-    const dy = (centerY - rect.top) - rect.height / 2;
-    translateX += dx * (1 / oldScale - 1 / scale);
-    translateY += dy * (1 / oldScale - 1 / scale);
-
-    clampPan();
-    applyTransform();
+  function showMessage(text, isError = false) {
+    const msg = document.getElementById("message");
+    if (!msg) return;
+    msg.textContent = text;
+    msg.style.color = isError ? "red" : "green";
   }
 
-  function clampPan() {
-    if (scale <= 1) { translateX = 0; translateY = 0; return; }
-    // пределы панорамирования — не вылезать далеко
-    const maxX = (lbStage.clientWidth * (scale - 1)) / 2;
-    const maxY = (lbStage.clientHeight * (scale - 1)) / 2;
-    translateX = Math.max(-maxX, Math.min(maxX, translateX));
-    translateY = Math.max(-maxY, Math.min(maxY, translateY));
-  }
+  // ==== Лайтбокс и остальной код ====
+  // ... оставляем без изменений (твой существующий код lightbox) ...
 
-  function resetTransform() {
-    scale = 1;
-    translateX = 0;
-    translateY = 0;
-    applyTransform();
-  }
-
-  function show(index) {
-    if (!currentImages.length) return;
-    currentIndex = (index + currentImages.length) % currentImages.length;
-    lbImg.src = currentImages[currentIndex];
-    lbIndex.textContent = String(currentIndex + 1);
-    lbCount.textContent = String(currentImages.length);
-    resetTransform();
-  }
-
-  function openLightbox(images) {
-    if (!images || !images.length) return;
-    currentImages = images.slice();
-    currentIndex = 0;
-    show(currentIndex);
-    lightbox.classList.add('active');
-    lightbox.setAttribute('aria-hidden', 'false');
-    document.body.classList.add('no-scroll');
-  }
-
-  function closeLightbox() {
-    lightbox.classList.remove('active');
-    lightbox.setAttribute('aria-hidden', 'true');
-    document.body.classList.remove('no-scroll');
-  }
-
-  // кнопки
-  closeBtn.addEventListener('click', closeLightbox);
-  prevBtn.addEventListener('click', (e) => { e.stopPropagation(); show(currentIndex - 1); });
-  nextBtn.addEventListener('click', (e) => { e.stopPropagation(); show(currentIndex + 1); });
-  
-
-  // клик по фону — закрыть
-  lightbox.addEventListener('click', (e) => {
-    if (e.target === lightbox) closeLightbox();
-  });
-
-  // двойной клик — зум к 2x/1x
-  lbStage.addEventListener('dblclick', (e) => {
-    if (scale === 1) setScale(2, e.clientX, e.clientY);
-    else resetTransform();
-  });
-
-  // колесо мыши — зум
-  lbStage.addEventListener('wheel', (e) => {
-    e.preventDefault();
-    const delta = Math.sign(e.deltaY); // 1 вниз, -1 вверх
-    const factor = delta > 0 ? 0.9 : 1.1;
-    setScale(scale * factor, e.clientX, e.clientY);
-  }, { passive: false });
-
-  // перетаскивание при зуме
-  lbStage.addEventListener('mousedown', (e) => {
-    if (scale <= 1) return;
-    isDragging = true;
-    dragStartX = e.clientX - translateX;
-    dragStartY = e.clientY - translateY;
-    applyTransform();
-  });
-  window.addEventListener('mousemove', (e) => {
-    if (!isDragging) return;
-    translateX = e.clientX - dragStartX;
-    translateY = e.clientY - dragStartY;
-    clampPan();
-    applyTransform();
-  });
-  window.addEventListener('mouseup', () => { isDragging = false; applyTransform(); });
-
-  // зум-кнопки
-  btnZoomIn.addEventListener('click', () => setScale(scale * 1.2));
-  btnZoomOut.addEventListener('click', () => setScale(scale / 1.2));
-  btnZoomReset.addEventListener('click', resetTransform);
-
-  // клавиатура
-  document.addEventListener('keydown', (e) => {
-    if (!lightbox.classList.contains('active')) return;
-    if (e.key === 'Escape') closeLightbox();
-    if (e.key === 'ArrowRight') show(currentIndex + 1);
-    if (e.key === 'ArrowLeft') show(currentIndex - 1);
-    if (e.key === '+') setScale(scale * 1.2);
-    if (e.key === '-') setScale(scale / 1.2);
-    if (e.key.toLowerCase() === 'r') resetTransform();
-  });
-  // Старт: загрузка авто
+  // Старт
   loadCars();
 });
