@@ -1,8 +1,6 @@
   document.addEventListener("DOMContentLoaded", () => {
   const API_BASE = "https://cars-api-ur5t.onrender.com/api";
 
-  let allCars = [];
-
   // ==== Бургер/меню ====
   const burger = document.getElementById("burger");
   const menu = document.getElementById("menu");
