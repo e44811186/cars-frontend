@@ -1,5 +1,7 @@
-document.addEventListener("DOMContentLoaded", () => {
-  const API_BASE = "https://cars-api-ur5t.onrender.com";
+  document.addEventListener("DOMContentLoaded", () => {
+  const API_BASE = "https://cars-api-ur5t.onrender.com/api";
+
+  let allCars = [];
 
   // ==== Бургер/меню ====
   const burger = document.getElementById("burger");
@@ -134,37 +136,35 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  async function loadCars() {
+   async function loadCars() {
     try {
-      const res = await fetch(`${API_BASE}`);
+      const res = await fetch(`${API_BASE}/cars`);
       allCars = await res.json();
       renderBrands();
       renderCars(allCars);
     } catch (err) {
-      console.error('Ошибка загрузки авто:', err);
+      console.error("Ошибка загрузки авто:", err);
     }
   }
 
-  // ==== Форма: реальная отправка через fetch ====
-  const orderForm = document.getElementById('orderForm');
+  const orderForm = document.getElementById("orderForm");
   if (orderForm) {
-    orderForm.addEventListener('submit', async (e) => {
+    orderForm.addEventListener("submit", async e => {
       e.preventDefault();
-      const name = document.getElementById('name').value.trim();
-      const phone = document.getElementById('phone').value.trim();
-      const car = document.getElementById('car').value.trim();
+      const name = document.getElementById("name").value.trim();
+      const phone = document.getElementById("phone").value.trim();
+      const car = document.getElementById("car").value.trim();
       if (!name || !phone || !car) return;
 
-      // ищем carId по названию
       const carObj = allCars.find(c => `${c.brand} ${c.model}` === car);
-      if (!carObj) { alert("Не удалось определить авто"); return; }
+      if (!carObj) { showMessage("Не удалось определить авто", true); return; }
 
       const data = { name, phone, carId: carObj.id };
 
       try {
-        const res = await fetch(`${API_BASE.replace('cars', 'orders')}`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+        const res = await fetch(`${API_BASE}/orders`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify(data)
         });
         if (!res.ok) throw new Error("Ошибка сервера");
@@ -184,9 +184,9 @@ document.addEventListener("DOMContentLoaded", () => {
     msg.style.color = isError ? "red" : "green";
   }
 
-  // ==== Лайтбокс и остальной код ====
-  // ... оставляем без изменений (твой существующий код lightbox) ...
+  // ==== Другой твой код: бренды, рендер, лайтбокс и т.д. ====
 
   // Старт
   loadCars();
 });
+
