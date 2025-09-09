@@ -109,11 +109,6 @@ document.addEventListener("click", e => {
   }
 });
 
-
-      // редиректим в order.html
-      window.location.href = "order.html";
-    });
-
     // открытие галереи
     article.querySelector(".car-thumbnail").addEventListener("click", () => {
       openLightbox(getAllImages(car));
