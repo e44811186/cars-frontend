@@ -140,6 +140,17 @@ h1, h3 { color: #f8ff23;}
   cursor: pointer;
   font-size: 14px;
 }
+button:disabled,
+button[disabled] {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.message {
+  margin-top: 12px;
+  font-weight: 500;
+}
+
 
 /* запрет прокрутки фона при модалке/меню */
 .no-scroll { overflow: hidden; }
