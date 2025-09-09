@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const API_BASE = "https://cars-api-ur5t.onrender.com/api";
   const form = document.getElementById("orderform");
   const carSelect = document.getElementById("car-select");
-  
+  const carManual = document.getElementById("car-manual") || document.getElementById("car");
   const msg = document.getElementById("message");
   const phone = document.getElementById("phone");
   const submitBtn = form ? form.querySelector("button[type=submit]") : null;
