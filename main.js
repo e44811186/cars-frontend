@@ -21,27 +21,6 @@ document.addEventListener("DOMContentLoaded", () => {
     menu.querySelectorAll("a").forEach(link => link.addEventListener("click", toggleMenu));
   }
 
-  // ==== Маска телефона ====
-  const phoneInput = document.getElementById("phone");
-  if (phoneInput) {
-    phoneInput.addEventListener("input", function () {
-      let value = this.value.replace(/\D/g, "").substring(0, 11);
-      let formatted = "+";
-      if (value[0] === "7" || value[0] === "8") {
-        formatted += "7 ";
-        value = value.substring(1);
-      } else if (value.length > 0) {
-        formatted += value[0] + " ";
-        value = value.substring(1);
-      }
-      if (value.length > 0) formatted += "(" + value.substring(0, 3);
-      if (value.length >= 4) formatted += ") " + value.substring(3, 6);
-      if (value.length >= 7) formatted += "-" + value.substring(6, 8);
-      if (value.length >= 9) formatted += "-" + value.substring(8, 10);
-      this.value = formatted;
-    });
-  }
-
   // ==== Lazy-load изображений ====
   const lazyObserver =
     "IntersectionObserver" in window
@@ -120,28 +99,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // кнопка "Забронировать"
     article.querySelector("a.white-button").addEventListener("click", e => {
-      const carField = document.getElementById("car");
-      if (carField) {
-        carField.value = `${car.brand} ${car.model}`;
-        carField.dataset.id = car.id; // сохраняем id машины
-      }
-      document.getElementById("order").scrollIntoView({ behavior: "smooth" });
+      e.preventDefault();
+
+      // сохраняем выбранное авто в localStorage
+      localStorage.setItem(
+        "orderData",
+        JSON.stringify({ carId: car.id, carName: `${car.brand} ${car.model}` })
+      );
+
+      // редиректим в order.html
+      window.location.href = "order.html";
     });
 
     // открытие галереи
     article.querySelector(".car-thumbnail").addEventListener("click", () => {
       openLightbox(getAllImages(car));
-    });
-
-    // анимация появления
-    article.style.opacity = 0;
-    article.style.transform = "translateY(30px)";
-    requestAnimationFrame(() => {
-      setTimeout(() => {
-        article.style.transition = "opacity 0.5s, transform 0.5s";
-        article.style.opacity = 1;
-        article.style.transform = "translateY(0)";
-      }, 0);
     });
 
     return article;
@@ -183,49 +155,8 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // ==== Отправка формы ====
-  const orderForm = document.getElementById("orderForm");
-  if (orderForm) {
-    orderForm.addEventListener("submit", async e => {
-      e.preventDefault();
-
-      const carField = document.getElementById("car");
-      const carId = carField.dataset.id; // берем id, а не текст
-      const name = document.getElementById("name").value.trim();
-      const phone = document.getElementById("phone").value.trim();
-
-      if (!carId || !name || !phone) {
-        showMessage("❌ Заполните все поля!", true);
-        return;
-      }
-
-      const data = { name, phone, carId: Number(carId) };
-
-      try {
-        const res = await fetch(`${API_BASE}/orders`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(data),
-        });
-
-        if (!res.ok) throw new Error("Ошибка сервера");
-        showMessage("✅ Заявка успешно отправлена!");
-        orderForm.reset();
-        carField.dataset.id = ""; // очищаем id
-      } catch (err) {
-        console.error("Ошибка при заказе:", err);
-        showMessage("❌ Ошибка отправки заявки", true);
-      }
-    });
-  }
-
-  function showMessage(text, isError = false) {
-    const msg = document.getElementById("message");
-    if (!msg) return;
-    msg.textContent = text;
-    msg.style.color = isError ? "red" : "green";
-  }
-
+  // ==== Лайтбокс ====
+  // (оставляем как у тебя)
   // ==== Лайтбокс ====
   const lightbox = document.getElementById("lightbox");
   const lbImg = document.getElementById("lightbox-img");
