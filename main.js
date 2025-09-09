@@ -97,15 +97,18 @@ document.addEventListener("DOMContentLoaded", () => {
     const thumb = article.querySelector("img.lazy");
     if (thumb) lazyObserver.observe(thumb);
 
-    // кнопка "Забронировать"
-    article.querySelector("a.white-button").addEventListener("click", e => {
-      e.preventDefault();
+   // кнопка "Забронировать" в карточке авто
+document.addEventListener("click", e => {
+  if (e.target.classList.contains("book-btn")) {
+    const card = e.target.closest(".car-card");
+    const carId = card.dataset.id;
+    const carName = card.querySelector(".car-title").textContent.trim();
 
-      // сохраняем выбранное авто в localStorage
-      localStorage.setItem(
-        "orderData",
-        JSON.stringify({ carId: car.id, carName: `${car.brand} ${car.model}` })
-      );
+    localStorage.setItem("orderData", JSON.stringify({ carId, carName }));
+    window.location.href = "order.html"; // переход на страницу заказа
+  }
+});
+
 
       // редиректим в order.html
       window.location.href = "order.html";
