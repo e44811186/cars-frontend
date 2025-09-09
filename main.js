@@ -7,12 +7,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const overlay = document.querySelector(".menu-overlay");
 
   function toggleMenu() {
+    if (!burger || !menu || !overlay) return;
     burger.classList.toggle("active");
     menu.classList.toggle("active");
     overlay.classList.toggle("active");
-    if (window.innerWidth <= 768) {
-      document.body.classList.toggle("no-scroll");
-    }
+    if (window.innerWidth <= 768) document.body.classList.toggle("no-scroll");
   }
 
   if (burger && overlay && menu) {
@@ -21,30 +20,19 @@ document.addEventListener("DOMContentLoaded", () => {
     menu.querySelectorAll("a").forEach(link => link.addEventListener("click", toggleMenu));
   }
 
-  // ==== Lazy-load изображений ====
-  const lazyObserver =
-    "IntersectionObserver" in window
-      ? new IntersectionObserver(
-          (entries, observer) => {
-            entries.forEach(entry => {
-              if (entry.isIntersecting) {
-                const img = entry.target;
-                if (img.dataset && img.dataset.src) {
-                  img.src = img.dataset.src;
-                }
-                img.classList.remove("lazy");
-                observer.unobserve(img);
-              }
-            });
-          },
-          { rootMargin: "0px 0px 200px 0px", threshold: 0.01 }
-        )
-      : {
-          observe: img => {
-            img.src = img.dataset.src;
-            img.classList.remove("lazy");
-          },
-        };
+  // ==== Lazy observer (safe fallback) ====
+  const lazyObserver = ('IntersectionObserver' in window)
+    ? new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const img = entry.target;
+            if (img.dataset && img.dataset.src) img.src = img.dataset.src;
+            img.classList.remove('lazy');
+            observer.unobserve(img);
+          }
+        });
+      }, { rootMargin: "0px 0px 200px 0px", threshold: 0.01 })
+    : { observe: (img) => { img.src = img.dataset.src; img.classList.remove('lazy'); } };
 
   let allCars = [];
   const brandsList = document.getElementById("brands-list");
@@ -70,73 +58,112 @@ document.addEventListener("DOMContentLoaded", () => {
     const prices = buildPrices(car.price);
     const firstImage = getPrimaryImage(car);
 
-    const article = document.createElement("article");
-    article.className = "car";
+    const article = document.createElement('article');
+    article.className = 'car';
+    article.dataset.id = car.id;
     article.innerHTML = `
       <img data-src="${firstImage}" alt="${car.brand} ${car.model}" class="lazy car-thumbnail" loading="lazy">
       <div class="car-details">
-        <h4>${car.brand} ${car.model} (${car.year})</h4>
+        <h4 class="car-title">${car.brand} ${car.model} (${car.year})</h4>
         <p>${car.description || ""}</p>
         <div class="car-action">
           <ul>
-            ${["на 1 сутки", "на 1-3 суток", "на 3+ суток"]
-              .map(
-                (p, i) => `
+            ${["на 1 сутки", "на 1-3 суток", "на 3+ суток"].map((p, i) => `
               <li>
                 <div class="car-period">${p}</div>
-                <div class="car-price">${prices[i]} ₽${i > 0 ? "<span>/сут</span>" : ""}</div>
-              </li>`
-              )
-              .join("")}
+                <div class="car-price">${prices[i]} ₽${i > 0 ? '<span>/сут</span>' : ''}</div>
+              </li>`).join('')}
           </ul>
-          <a href="#order" class="button white-button" data-id="${car.id}" data-title="${car.brand} ${car.model}">Забронировать</a>
+          <a href="#order" class="button white-button book-btn" data-id="${car.id}" data-title="${car.brand} ${car.model}">Забронировать</a>
         </div>
       </div>
     `;
 
-    const thumb = article.querySelector("img.lazy");
+    // lazy load
+    const thumb = article.querySelector('img.lazy');
     if (thumb) lazyObserver.observe(thumb);
 
-   // кнопка "Забронировать" в карточке авто
-document.addEventListener("click", e => {
-  if (e.target.classList.contains("book-btn")) {
-    const card = e.target.closest(".car-card");
-    const carId = card.dataset.id;
-    const carName = card.querySelector(".car-title").textContent.trim();
+    // кнопка "Забронировать"
+    const bookBtn = article.querySelector('a.book-btn');
+    if (bookBtn) {
+      bookBtn.addEventListener('click', (e) => {
+        e.preventDefault(); // мы сами обработаем scroll/redirect
 
-    localStorage.setItem("orderData", JSON.stringify({ carId, carName }));
-    window.location.href = "order.html"; // переход на страницу заказа
-  }
-});
+        const carObj = { carId: car.id, carName: `${car.brand} ${car.model}` };
+        // сохраняем для order.html
+        localStorage.setItem('orderData', JSON.stringify(carObj));
 
-    // открытие галереи
-    article.querySelector(".car-thumbnail").addEventListener("click", () => {
-      openLightbox(getAllImages(car));
+        // если форма заказа на той же странице — скроллим и подставляем
+        const orderSection = document.getElementById('order') || document.getElementById('orderForm') || document.querySelector('.order');
+        if (orderSection) {
+          // подставляем значение, если поле есть
+          const fieldCar = document.getElementById('car') || document.getElementById('car-manual') || document.getElementById('car-select');
+          if (fieldCar) {
+            if (fieldCar.tagName.toLowerCase() === 'select') {
+              // если select — попробуем выбрать опцию (если есть)
+              const opt = Array.from(fieldCar.options).find(o => o.textContent.trim().startsWith(carObj.carName));
+              if (opt) opt.selected = true;
+              else {
+                // если нет — оставляем ручной ввод (если есть)
+                const manual = document.getElementById('car-manual');
+                if (manual) manual.value = carObj.carName;
+              }
+            } else {
+              fieldCar.value = carObj.carName;
+              // сохраняем id в data-attr если есть
+              if (fieldCar.dataset) fieldCar.dataset.id = carObj.carId;
+            }
+          }
+          // плавный скролл
+          orderSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        } else {
+          // нет формы на этой странице — переходим на order.html
+          window.location.href = 'order.html';
+        }
+      });
+    }
+
+    // открыть галерею по клику на картинку
+    const thumbImg = article.querySelector('.car-thumbnail');
+    if (thumbImg) thumbImg.addEventListener('click', () => openLightbox(getAllImages(car)));
+
+    // анимация появления
+    article.style.opacity = 0;
+    article.style.transform = 'translateY(30px)';
+    requestAnimationFrame(() => {
+      setTimeout(() => {
+        article.style.transition = 'opacity 0.5s, transform 0.5s';
+        article.style.opacity = 1;
+        article.style.transform = 'translateY(0)';
+      }, 0);
     });
 
     return article;
   }
 
   function renderCars(cars) {
-    carsList.innerHTML = "";
-    cars.forEach(c => {
+    if (!carsList) return;
+    carsList.innerHTML = '';
+    cars.forEach((c) => {
       const article = createCarArticle(c);
       carsList.appendChild(article);
     });
   }
 
   function renderBrands() {
-    brandsList.innerHTML = "";
+    if (!brandsList) return;
+    brandsList.innerHTML = '';
     const uniq = ["Все марки", ...Array.from(new Set(allCars.map(c => c.brand)))];
     uniq.forEach((brand, idx) => {
-      const li = document.createElement("li");
+      const li = document.createElement('li');
       li.textContent = brand;
-      if (idx === 0) li.classList.add("active");
-      li.addEventListener("click", () => {
-        Array.from(brandsList.children).forEach(el => el.classList.remove("active"));
-        li.classList.add("active");
-        renderCars(brand === "Все марки" ? allCars : allCars.filter(c => c.brand === brand));
-        document.getElementById("cars-content").scrollIntoView({ behavior: "instant" });
+      if (idx === 0) li.classList.add('active');
+      li.addEventListener('click', () => {
+        Array.from(brandsList.children).forEach(el => el.classList.remove('active'));
+        li.classList.add('active');
+        renderCars(brand === 'Все марки' ? allCars : allCars.filter(c => c.brand === brand));
+        const carsContent = document.getElementById('cars-content');
+        if (carsContent) carsContent.scrollIntoView({ behavior: 'instant' });
       });
       brandsList.appendChild(li);
     });
@@ -149,12 +176,10 @@ document.addEventListener("click", e => {
       renderBrands();
       renderCars(allCars);
     } catch (err) {
-      console.error("Ошибка загрузки авто:", err);
+      console.error('Ошибка загрузки авто:', err);
     }
   }
 
-  // ==== Лайтбокс ====
-  // (оставляем как у тебя)
   // ==== Лайтбокс ====
   const lightbox = document.getElementById("lightbox");
   const lbImg = document.getElementById("lightbox-img");
@@ -303,6 +328,5 @@ document.addEventListener("click", e => {
     if (e.key.toLowerCase() === "r") resetTransform();
   });
 
-  // старт
   loadCars();
 });
