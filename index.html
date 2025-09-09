@@ -22,7 +22,7 @@
         <nav class="menu" id="menu">
           <ul>
             <li><a href="#cars">НАШ автопарк</a></li>
-            <li><a href="#order">Забронировать</a></li>
+            <li><a href="order.html">Забронировать</a></li>
             <li><a href="contacts.html">Контакты</a></li>
           </ul>
         </nav>
@@ -57,22 +57,6 @@
     </div>
   </section>
 
-  <section class="order" id="order">
-    <div class="container">
-      <img src="images/order-car.png" alt="order car" loading="lazy">
-      <form id="orderForm">
-        <h3>Забронируйте автомобиль</h3>
-        <p>Заполните контактные данные, и мы перезвоним вам для подтверждения бронирования</p>
-        <div class="order-form">
-          <input type="text" placeholder="Автомобиль" readonly required id="car">
-          <input type="text" placeholder="Ваше имя" required id="name">
-          <input type="text" placeholder="Ваш телефон" required minlength="10" id="phone">
-          <button class="button" type="submit" id="order-action">Забронировать</button>
-        </div>
-      </form>
-    </div>
-  </section>
-
   <footer class="footer">
     <div class="container">
       <div class="logo"><img src="images/logo.png" alt="Logo" loading="lazy"></div>
@@ -80,21 +64,17 @@
     </div>
   </footer>
 
-  <!-- Лайтбокс вынесен в конец body, чтобы перекрывать всё -->
+  <!-- Лайтбокс -->
   <div id="lightbox" aria-hidden="true">
     <button class="lb-btn lb-close" aria-label="Закрыть">&times;</button>
     <button class="lb-btn lb-prev" aria-label="Предыдущее">&#10094;</button>
-
     <div class="lb-stage" id="lb-stage">
       <img id="lightbox-img" alt="Фото авто" draggable="false">
     </div>
-
     <button class="lb-btn lb-next" aria-label="Следующее">&#10095;</button>
-
     <div class="lb-counter">
       <span id="lb-index">1</span>/<span id="lb-count">1</span>
     </div>
-
     <div class="lb-zoom">
       <button id="lb-zoom-out" aria-label="Уменьшить">−</button>
       <button id="lb-zoom-in" aria-label="Увеличить">+</button>
