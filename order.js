@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const API_BASE = "https://cars-api-ur5t.onrender.com/api";
   const form = document.getElementById("orderform");
   const carSelect = document.getElementById("car-select");
-  const carManual = document.getElementById("car-manual") || document.getElementById("car");
+  
   const msg = document.getElementById("message");
   const phone = document.getElementById("phone");
   const submitBtn = form ? form.querySelector("button[type=submit]") : null;
@@ -87,9 +87,9 @@ document.addEventListener("DOMContentLoaded", async () => {
       const phoneVal = (phone ? phone.value.trim() : "");
       // приоритет: select -> manual input
       const selectedId = carSelect ? carSelect.value : null;
-      const manualName = carManual ? carManual.value.trim() : null;
+      const carId = carSelect.value;
 
-      if (!name || !phoneVal || (!selectedId && !manualName)) {
+      if (!name || !phoneVal || !selectedId) {
         showMsg("❌ Заполните все поля!", true);
         pending = false;
         if (submitBtn) submitBtn.disabled = false;
