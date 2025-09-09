@@ -3,7 +3,11 @@ document.addEventListener("DOMContentLoaded", async () => {
   const form = document.getElementById("orderform");
   const select = document.getElementById("car-select");
   const manualInput = document.getElementById("car-manual");
+  const phoneInput = document.getElementById("phone");
   const msg = document.getElementById("message");
+
+  // Маска телефона
+  Inputmask({ mask: "+7 (999) 999-99-99" }).mask(phoneInput);
 
   // Подгружаем авто в select
   try {
@@ -53,6 +57,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     };
 
     try {
+      // Отправка на API
       const res = await fetch(`${API_BASE}/orders`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -60,6 +65,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       });
 
       if (!res.ok) throw new Error("Ошибка сервера");
+
       msg.textContent = "✅ Заявка отправлена!";
       msg.style.color = "green";
       form.reset();
