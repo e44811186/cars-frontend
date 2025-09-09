@@ -6,7 +6,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const msg = document.getElementById("message");
   const phoneInput = document.getElementById("phone");
 
-  // флаг отправки
   let isSubmitting = false;
 
   // === Маска телефона ===
@@ -35,7 +34,6 @@ document.addEventListener("DOMContentLoaded", () => {
       const res = await fetch(`${API_BASE}/cars`);
       if (!res.ok) throw new Error("Ошибка при загрузке авто");
       const cars = await res.json();
-      // очищаем и вставляем
       select.innerHTML = '<option value="">Выберите авто</option>';
       cars.forEach(c => {
         const opt = document.createElement("option");
@@ -45,82 +43,70 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     } catch (err) {
       console.error("Ошибка загрузки авто:", err);
-      // оставляем select с единственным вариантом
     }
   })();
 
-  // === Подставляем данные из localStorage (если переход с главной) ===
-  try {
-    const saved = localStorage.getItem("orderData");
-    if (saved) {
+  // === Подставляем выбранное авто из localStorage ===
+  const saved = localStorage.getItem("orderData");
+  if (saved) {
+    try {
       const data = JSON.parse(saved);
       if (data.carId) select.value = data.carId;
       if (data.carName) manualInput.value = data.carName;
-    }
-  } catch (e) { /* ignore */ }
+    } catch (_) {}
+  }
 
   // === Отправка формы ===
-  if (form) {
+  form.addEventListener("submit", async e => {
+    e.preventDefault();
+    if (isSubmitting) return;
+
+    const name = form.name.value.trim();
+    const phone = form.phone.value.trim();
+    const carId = select.value;
+    const carName = manualInput.value.trim();
+
+    if (!name || !phone || (!carId && !carName)) {
+      msg.textContent = "❌ Заполните все поля!";
+      msg.style.color = "red";
+      return;
+    }
+
+    isSubmitting = true;
     const submitBtn = form.querySelector("button[type=submit]");
-    form.addEventListener("submit", async e => {
-      e.preventDefault();
-      if (isSubmitting) return; // уже отправляется/отправлено
+    submitBtn.disabled = true;
+    const prevText = submitBtn.textContent;
+    submitBtn.textContent = "Отправка...";
 
-      const name = form.name.value.trim();
-      const phone = form.phone.value.trim();
-      const carId = select.value;
-      const carName = manualInput.value.trim();
+    const payload = {
+      name,
+      phone,
+      carId: carId ? Number(carId) : null,
+      carName: carName || null,
+    };
 
-      if (!name || !phone || (!carId && !carName)) {
-        msg.textContent = "❌ Заполните все поля!";
-        msg.style.color = "red";
-        return;
-      }
+    try {
+      const res = await fetch(`${API_BASE}/orders`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
 
-      // блокируем кнопку и ставим флаг
-      isSubmitting = true;
-      submitBtn.disabled = true;
-      const prevText = submitBtn.textContent;
-      submitBtn.textContent = "Отправка...";
+      if (!res.ok) throw new Error("Ошибка сервера");
 
-      const payload = {
-        name,
-        phone,
-        carId: carId ? Number(carId) : null,
-        carName: carName || null
-      };
+      msg.textContent = "✅ Заявка отправлена!";
+      msg.style.color = "green";
+      submitBtn.textContent = "Отправлено";
 
-      try {
-        const res = await fetch(`${API_BASE}/orders`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload)
-        });
-
-        if (!res.ok) {
-          // если сервер вернул ошибку — даём возможность повторить
-          const txt = await res.text().catch(()=>null);
-          throw new Error(txt || "Ошибка сервера");
-        }
-
-        // успех — оставляем кнопку заблокированной (чтобы нельзя было отправить ещё раз),
-        // и изменяем её текст/показываем сообщение
-        submitBtn.textContent = "Отправлено";
-        msg.textContent = "✅ Заявка отправлена! Спасибо, мы свяжемся с вами.";
-        msg.style.color = "green";
-
-        // очищаем локальное сохранение (если было)
-        try { localStorage.removeItem("orderData"); } catch(_) {}
-        // не снимаем isSubmitting — это и блокировка до перезагрузки страницы
-      } catch (err) {
-        console.error("Ошибка при отправке:", err);
-        msg.textContent = "❌ Ошибка отправки (попробуйте ещё раз)";
-        msg.style.color = "red";
-        // разблокируем, позволяем повторить
-        isSubmitting = false;
-        submitBtn.disabled = false;
-        submitBtn.textContent = prevText;
-      }
-    });
-  }
+      localStorage.removeItem("orderData");
+      // форма больше не активна до обновления страницы
+    } catch (err) {
+      console.error("Ошибка при отправке:", err);
+      msg.textContent = "❌ Ошибка отправки заявки";
+      msg.style.color = "red";
+      isSubmitting = false;
+      submitBtn.disabled = false;
+      submitBtn.textContent = prevText;
+    }
+  });
 });
