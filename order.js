@@ -1,10 +1,10 @@
-const API_BASE = "https://cars-api-ur5t.onrender.com";
+const API_BASE = "https://cars-api-ur5t.onrender.com/api";
 
-// Загрузка списка авто
+// Загружаем список авто
 async function loadCars() {
   try {
-    const res = await fetch(`${API_BASE}/api/cars`);
-    if (!res.ok) throw new Error("Ошибка загрузки списка машин");
+    const res = await fetch(`${API_BASE}/cars`);
+    if (!res.ok) throw new Error("Ошибка при загрузке списка авто");
 
     const cars = await res.json();
     const select = document.querySelector("select[name=car]");
@@ -16,54 +16,60 @@ async function loadCars() {
       opt.textContent = `${c.brand} ${c.model} (${c.year})`;
       select.appendChild(opt);
     });
+
+    // Если есть ?carId= в URL — выбираем сразу это авто
+    const urlParams = new URLSearchParams(window.location.search);
+    const carId = urlParams.get("carId");
+    if (carId) {
+      select.value = carId;
+    }
+
   } catch (err) {
     console.error(err);
-    showMessage("Не удалось загрузить список авто", true);
+    showMessage("❌ Не удалось загрузить список авто", true);
   }
 }
 
-// ==== Отправка формы ====
-  const orderForm = document.getElementById("orderForm");
-  if (orderForm) {
-    orderForm.addEventListener("submit", async e => {
-      e.preventDefault();
+// Отправка формы
+document.getElementById("orderform").addEventListener("submit", async (e) => {
+  e.preventDefault();
 
-      const carField = document.getElementById("car");
-      const carId = carField.dataset.id; // берем id, а не текст
-      const name = document.getElementById("name").value.trim();
-      const phone = document.getElementById("phone").value.trim();
+  const form = e.target;
+  const name = form.name.value.trim();
+  const phone = form.phone.value.trim();
+  const carId = Number(form.car.value);
 
-      if (!carId || !name || !phone) {
-        showMessage("❌ Заполните все поля!", true);
-        return;
-      }
+  if (!name || !phone || !carId) {
+    showMessage("❌ Заполните все поля", true);
+    return;
+  }
 
-      const data = { name, phone, carId: Number(carId) };
+  const data = { name, phone, carId };
 
-      try {
-        const res = await fetch(`${API_BASE}/orders`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(data),
-        });
-
-        if (!res.ok) throw new Error("Ошибка сервера");
-        showMessage("✅ Заявка успешно отправлена!");
-        orderForm.reset();
-        carField.dataset.id = ""; // очищаем id
-      } catch (err) {
-        console.error("Ошибка при заказе:", err);
-        showMessage("❌ Ошибка отправки заявки", true);
-      }
+  try {
+    const res = await fetch(`${API_BASE}/orders`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
     });
-  }
 
-  function showMessage(text, isError = false) {
-    const msg = document.getElementById("message");
-    if (!msg) return;
-    msg.textContent = text;
-    msg.style.color = isError ? "red" : "green";
-  }
+    if (!res.ok) throw new Error("Ошибка сервера");
 
-// Загружаем список авто при старте
+    await res.json();
+    showMessage("✅ Заявка успешно отправлена!");
+    form.reset();
+  } catch (err) {
+    console.error("Ошибка при заказе:", err);
+    showMessage("❌ Ошибка отправки заявки", true);
+  }
+});
+
+// Сообщения
+function showMessage(text, isError = false) {
+  const msg = document.getElementById("message");
+  msg.textContent = text;
+  msg.style.color = isError ? "red" : "green";
+}
+
+// При загрузке
 loadCars();
