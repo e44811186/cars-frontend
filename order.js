@@ -23,7 +23,7 @@ async function loadCars() {
 }
 
 // Отправка формы
-document.getElementById("order-form").addEventListener("submit", async (e) => {
+document.getElementById("orderform").addEventListener("submit", async (e) => {
   e.preventDefault();
 
   const form = e.target;
