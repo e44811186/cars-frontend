@@ -96,13 +96,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         return;
       }
 
-      // если выбран id — отправляем carId; если нет, отправляем carName
+      // id — отправляем carId;
       const payload = {
-        name,
-        phone: phoneVal,
-        carId: selectedId ? Number(selectedId) : null,
-        carName: selectedId ? null : manualName
-      };
+       carId: Number(carId),
+       name,
+       phone: phoneVal
+     };
 
       try {
         const res = await fetch(`${API_BASE}/orders`, {
