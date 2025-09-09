@@ -5,45 +5,45 @@
   <title>Заказ авто</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="styles.css">
-  <!-- Inputmask для телефона -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/inputmask/5.0.8/inputmask.min.js"></script>
 </head>
 <body>
   <header class="header">
     <div class="container">
-      <div class="logo"><img src="images/logo.png" alt="Logo"></div>
-      <h1>Оформление заказа</h1>
+      <a href="index.html" class="logo">
+        <img src="images/logo.png" alt="Logo">
+      </a>
+      <a href="index.html" class="button">← На главную</a>
     </div>
   </header>
 
-  <section class="order">
-    <div class="container">
-      <img src="images/order-car.png" alt="order banner" class="order-banner">
-      <form id="orderform" class="order-form">
-        <h3>Забронируйте автомобиль</h3>
-        <p>Заполните контактные данные, и мы перезвоним вам</p>
-
-        <input type="text" name="name" placeholder="Ваше имя" required>
-        <input type="text" id="phone" name="phone" placeholder="Телефон" required>
-
-        <label for="car">Автомобиль</label>
-        <select id="car-select" name="carSelect">
-          <option value="">Выберите авто</option>
-        </select>
-        <input type="text" id="car-manual" name="carManual" placeholder="Или введите вручную">
-
-        <div class="order-buttons">
-          <button type="submit" class="button">Отправить</button>
-          <a href="index.html" class="button white-button">Вернуться на главную</a>
-        </div>
-      </form>
-      <p id="message" class="message"></p>
-    </div>
+  <section class="order-banner">
+    <img src="images/order-car.png" alt="Баннер заказа" loading="lazy">
   </section>
+
+  <main class="container order">
+    <h2>Заказ автомобиля</h2>
+    <p>Заполните форму, и мы свяжемся с вами для подтверждения бронирования</p>
+
+    <form id="orderform" class="order-form">
+      <input type="text" name="name" placeholder="Ваше имя" required>
+      <input type="text" id="phone" name="phone" placeholder="Телефон" required minlength="10">
+
+      <!-- выбор или ручной ввод -->
+      <select id="car-select" name="car">
+        <option value="">Выберите авто</option>
+      </select>
+      <input type="text" id="car-manual" placeholder="Или введите вручную">
+
+      <button type="submit" class="button">Отправить</button>
+    </form>
+
+    <p id="message" class="message"></p>
+  </main>
 
   <footer class="footer">
     <div class="container">
-      <div class="rights">© Все права защищены</div>
+      <div class="logo"><img src="images/logo.png" alt="Logo"></div>
+      <div class="rights">Все права защищены</div>
     </div>
   </footer>
 
