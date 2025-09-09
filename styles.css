@@ -140,39 +140,6 @@ h1, h3 { color: #f8ff23;}
   cursor: pointer;
   font-size: 14px;
 }
-.order .container {
-  max-width: 600px;
-  margin: 0 auto;
-  padding: 20px;
-}
-
-.order-banner {
-  width: 100%;
-  max-height: 200px;
-  object-fit: cover;
-  margin-bottom: 20px;
-  border-radius: 12px;
-}
-
-.order-form input,
-.order-form select {
-  width: 100%;
-  padding: 12px;
-  margin-bottom: 15px;
-  font-size: 16px;
-}
-
-.order-buttons {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-.order-buttons .button {
-  flex: 1;
-  text-align: center;
-}
-
 
 /* запрет прокрутки фона при модалке/меню */
 .no-scroll { overflow: hidden; }
