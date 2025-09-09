@@ -22,46 +22,48 @@ async function loadCars() {
   }
 }
 
-// Отправка формы
-document.getElementById("orderform").addEventListener("submit", async (e) => {
-  e.preventDefault();
+// ==== Отправка формы ====
+  const orderForm = document.getElementById("order-Form");
+  if (orderForm) {
+    orderForm.addEventListener("submit", async e => {
+      e.preventDefault();
 
-  const form = e.target;
-  const btn = form.querySelector("button");
-  btn.disabled = true;
+      const carField = document.getElementById("car");
+      const carId = carField.dataset.id; // берем id, а не текст
+      const name = document.getElementById("name").value.trim();
+      const phone = document.getElementById("phone").value.trim();
 
-  const name = form.name.value.trim();
-  const phone = form.phone.value.trim();
-  const carId = Number(form.car.value);
+      if (!carId || !name || !phone) {
+        showMessage("❌ Заполните все поля!", true);
+        return;
+      }
 
-  const data = { name, phone, carId };
+      const data = { name, phone, carId: Number(carId) };
 
-  try {
-    const res = await fetch(`${API_BASE}/api/orders`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data)
+      try {
+        const res = await fetch(`${API_BASE}/orders`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+        });
+
+        if (!res.ok) throw new Error("Ошибка сервера");
+        showMessage("✅ Заявка успешно отправлена!");
+        orderForm.reset();
+        carField.dataset.id = ""; // очищаем id
+      } catch (err) {
+        console.error("Ошибка при заказе:", err);
+        showMessage("❌ Ошибка отправки заявки", true);
+      }
     });
-
-    if (!res.ok) throw new Error("Сервер вернул ошибку");
-
-    await res.json();
-    showMessage("✅ Заявка успешно отправлена!");
-    form.reset();
-  } catch (err) {
-    console.error(err);
-    showMessage("❌ Ошибка отправки заявки", true);
-  } finally {
-    btn.disabled = false;
   }
-});
 
-// Сообщения пользователю
-function showMessage(text, isError = false) {
-  const msg = document.getElementById("message");
-  msg.textContent = text;
-  msg.style.color = isError ? "red" : "green";
-}
+  function showMessage(text, isError = false) {
+    const msg = document.getElementById("message");
+    if (!msg) return;
+    msg.textContent = text;
+    msg.style.color = isError ? "red" : "green";
+  }
 
 // Загружаем список авто при старте
 loadCars();
