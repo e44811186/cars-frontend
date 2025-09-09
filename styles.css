@@ -173,17 +173,6 @@ h1, h3 { color: #f8ff23;}
   text-align: center;
 }
 
-@media (max-width: 768px) {
-  .order-form input,
-  .order-form select {
-    font-size: 14px;
-    padding: 10px;
-  }
-  .order-buttons {
-    flex-direction: column;
-  }
-}
-
 
 /* запрет прокрутки фона при модалке/меню */
 .no-scroll { overflow: hidden; }
@@ -227,5 +216,13 @@ h1, h3 { color: #f8ff23;}
   .cars h2 { font-size: 40px; }
   .order h3 { font-size: 40px; }
   .order p { font-size: 18px; }
+  .order-form input,
+  .order-form select {
+    font-size: 14px;
+    padding: 10px;
+  }
+  .order-buttons {
+    flex-direction: column;
+  }
 }
 .no-scroll { overflow: hidden; }
