@@ -8,37 +8,40 @@
 </head>
 <body>
   <header class="header">
-    <div class="container">
+    <div class="container header-row">
       <a href="index.html" class="logo">
         <img src="images/logo.png" alt="Logo">
       </a>
-      <a href="index.html" class="button">← На главную</a>
+      <a href="index.html" class="button small-btn">← На главную</a>
     </div>
   </header>
 
-  <section class="order-banner">
-    <img src="images/order-car.png" alt="Баннер заказа" loading="lazy">
+  <section class="order">
+    <div class="container order-content">
+      <!-- левая часть -->
+      <div class="order-image">
+        <img src="images/order-car.png" alt="Баннер заказа" loading="lazy">
+      </div>
+
+      <!-- правая часть -->
+      <form id="orderform" class="order-form">
+        <h3>Забронируйте автомобиль</h3>
+        <p>Заполните контактные данные, и мы перезвоним вам</p>
+
+        <input type="text" name="name" placeholder="Ваше имя" required>
+        <input type="text" id="phone" name="phone" placeholder="Телефон" required minlength="10">
+
+        <div class="car-input-wrapper">
+          <input type="text" id="car-manual" name="carManual" placeholder="Выберите автомобиль" autocomplete="off">
+          <span class="arrow">▼</span>
+          <ul id="car-dropdown" class="car-dropdown"></ul>
+        </div>
+
+        <button type="submit" class="button">Отправить</button>
+        <p id="message" class="message"></p>
+      </form>
+    </div>
   </section>
-
-  <main class="container order">
-    <h2>Заказ автомобиля</h2>
-    <p>Заполните форму, и мы свяжемся с вами для подтверждения бронирования</p>
-
-    <form id="orderform" class="order-form">
-      <input type="text" name="name" placeholder="Ваше имя" required>
-      <input type="text" id="phone" name="phone" placeholder="Телефон" required minlength="10">
-
-      <!-- выбор или ручной ввод -->
-      <select id="car-select" name="car">
-        <option value="">Выберите авто</option>
-      </select>
-      <input type="text" id="car-manual" placeholder="Или введите вручную">
-
-      <button type="submit" class="button">Отправить</button>
-    </form>
-
-    <p id="message" class="message"></p>
-  </main>
 
   <footer class="footer">
     <div class="container">
