@@ -7,15 +7,17 @@ document.addEventListener("DOMContentLoaded", async () => {
   const submitBtn = form ? form.querySelector("button[type=submit]") : null;
 
   let cars = [];
+  let pending = false;
 
-  // загрузим список авто
+  // === Загрузка списка авто ===
   try {
     const res = await fetch(`${API_BASE}/cars`);
     cars = await res.json();
+
     if (carSelect) {
       cars.forEach(c => {
         const opt = document.createElement("option");
-        opt.value = c.id; // backend ждёт id
+        opt.value = c.id;
         opt.textContent = `${c.brand} ${c.model}`;
         carSelect.appendChild(opt);
       });
@@ -24,7 +26,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     console.error("Ошибка загрузки авто:", err);
   }
 
-  // подстановка авто из localStorage (при переходе с главной)
+  // === Подстановка выбранного авто из localStorage ===
   const saved = localStorage.getItem("orderData");
   if (saved) {
     try {
@@ -33,32 +35,42 @@ document.addEventListener("DOMContentLoaded", async () => {
         const opt = Array.from(carSelect.options).find(o => o.value == data.carId);
         if (opt) opt.selected = true;
       }
-    } catch (e) { /* ignore */ }
+    } catch (e) {
+      console.warn("Ошибка чтения localStorage", e);
+    }
   }
 
-  // Маска телефона (замена только 8 → 7 в начале)
+  // === Маска телефона ===
   if (phone) {
     phone.addEventListener("input", phoneMask, false);
-    phone.addEventListener("blur", () => { if (!phone.value) phone.value = ""; }, false);
+    phone.addEventListener("blur", () => {
+      if (!phone.value) phone.value = "";
+    }, false);
   }
 
   function phoneMask(e) {
     const el = e.target;
     let digits = el.value.replace(/\D/g, "");
-    if (!digits) { el.value = ""; return; }
+    if (!digits) {
+      el.value = "";
+      return;
+    }
 
+    // если первый символ 8 → меняем на 7
     if (digits[0] === "8") digits = "7" + digits.slice(1);
 
+    // форматируем только для РФ (начинается с 7)
     if (digits[0] !== "7") {
       el.value = digits;
       return;
     }
 
-    let rest = digits.slice(1).slice(0, 10);
+    let rest = digits.slice(1).slice(0, 10); // максимум 10 цифр
     const a = rest.slice(0, 3);
     const b = rest.slice(3, 6);
     const c = rest.slice(6, 8);
     const d = rest.slice(8, 10);
+
     let out = "+7";
     if (a.length) out += " (" + a + ")";
     if (b.length) out += " " + b;
@@ -67,15 +79,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     el.value = out;
   }
 
-  // защита от повторных отправок
-  let pending = false;
-
+  // === Отправка формы ===
   if (form) {
-    form.addEventListener("submit", async (e) => {
+    form.addEventListener("submit", async e => {
       e.preventDefault();
       if (pending) return;
-      pending = true;
-      if (submitBtn) submitBtn.disabled = true;
 
       const name = form.name.value.trim();
       const phoneVal = phone ? phone.value.trim() : "";
@@ -83,10 +91,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       if (!name || !phoneVal || !carId) {
         showMsg("❌ Заполните все поля!", true);
-        pending = false;
-        if (submitBtn) submitBtn.disabled = false;
         return;
       }
+
+      pending = true;
+      if (submitBtn) submitBtn.disabled = true;
 
       const payload = {
         carId: Number(carId),
