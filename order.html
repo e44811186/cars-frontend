@@ -31,10 +31,12 @@
         <input type="text" name="name" placeholder="Ваше имя" required>
         <input type="text" id="phone" name="phone" placeholder="Телефон" required minlength="10">
 
-        <label for="car-select">Выберите автомобиль:</label>
-        <select id="car-select" name="carId" required>
-          <option value="" disabled selected>-- выберите авто --</option>
-        </select>
+        <!-- красивый select -->
+        <div class="select-wrapper">
+          <select id="car-select" name="carId" required>
+            <option value="" disabled selected>-- выберите авто --</option>
+          </select>
+        </div>
 
         <button type="submit" class="button">Отправить</button>
         <p id="message" class="message"></p>
