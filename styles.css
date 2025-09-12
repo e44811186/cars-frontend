@@ -178,15 +178,15 @@ button[disabled] {
 }*/
 .order-form {
   flex: 1;
-  max-width: 480px;
+  max-width: 344px;
 }
 .order-form h3 {
-  font-size: 40px;
+  font-size: 50px;
   margin-bottom: 20px;
   color: #f8ff23;
 }
 .order-form p {
-  font-size: 18px;
+  font-size: 23px;
   color: #d4d4d4;
   margin-bottom: 30px;
 }
@@ -354,7 +354,7 @@ button[disabled] {
   .main-info h1 { font-size: 30px; }
   .main-info p { font-size: 18px; max-width: 100%; }
   .car img { max-width: 100%; }
-  .button { width: 100%; font-size: 18px; height: auto; padding: 15px; }
+  .button { font-size: 18px; height: auto; padding: 15px; }
   .order-form input { height: 50px; padding: 15px; font-size: 14px; }
   .cars h2 { font-size: 40px; }
   .order h3 { font-size: 40px; }
@@ -364,6 +364,7 @@ button[disabled] {
     font-size: 14px;
     padding: 10px;
   }
+  
   .order-buttons {
     flex-direction: column;
   }
