@@ -20,10 +20,7 @@
       border-radius: 6px;
       background: #f5f5f5;
     }
-    .cabinet-nav a.active {
-      background: #007bff;
-      color: #fff;
-    }
+    .cabinet-nav a.active { background: #007bff; color: #fff; }
     .cabinet-section { display: none; }
     .cabinet-section.active { display: block; }
     .car-card {
@@ -35,118 +32,237 @@
       justify-content: space-between;
       align-items: center;
     }
-    .car-actions button {
-      margin-left: 8px;
-    }
-    form input, form textarea, form select {
-      display: block;
-      width: 100%;
-      margin: 6px 0;
-      padding: 8px;
-    }
+    .car-actions button { margin-left: 8px; }
+    form input, form textarea, form select { display: block; width: 100%; margin: 6px 0; padding: 8px; }
+    .auth-section { max-width: 400px; margin: 20px auto; }
   </style>
 </head>
 <body>
-  <header class="header">
-    <div class="container header-row">
-      <a href="index.html" class="logo">
-        <img src="images/logo.png" alt="Logo">
-      </a>
-      <a href="index.html" class="button small-btn">← На главную</a>
-    </div>
-  </header>
+<header class="header">
+  <div class="container header-row">
+    <a href="index.html" class="logo"><img src="images/logo.png" alt="Logo"></a>
+    <a href="index.html" class="button small-btn">← На главную</a>
+  </div>
+</header>
 
-  <section class="cabinet">
-    <div class="container">
-      <h2>Личный кабинет</h2>
+<section class="cabinet container">
+  <h2>Личный кабинет</h2>
 
-      <!-- Навигация -->
-      <nav class="cabinet-nav">
-        <a class="active" data-tab="my-cars">Мои объявления</a>
-        <a data-tab="add-car">Добавить авто</a>
-        <a data-tab="orders">Заявки</a>
-      </nav>
+  <!-- Авторизация / регистрация -->
+  <div id="auth" class="auth-section">
+    <h3>Войти</h3>
+    <form id="loginForm">
+      <input type="text" name="username" placeholder="Имя пользователя" required>
+      <input type="password" name="password" placeholder="Пароль" required>
+      <button type="submit" class="button">Войти</button>
+    </form>
+    <h3>Регистрация</h3>
+    <form id="registerForm">
+      <input type="text" name="username" placeholder="Имя пользователя" required>
+      <input type="password" name="password" placeholder="Пароль" required>
+      <button type="submit" class="button">Зарегистрироваться</button>
+    </form>
+  </div>
 
-      <!-- Мои объявления -->
-      <div id="my-cars" class="cabinet-section active">
+  <!-- Навигация кабинета (скрыта до авторизации) -->
+  <nav id="cabinetNav" class="cabinet-nav" style="display:none;">
+    <a class="active" data-tab="my-cars">Мои объявления</a>
+    <a data-tab="add-car">Добавить авто</a>
+    <a data-tab="orders">Заявки</a>
+    <a id="logoutBtn">Выйти</a>
+  </nav>
+
+  <!-- Мои объявления -->
+  <div id="my-cars" class="cabinet-section active"></div>
+
+  <!-- Добавить авто -->
+  <div id="add-car" class="cabinet-section">
+    <form id="addCarForm">
+      <input type="text" name="brand" placeholder="Марка" required>
+      <input type="text" name="model" placeholder="Модель" required>
+      <input type="number" name="year" placeholder="Год выпуска" required>
+      <input type="number" name="price" placeholder="Цена в сутки" required>
+      <textarea name="description" placeholder="Описание"></textarea>
+      <input type="file" name="photo">
+      <button type="submit" class="button">Добавить</button>
+    </form>
+  </div>
+
+  <!-- Заявки -->
+  <div id="orders" class="cabinet-section"></div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="logo"><img src="images/logo.png" alt="Logo"></div>
+    <div class="rights">Все права защищены</div>
+  </div>
+</footer>
+
+<script>
+  const API_URL = "https://твое-доменное-имя/api"; // Заменить на реальный адрес API
+  let token = localStorage.getItem('token');
+
+  const authSection = document.getElementById('auth');
+  const navBar = document.getElementById('cabinetNav');
+  const myCarsDiv = document.getElementById('my-cars');
+  const ordersDiv = document.getElementById('orders');
+  const addCarForm = document.getElementById('addCarForm');
+
+  // ---------------- Авторизация ----------------
+  function setAuth(tokenValue) {
+    token = tokenValue;
+    localStorage.setItem('token', token);
+    authSection.style.display = 'none';
+    navBar.style.display = 'flex';
+    loadMyCars();
+    loadOrders();
+  }
+
+  document.getElementById('loginForm').addEventListener('submit', async e => {
+    e.preventDefault();
+    const form = e.target;
+    const res = await fetch(`${API_URL}/auth/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        username: form.username.value,
+        password: form.password.value
+      })
+    });
+    if (res.ok) {
+      const data = await res.json();
+      setAuth(data.token);
+    } else {
+      alert('Неверные данные');
+    }
+  });
+
+  document.getElementById('registerForm').addEventListener('submit', async e => {
+    e.preventDefault();
+    const form = e.target;
+    const res = await fetch(`${API_URL}/auth/register`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        username: form.username.value,
+        password: form.password.value
+      })
+    });
+    if (res.ok) {
+      alert('Регистрация прошла успешно. Войдите.');
+    } else {
+      alert('Ошибка регистрации');
+    }
+  });
+
+  document.getElementById('logoutBtn').addEventListener('click', () => {
+    token = null;
+    localStorage.removeItem('token');
+    location.reload();
+  });
+
+  // ---------------- Навигация ----------------
+  document.querySelectorAll('.cabinet-nav a[data-tab]').forEach(link => {
+    link.addEventListener('click', () => {
+      document.querySelectorAll('.cabinet-nav a').forEach(l => l.classList.remove('active'));
+      link.classList.add('active');
+      document.querySelectorAll('.cabinet-section').forEach(sec => sec.classList.remove('active'));
+      document.getElementById(link.dataset.tab).classList.add('active');
+    });
+  });
+
+  // ---------------- Загрузка моих объявлений ----------------
+  async function loadMyCars() {
+    if (!token) return;
+    myCarsDiv.innerHTML = 'Загрузка...';
+    const res = await fetch(`${API_URL}/cars/mine`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    if (res.ok) {
+      const cars = await res.json();
+      myCarsDiv.innerHTML = cars.map(car => `
         <div class="car-card">
           <div>
-            <strong>Lada Vesta</strong><br>
-            2020, белая, 1200₽/сутки
+            <strong>${car.brand} ${car.model}</strong><br>
+            ${car.year}, ${car.color || '—'}, ${car.price}₽/сутки
           </div>
           <div class="car-actions">
-            <button class="button small-btn">✏ Редактировать</button>
-            <button class="button small-btn">🗑 Удалить</button>
+            <button class="button small-btn" onclick="editCar(${car.id})">✏ Редактировать</button>
+            <button class="button small-btn" onclick="deleteCar(${car.id})">🗑 Удалить</button>
           </div>
         </div>
+      `).join('');
+    } else {
+      myCarsDiv.innerHTML = 'Ошибка загрузки';
+    }
+  }
+
+  // ---------------- Добавление авто ----------------
+  addCarForm.addEventListener('submit', async e => {
+    e.preventDefault();
+    const formData = new FormData(addCarForm);
+    const obj = Object.fromEntries(formData.entries());
+    const res = await fetch(`${API_URL}/cars`, {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify(obj)
+    });
+    if (res.ok) {
+      alert('Авто добавлено');
+      addCarForm.reset();
+      loadMyCars();
+    } else {
+      alert('Ошибка добавления');
+    }
+  });
+
+  // ---------------- Заявки ----------------
+  async function loadOrders() {
+    if (!token) return;
+    ordersDiv.innerHTML = 'Загрузка...';
+    const res = await fetch(`${API_URL}/orders/mine`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    if (res.ok) {
+      const orders = await res.json();
+      ordersDiv.innerHTML = orders.map(order => `
         <div class="car-card">
           <div>
-            <strong>Kia Rio</strong><br>
-            2019, черный, 1500₽/сутки
-          </div>
-          <div class="car-actions">
-            <button class="button small-btn">✏ Редактировать</button>
-            <button class="button small-btn">🗑 Удалить</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Добавить авто -->
-      <div id="add-car" class="cabinet-section">
-        <form id="addCarForm">
-          <input type="text" name="brand" placeholder="Марка" required>
-          <input type="text" name="model" placeholder="Модель" required>
-          <input type="number" name="year" placeholder="Год выпуска" required>
-          <input type="number" name="price" placeholder="Цена в сутки" required>
-          <textarea name="description" placeholder="Описание"></textarea>
-          <input type="file" name="photo">
-          <button type="submit" class="button">Добавить</button>
-        </form>
-      </div>
-
-      <!-- Заявки -->
-      <div id="orders" class="cabinet-section">
-        <div class="car-card">
-          <div>
-            <strong>Заявка на Lada Vesta</strong><br>
-            Клиент: Иван, тел. +7 900 123 45 67
+            <strong>Заявка на ${order.car.brand} ${order.car.model}</strong><br>
+            Клиент: ${order.clientName}, тел. ${order.clientPhone}
           </div>
           <div>
-            <button class="button small-btn">✅ Подтвердить</button>
-            <button class="button small-btn">❌ Отклонить</button>
+            <button class="button small-btn" onclick="confirmOrder(${order.id})">✅ Подтвердить</button>
+            <button class="button small-btn" onclick="rejectOrder(${order.id})">❌ Отклонить</button>
           </div>
         </div>
-      </div>
+      `).join('');
+    } else {
+      ordersDiv.innerHTML = 'Ошибка загрузки заявок';
+    }
+  }
 
-    </div>
-  </section>
-
-  <footer class="footer">
-    <div class="container">
-      <div class="logo"><img src="images/logo.png" alt="Logo"></div>
-      <div class="rights">Все права защищены</div>
-    </div>
-  </footer>
-
-  <script>
-    // Переключение вкладок
-    const navLinks = document.querySelectorAll('.cabinet-nav a');
-    const sections = document.querySelectorAll('.cabinet-section');
-
-    navLinks.forEach(link => {
-      link.addEventListener('click', () => {
-        navLinks.forEach(l => l.classList.remove('active'));
-        link.classList.add('active');
-        sections.forEach(sec => sec.classList.remove('active'));
-        document.getElementById(link.dataset.tab).classList.add('active');
-      });
+  async function confirmOrder(id) {
+    await fetch(`${API_URL}/orders/${id}/confirm`, {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${token}` }
     });
+    loadOrders();
+  }
 
-    // Пример добавления авто (заглушка)
-    document.getElementById('addCarForm').addEventListener('submit', e => {
-      e.preventDefault();
-      alert('Машина добавлена (пока без API)');
+  async function rejectOrder(id) {
+    await fetch(`${API_URL}/orders/${id}/reject`, {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${token}` }
     });
-  </script>
+    loadOrders();
+  }
+
+  // ---------------- Инициализация ----------------
+  if (token) {
+    setAuth(token);
+  }
+</script>
 </body>
 </html>
