@@ -10,7 +10,6 @@ h1, h3 { color: #f8ff23;}
 .black-block { position: absolute; width: 477px; height: 910px; top: 0; background-color: #000000; z-index: -2; right: calc(50% - 780px);}
 .header { padding: 46px 0;}
 .header .container { display: flex; align-items: center;}
-.header .container a { color: #fff;}
 .logo img { max-width: 129px; vertical-align: bottom;}
 .menu { margin-left: 177px; margin-right: auto;}
 .menu ul { list-style: none; display: flex; gap: 65px;}
