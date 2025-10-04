@@ -138,7 +138,7 @@
       document.getElementById('loginForm').addEventListener('submit', async e => {
         e.preventDefault();
         const data = Object.fromEntries(new FormData(e.target).entries());
-        const res = await fetch('https://cars-api-ur5t.onrender.com/render/api/auth/login', {
+        const res = await fetch('https://cars-api-ur5t.onrender.com/api/auth/login', {
           method: 'POST',
           headers: {'Content-Type': 'application/json'},
           body: JSON.stringify(data)
@@ -159,7 +159,7 @@
       document.getElementById('registerForm').addEventListener('submit', async e => {
         e.preventDefault();
         const data = Object.fromEntries(new FormData(e.target).entries());
-        const res = await fetch('https://cars-api-ur5t.onrender.com/render/api/auth/register', {
+        const res = await fetch('https://cars-api-ur5t.onrender.com/api/auth/register', {
           method: 'POST',
           headers: {'Content-Type': 'application/json'},
           body: JSON.stringify(data)
