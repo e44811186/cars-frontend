@@ -1,180 +1,239 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Личный кабинет</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="styles.css">
   <style>
-    body {
-      font-family: "Inter", sans-serif;
-      margin: 0;
-      background: #f5f5f5;
+    body.modal-open {
+      overflow: hidden;
     }
 
-    /* ====== МОДАЛКА ====== */
+    /* Задний фон (эффект GitHub) */
     .modal-overlay {
-      display: none;
       position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.7);
-      backdrop-filter: blur(8px);
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.65);
+      backdrop-filter: blur(10px);
+      display: none;
       justify-content: center;
       align-items: center;
       z-index: 9999;
-    }
-    .modal {
-      background: rgba(30, 30, 30, 0.9);
-      border-radius: 12px;
-      padding: 30px;
-      width: 340px;
-      color: #fff;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
-      text-align: center;
-    }
-    .modal h2 {
-      margin-bottom: 20px;
-      font-size: 22px;
-    }
-    .modal input {
-      width: 100%;
-      margin-bottom: 12px;
-      padding: 10px;
-      border: none;
-      border-radius: 6px;
-      background: rgba(255, 255, 255, 0.1);
-      color: #fff;
-    }
-    .modal button {
-      width: 100%;
-      padding: 10px;
-      border: none;
-      border-radius: 6px;
-      background: #238636;
-      color: #fff;
-      cursor: pointer;
-      font-weight: bold;
-    }
-    .modal button:hover {
-      background: #2ea043;
-    }
-    .modal p {
-      margin-top: 10px;
-      font-size: 14px;
-    }
-    .modal p span {
-      color: #58a6ff;
-      cursor: pointer;
+      animation: fadeIn 0.3s ease;
     }
 
-    /* ====== КОНТЕНТ ====== */
-    .container {
-      max-width: 800px;
-      margin: 40px auto;
-      background: #fff;
-      padding: 20px;
-      border-radius: 8px;
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
     }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    /* Модальное окно */
+    .auth-modal {
+      background: rgba(24, 24, 24, 0.95);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 10px;
+      width: 360px;
+      padding: 30px 25px;
+      box-shadow: 0 0 25px rgba(0,0,0,0.4);
+      text-align: center;
+      color: #fff;
+      animation: popIn 0.25s ease;
+    }
+
+    @keyframes popIn {
+      from { transform: scale(0.9); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .auth-modal h2 {
+      margin-bottom: 20px;
+      font-weight: 600;
+    }
+
+    .auth-modal input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 14px;
+      border-radius: 6px;
+      border: 1px solid rgba(255,255,255,0.2);
+      background: rgba(255,255,255,0.08);
+      color: #fff;
+      font-size: 15px;
+      outline: none;
+    }
+
+    .auth-modal input::placeholder {
+      color: rgba(255,255,255,0.5);
+    }
+
+    .auth-modal button {
+      width: 100%;
+      padding: 10px;
+      background: #238636;
+      border: none;
+      border-radius: 6px;
+      color: #fff;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.2s;
+      font-size: 15px;
+    }
+
+    .auth-modal button:hover {
+      background: #2ea043;
+    }
+
+    .auth-modal .toggle {
+      margin-top: 15px;
+      color: #58a6ff;
+      cursor: pointer;
+      display: inline-block;
+      font-size: 14px;
+    }
+
+    .cabinet { padding: 30px; }
   </style>
 </head>
 <body>
+  <header class="header">
+    <div class="container header-row">
+      <a href="index.html" class="logo">
+        <img src="images/logo.png" alt="Logo">
+      </a>
+      <a href="index.html" class="button small-btn">← На главную</a>
+    </div>
+  </header>
+
+  <section class="cabinet">
+    <div class="container">
+      <h2>Личный кабинет</h2>
+      <p>Содержимое загрузится после входа...</p>
+    </div>
+  </section>
+
+  <!-- Модальное окно -->
   <div class="modal-overlay" id="authModal">
-    <div class="modal" id="authBox">
-      <h2>Вход</h2>
+    <!-- Вход -->
+    <div class="auth-modal" id="loginModal">
+      <h2>Вход в аккаунт</h2>
       <form id="loginForm">
-        <input type="text" name="username" placeholder="Имя пользователя" required>
-        <input type="password" name="password" placeholder="Пароль" required>
+        <input type="text" name="username" placeholder="Имя пользователя" required />
+        <input type="password" name="password" placeholder="Пароль" required />
         <button type="submit">Войти</button>
       </form>
-      <p>Нет аккаунта? <span id="showRegister">Зарегистрироваться</span></p>
+      <div class="toggle" id="toRegister">Нет аккаунта? Зарегистрироваться</div>
+    </div>
+
+    <!-- Регистрация -->
+    <div class="auth-modal" id="registerModal" style="display:none;">
+      <h2>Регистрация</h2>
+      <form id="registerForm">
+        <input type="text" name="username" placeholder="Имя пользователя" required />
+        <input type="email" name="email" placeholder="Email" required />
+        <input type="tel" name="phone" placeholder="Телефон (необязательно)" />
+        <input type="password" name="password" placeholder="Пароль" required />
+        <button type="submit">Создать аккаунт</button>
+      </form>
+      <div class="toggle" id="toLogin">Уже есть аккаунт? Войти</div>
     </div>
   </div>
 
-  <div class="container" id="cabinetContent" style="display:none;">
-    <h2>Личный кабинет</h2>
-    <p>Содержимое появится после входа...</p>
-  </div>
-
   <script>
+    const API_URL = "https://cars-api-ur5t.onrender.com/api/auth"; // укажи точный адрес своего Render API
     const authModal = document.getElementById('authModal');
-    const authBox = document.getElementById('authBox');
-    const showRegister = document.getElementById('showRegister');
-    const cabinetContent = document.getElementById('cabinetContent');
+    const loginModal = document.getElementById('loginModal');
+    const registerModal = document.getElementById('registerModal');
+    const loginForm = document.getElementById('loginForm');
+    const registerForm = document.getElementById('registerForm');
+    const toRegister = document.getElementById('toRegister');
+    const toLogin = document.getElementById('toLogin');
 
-    // Показываем модалку, если нет токена
-    const token = localStorage.getItem('token');
+    // Переключение форм
+    toRegister.addEventListener('click', () => {
+      loginModal.style.display = 'none';
+      registerModal.style.display = 'block';
+    });
+    toLogin.addEventListener('click', () => {
+      registerModal.style.display = 'none';
+      loginModal.style.display = 'block';
+    });
+
+    // Проверка токена
+    const token = localStorage.getItem('authToken');
     if (!token) {
-      authModal.style.display = 'flex';
-    } else {
-      cabinetContent.style.display = 'block';
+      document.body.classList.add('modal-open');
+      authModal.classList.add('active');
     }
 
-    // Переключение между входом и регистрацией
-    showRegister.addEventListener('click', () => {
-      if (authBox.querySelector('#registerForm')) {
-        authBox.innerHTML = `
-          <h2>Вход</h2>
-          <form id="loginForm">
-            <input type="text" name="username" placeholder="Имя пользователя" required>
-            <input type="password" name="password" placeholder="Пароль" required>
-            <button type="submit">Войти</button>
-          </form>
-          <p>Нет аккаунта? <span id="showRegister">Зарегистрироваться</span></p>`;
-        bindLogin();
-      } else {
-        authBox.innerHTML = `
-          <h2>Регистрация</h2>
-          <form id="registerForm">
-            <input type="text" name="username" placeholder="Имя пользователя" required>
-            <input type="password" name="password" placeholder="Пароль" required>
-            <button type="submit">Зарегистрироваться</button>
-          </form>
-          <p>Уже есть аккаунт? <span id="showLogin">Войти</span></p>`;
-        bindRegister();
+    // Вход
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const data = {
+        username: loginForm.username.value,
+        password: loginForm.password.value
+      };
+
+      try {
+        const res = await fetch(`${API_URL}/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+
+        if (!res.ok) {
+          const msg = await res.text();
+          throw new Error(msg || 'Ошибка входа');
+        }
+
+        const result = await res.json();
+        localStorage.setItem('authToken', result.token);
+        authModal.classList.remove('active');
+        document.body.classList.remove('modal-open');
+        alert("Добро пожаловать, " + data.username + "!");
+        location.reload();
+      } catch (err) {
+        alert(err.message);
       }
     });
 
-    function bindLogin() {
-      document.getElementById('loginForm').addEventListener('submit', async e => {
-        e.preventDefault();
-        const data = Object.fromEntries(new FormData(e.target).entries());
-        const res = await fetch('https://cars-api-ur5t.onrender.com/api/auth/login', {
+    // Регистрация
+    registerForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const data = {
+        username: registerForm.username.value,
+        email: registerForm.email.value,
+        phone: registerForm.phone.value,
+        password: registerForm.password.value
+      };
+
+      try {
+        const res = await fetch(`${API_URL}/register`, {
           method: 'POST',
-          headers: {'Content-Type': 'application/json'},
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(data)
         });
-        if (res.ok) {
-          const json = await res.json();
-          localStorage.setItem('token', json.token);
-          authModal.style.display = 'none';
-          cabinetContent.style.display = 'block';
-        } else {
-          alert('Ошибка входа');
-        }
-      });
-      document.getElementById('showRegister').addEventListener('click', () => showRegister.click());
-    }
 
-    function bindRegister() {
-      document.getElementById('registerForm').addEventListener('submit', async e => {
-        e.preventDefault();
-        const data = Object.fromEntries(new FormData(e.target).entries());
-        const res = await fetch('https://cars-api-ur5t.onrender.com/api/auth/register', {
-          method: 'POST',
-          headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify(data)
-        });
-        if (res.ok) {
-          alert('Регистрация успешна! Теперь войдите.');
-          showRegister.click();
-        } else {
-          alert('Ошибка регистрации');
+        if (!res.ok) {
+          const msg = await res.text();
+          throw new Error(msg || 'Ошибка регистрации');
         }
-      });
-      document.getElementById('showLogin').addEventListener('click', () => showRegister.click());
-    }
 
-    bindLogin();
+        const result = await res.json();
+        localStorage.setItem('authToken', result.token);
+        authModal.classList.remove('active');
+        document.body.classList.remove('modal-open');
+        alert("Регистрация успешна!");
+        location.reload();
+      } catch (err) {
+        alert(err.message);
+      }
+    });
   </script>
 </body>
 </html>
