@@ -1,6 +1,7 @@
 body { font-family: Arial, sans-serif; background: #121212; color: #fff; margin: 0; padding: 0;}
 h1, h3 { color: #f8ff23;}
 .container { max-width: 1200px; margin: 0 auto;}
+.container a { color: #fff;}
 .button { border-radius: 12px; width: 344px; height: 69px; padding: 20px; text-align: center; box-sizing: border-box; background-color: #f8ff23; color: #000000; outline: 0; text-decoration: none; display: block; border: 0; cursor: pointer; font-size: 24px;}
 .button:hover:not(:disabled) { background-color: #ffffff;}
 .button:disabled { cursor: not-allowed; color: gray; background-color: #343434;}
