@@ -10,17 +10,23 @@
       overflow: hidden;
     }
 
-    /* Задний фон */
+    /* Задний фон (эффект GitHub) */
     .modal-overlay {
       position: fixed;
       top: 0; left: 0;
       width: 100%; height: 100%;
-      background: rgba(0, 0, 0, 0.6);
-      backdrop-filter: blur(8px);
+      background: rgba(0, 0, 0, 0.65);
+      backdrop-filter: blur(10px);
       display: none;
       justify-content: center;
       align-items: center;
-      z-index: 999;
+      z-index: 9999;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
     }
 
     .modal-overlay.active {
@@ -29,53 +35,69 @@
 
     /* Модальное окно */
     .auth-modal {
-      background: rgba(20, 20, 20, 0.9);
-      color: #fff;
-      padding: 30px;
-      border-radius: 12px;
+      background: rgba(24, 24, 24, 0.95);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 10px;
       width: 360px;
-      box-shadow: 0 0 20px rgba(0,0,0,0.3);
+      padding: 30px 25px;
+      box-shadow: 0 0 25px rgba(0,0,0,0.4);
       text-align: center;
+      color: #fff;
+      animation: popIn 0.25s ease;
+    }
+
+    @keyframes popIn {
+      from { transform: scale(0.9); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
     }
 
     .auth-modal h2 {
       margin-bottom: 20px;
+      font-weight: 600;
     }
 
     .auth-modal input {
       width: 100%;
       padding: 10px;
-      margin-bottom: 12px;
-      border: 1px solid #555;
+      margin-bottom: 14px;
       border-radius: 6px;
-      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      background: rgba(255,255,255,0.08);
       color: #fff;
+      font-size: 15px;
+      outline: none;
+    }
+
+    .auth-modal input::placeholder {
+      color: rgba(255,255,255,0.5);
     }
 
     .auth-modal button {
       width: 100%;
       padding: 10px;
-      background: #2da44e;
+      background: #238636;
       border: none;
       border-radius: 6px;
       color: #fff;
-      font-weight: bold;
+      font-weight: 600;
       cursor: pointer;
+      transition: 0.2s;
+      font-size: 15px;
     }
 
     .auth-modal button:hover {
-      background: #2c974b;
+      background: #2ea043;
     }
 
     .auth-modal .toggle {
-      margin-top: 12px;
+      margin-top: 15px;
       color: #58a6ff;
       cursor: pointer;
       display: inline-block;
+      font-size: 14px;
     }
 
-    /* Кабинет */
-    .cabinet { padding: 20px; }
+    .cabinet { padding: 30px; }
   </style>
 </head>
 <body>
@@ -91,38 +113,39 @@
   <section class="cabinet">
     <div class="container">
       <h2>Личный кабинет</h2>
-      <p>Содержимое личного кабинета загрузится после входа...</p>
+      <p>Содержимое загрузится после входа...</p>
     </div>
   </section>
 
   <!-- Модальное окно -->
   <div class="modal-overlay" id="authModal">
+    <!-- Вход -->
     <div class="auth-modal" id="loginModal">
-      <h2>Вход</h2>
+      <h2>Вход в аккаунт</h2>
       <form id="loginForm">
         <input type="text" name="username" placeholder="Имя пользователя" required />
         <input type="password" name="password" placeholder="Пароль" required />
         <button type="submit">Войти</button>
       </form>
-      <div class="toggle" id="toRegister">Ещё нет аккаунта? Зарегистрироваться</div>
+      <div class="toggle" id="toRegister">Нет аккаунта? Зарегистрироваться</div>
     </div>
 
+    <!-- Регистрация -->
     <div class="auth-modal" id="registerModal" style="display:none;">
       <h2>Регистрация</h2>
       <form id="registerForm">
         <input type="text" name="username" placeholder="Имя пользователя" required />
         <input type="email" name="email" placeholder="Email" required />
-        <input type="tel" name="phone" placeholder="Телефон" />
+        <input type="tel" name="phone" placeholder="Телефон (необязательно)" />
         <input type="password" name="password" placeholder="Пароль" required />
-        <button type="submit">Зарегистрироваться</button>
+        <button type="submit">Создать аккаунт</button>
       </form>
       <div class="toggle" id="toLogin">Уже есть аккаунт? Войти</div>
     </div>
   </div>
 
   <script>
-    const API_URL = "http://localhost:8080/api/auth"; // если у тебя другой порт — поменяй
-
+    const API_URL = "https://cars-api.onrender.com/api/auth"; // укажи точный адрес своего Render API
     const authModal = document.getElementById('authModal');
     const loginModal = document.getElementById('loginModal');
     const registerModal = document.getElementById('registerModal');
@@ -131,7 +154,7 @@
     const toRegister = document.getElementById('toRegister');
     const toLogin = document.getElementById('toLogin');
 
-    // переключение форм
+    // Переключение форм
     toRegister.addEventListener('click', () => {
       loginModal.style.display = 'none';
       registerModal.style.display = 'block';
@@ -141,14 +164,14 @@
       loginModal.style.display = 'block';
     });
 
-    // проверка токена
+    // Проверка токена
     const token = localStorage.getItem('authToken');
     if (!token) {
       document.body.classList.add('modal-open');
       authModal.classList.add('active');
     }
 
-    // обработчик входа
+    // Вход
     loginForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       const data = {
@@ -163,7 +186,11 @@
           body: JSON.stringify(data)
         });
 
-        if (!res.ok) throw new Error('Ошибка входа');
+        if (!res.ok) {
+          const msg = await res.text();
+          throw new Error(msg || 'Ошибка входа');
+        }
+
         const result = await res.json();
         localStorage.setItem('authToken', result.token);
         authModal.classList.remove('active');
@@ -175,7 +202,7 @@
       }
     });
 
-    // обработчик регистрации
+    // Регистрация
     registerForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       const data = {
@@ -192,7 +219,11 @@
           body: JSON.stringify(data)
         });
 
-        if (!res.ok) throw new Error('Ошибка регистрации');
+        if (!res.ok) {
+          const msg = await res.text();
+          throw new Error(msg || 'Ошибка регистрации');
+        }
+
         const result = await res.json();
         localStorage.setItem('authToken', result.token);
         authModal.classList.remove('active');
