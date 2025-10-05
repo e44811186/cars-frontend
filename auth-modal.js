@@ -1,5 +1,7 @@
+// === API URL ===
 const API_URL = "https://cars-api-ur5t.onrender.com/api/auth";
 
+// === Элементы ===
 const authModal = document.getElementById('authModal');
 const loginModal = document.getElementById('loginModal');
 const registerModal = document.getElementById('registerModal');
@@ -11,24 +13,36 @@ const userControls = document.getElementById('userControls');
 const cabinetContent = document.getElementById('cabinetContent');
 
 // === Переключение форм ===
-toRegister.onclick = () => {
-  loginModal.style.display = 'none';
-  registerModal.style.display = 'block';
-};
-toLogin.onclick = () => {
-  registerModal.style.display = 'none';
-  loginModal.style.display = 'block';
-};
+if (toRegister) {
+  toRegister.onclick = () => {
+    loginModal.style.display = 'none';
+    registerModal.style.display = 'block';
+  };
+}
+if (toLogin) {
+  toLogin.onclick = () => {
+    registerModal.style.display = 'none';
+    loginModal.style.display = 'block';
+  };
+}
 
 // === Проверка токена ===
 const token = localStorage.getItem('authToken');
-if (!token) openAuthModal(); else showCabinet();
+if (!token) {
+  openAuthModal();
+} else {
+  showCabinet();
+  updateProfileMenu();
+}
 
+// === Открыть / закрыть модалку ===
 function openAuthModal() {
+  if (!authModal) return;
   document.body.classList.add('modal-open');
   authModal.classList.add('active');
 }
 function closeAuthModal() {
+  if (!authModal) return;
   document.body.classList.remove('modal-open');
   authModal.classList.remove('active');
 }
@@ -53,61 +67,69 @@ document.querySelectorAll('.toggle-password').forEach(toggle => {
 });
 
 // === Вход ===
-loginForm.addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const btn = loginForm.querySelector('button');
-  disableButton(btn);
-  const data = {
-    username: loginForm.username.value,
-    password: loginForm.password.value
-  };
+if (loginForm) {
+  loginForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = loginForm.querySelector('button');
+    disableButton(btn);
 
-  try {
-    const res = await fetch(`${API_URL}/login`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data)
-    });
+    const data = {
+      username: loginForm.username.value.trim(),
+      password: loginForm.password.value.trim()
+    };
 
-    if (!res.ok) throw new Error(await res.text());
-    const result = await res.json();
+    try {
+      const res = await fetch(`${API_URL}/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
 
-    localStorage.setItem('authToken', result.token);
-    closeAuthModal();
-    showCabinet();
-  } catch (err) {
-    alert(err.message);
-  }
-});
+      if (!res.ok) throw new Error(await res.text());
+      const result = await res.json();
+
+      localStorage.setItem('authToken', result.token);
+      closeAuthModal();
+      showCabinet();
+      updateProfileMenu();
+    } catch (err) {
+      alert(err.message);
+    }
+  });
+}
 
 // === Регистрация ===
-registerForm.addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const btn = registerForm.querySelector('button');
-  disableButton(btn);
-  const data = {
-    username: registerForm.username.value,
-    email: registerForm.email.value,
-    password: registerForm.password.value
-  };
+if (registerForm) {
+  registerForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = registerForm.querySelector('button');
+    disableButton(btn);
 
-  try {
-    const res = await fetch(`${API_URL}/register`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data)
-    });
+    const data = {
+      username: registerForm.username.value.trim(),
+      email: registerForm.email.value.trim(),
+      password: registerForm.password.value.trim()
+    };
 
-    if (!res.ok) throw new Error(await res.text());
-    const result = await res.json();
+    try {
+      const res = await fetch(`${API_URL}/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
 
-    localStorage.setItem('authToken', result.token);
-    closeAuthModal();
-    showCabinet();
-  } catch (err) {
-    alert(err.message);
-  }
-});
+      if (!res.ok) throw new Error(await res.text());
+      const result = await res.json();
+
+      localStorage.setItem('authToken', result.token);
+      closeAuthModal();
+      showCabinet();
+      updateProfileMenu();
+    } catch (err) {
+      alert(err.message);
+    }
+  });
+}
 
 // === Смена пароля ===
 async function changePassword() {
@@ -132,6 +154,28 @@ async function changePassword() {
   }
 }
 
+// === Удаление аккаунта ===
+async function deleteAccount() {
+  if (!confirm("Удалить аккаунт безвозвратно?")) return;
+
+  try {
+    const res = await fetch(`${API_URL}/delete`, {
+      method: 'DELETE',
+      headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` }
+    });
+
+    if (res.ok) {
+      localStorage.removeItem('authToken');
+      alert("Аккаунт удалён");
+      location.reload();
+    } else {
+      alert("Ошибка: " + (await res.text()));
+    }
+  } catch (err) {
+    alert("Ошибка сети: " + err.message);
+  }
+}
+
 // === Выход ===
 function logout() {
   localStorage.removeItem('authToken');
@@ -140,20 +184,30 @@ function logout() {
 
 // === Отображение личного кабинета ===
 function showCabinet() {
+  if (!cabinetContent) return;
+
   cabinetContent.innerHTML = `
     <h3>Ваши объявления</h3>
     <div id="myAds" class="ads-container"></div>
     <button id="addAd" class="button small-btn">Добавить объявление</button>
   `;
-  userControls.innerHTML = `
-    <button class="button small-btn" onclick="changePassword()">Сменить пароль</button>
-    <button class="button small-btn" onclick="logout()">Выйти</button>
-  `;
+
+  if (userControls) {
+    userControls.innerHTML = `
+      <button class="button small-btn" onclick="changePassword()">Сменить пароль</button>
+      <button class="button small-btn" onclick="logout()">Выйти</button>
+    `;
+  }
+
   loadUserAds();
 }
+
+// === Меню профиля ===
 function updateProfileMenu() {
   const token = localStorage.getItem('authToken');
   const profileDropdown = document.getElementById('profileDropdown');
+  if (!profileDropdown) return;
+
   if (token) {
     profileDropdown.innerHTML = `
       <a href="cabinet.html">Профиль</a>
@@ -169,10 +223,10 @@ function updateProfileMenu() {
   }
 }
 
-
 // === Загрузка объявлений ===
 async function loadUserAds() {
   const adsContainer = document.getElementById('myAds');
+  if (!adsContainer) return;
   adsContainer.innerHTML = "<p>Загрузка...</p>";
   try {
     const res = await fetch(`https://cars-api-ur5t.onrender.com/api/cars/my`, {
@@ -193,63 +247,38 @@ async function loadUserAds() {
     adsContainer.innerHTML = `<p>Ошибка: ${e.message}</p>`;
   }
 }
-// ==== Бургер/меню ====
-  const burger = document.getElementById("burger");
-  const menu = document.getElementById("menu");
-  const overlay = document.querySelector(".menu-overlay");
 
-  function toggleMenu() {
-    if (!burger || !menu || !overlay) return;
-    burger.classList.toggle("active");
-    menu.classList.toggle("active");
-    overlay.classList.toggle("active");
-    if (window.innerWidth <= 768) document.body.classList.toggle("no-scroll");
-  }
+// === Бургер-меню ===
+const burger = document.getElementById("burger");
+const menu = document.getElementById("menu");
+const overlay = document.querySelector(".menu-overlay");
 
-  if (burger && overlay && menu) {
-    burger.addEventListener("click", toggleMenu);
-    overlay.addEventListener("click", toggleMenu);
-    menu.querySelectorAll("a").forEach(link => link.addEventListener("click", toggleMenu));
-  }
-// ======== ИКОНКА ПРОФИЛЯ ========
+function toggleMenu() {
+  if (!burger || !menu || !overlay) return;
+  burger.classList.toggle("active");
+  menu.classList.toggle("active");
+  overlay.classList.toggle("active");
+  if (window.innerWidth <= 768) document.body.classList.toggle("no-scroll");
+}
+
+if (burger && overlay && menu) {
+  burger.addEventListener("click", toggleMenu);
+  overlay.addEventListener("click", toggleMenu);
+  menu.querySelectorAll("a").forEach(link => link.addEventListener("click", toggleMenu));
+}
+
+// === Иконка профиля ===
 const profileIcon = document.getElementById('profileIcon');
 const profileDropdown = document.getElementById('profileDropdown');
 
-if (profileIcon) {
+if (profileIcon && profileDropdown) {
   profileIcon.addEventListener('click', (e) => {
     e.stopPropagation();
     profileDropdown.classList.toggle('show');
   });
-
   document.addEventListener('click', (e) => {
     if (!profileDropdown.contains(e.target) && e.target !== profileIcon) {
       profileDropdown.classList.remove('show');
     }
   });
 }
-
-// ======== ВЫХОД / УДАЛЕНИЕ ========
-document.getElementById('logoutLink')?.addEventListener('click', () => {
-  localStorage.removeItem('authToken');
-  alert('Вы вышли из аккаунта.');
-  location.reload();
-});
-
-document.getElementById('deleteAccLink')?.addEventListener('click', async () => {
-  if (confirm('Удалить аккаунт безвозвратно?')) {
-    const token = localStorage.getItem('authToken');
-    if (!token) return alert('Вы не вошли в систему.');
-
-    const res = await fetch('/api/auth/delete', {
-      method: 'DELETE',
-      headers: { Authorization: `Bearer ${token}` }
-    });
-    if (res.ok) {
-      localStorage.removeItem('authToken');
-      alert('Аккаунт удалён.');
-      location.reload();
-    } else {
-      alert('Ошибка при удалении.');
-    }
-  }
-});
