@@ -116,6 +116,44 @@ body.modal-open { overflow: hidden; }
 }
 
 .auth-modal button:hover { background: #2ea043; }
+.auth-form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.auth-form input {
+  width: 100%;
+  max-width: 320px;
+  padding: 12px;
+  margin: 8px 0;
+  border-radius: 8px;
+  border: none;
+  background: rgba(255,255,255,0.1);
+  color: white;
+  font-size: 15px;
+  outline: none;
+}
+
+.auth-form button {
+  width: 100%;
+  max-width: 320px;
+  padding: 12px;
+  margin-top: 10px;
+  background: #00aaff;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.auth-form button:hover {
+  background: #0088dd;
+}
+
 .toggle {
   margin-top: 15px;
   color: #58a6ff;
