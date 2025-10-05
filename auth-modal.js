@@ -151,6 +151,24 @@ function showCabinet() {
   `;
   loadUserAds();
 }
+function updateProfileMenu() {
+  const token = localStorage.getItem('authToken');
+  const profileDropdown = document.getElementById('profileDropdown');
+  if (token) {
+    profileDropdown.innerHTML = `
+      <a href="cabinet.html">Профиль</a>
+      <a href="#" onclick="changePassword()">Сменить пароль</a>
+      <a href="#" onclick="logout()">Выйти</a>
+      <a href="#" class="danger" onclick="deleteAccount()">Удалить аккаунт</a>
+    `;
+  } else {
+    profileDropdown.innerHTML = `
+      <a href="#" onclick="openAuthModal()">Войти</a>
+      <a href="#" onclick="openAuthModal()">Регистрация</a>
+    `;
+  }
+}
+
 
 // === Загрузка объявлений ===
 async function loadUserAds() {
