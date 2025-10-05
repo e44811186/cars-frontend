@@ -6,42 +6,252 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="auth-modal.css">
+  <style>
+    /* ===== Базовая стилизация ===== */
+    body.modal-open {
+      overflow: hidden;
+    }
+
+    /* ===== Модальное окно: затемнённый фон ===== */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.65);
+      backdrop-filter: blur(10px);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    /* ===== Всплывающие окна (авторизация/регистрация/смена пароля) ===== */
+    .auth-modal {
+      background: rgba(24, 24, 24, 0.95);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
+      width: 360px;
+      padding: 28px 25px;
+      box-shadow: 0 0 25px rgba(0,0,0,0.4);
+      text-align: center;
+      color: #fff;
+      animation: popIn 0.25s ease;
+      position: relative;
+    }
+
+    @keyframes popIn {
+      from { transform: scale(0.9); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .auth-modal h2 {
+      margin-bottom: 20px;
+      font-weight: 600;
+    }
+
+    .auth-modal form {
+      position: relative;
+    }
+
+    .auth-modal input {
+      width: 100%;
+      padding: 10px 12px;
+      margin-bottom: 14px;
+      border-radius: 6px;
+      border: 1px solid rgba(255,255,255,0.2);
+      background: rgba(255,255,255,0.08);
+      color: #fff;
+      font-size: 15px;
+      outline: none;
+      box-sizing: border-box;
+    }
+
+    .auth-modal input::placeholder {
+      color: rgba(255,255,255,0.5);
+    }
+
+    .toggle-password {
+      position: absolute;
+      right: 10px;
+      top: 37px;
+      cursor: pointer;
+      user-select: none;
+      font-size: 18px;
+    }
+
+    .auth-modal button {
+      width: 100%;
+      padding: 10px;
+      background: #238636;
+      border: none;
+      border-radius: 6px;
+      color: #fff;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.2s;
+      font-size: 15px;
+      margin-top: 4px;
+    }
+
+    .auth-modal button:hover {
+      background: #2ea043;
+    }
+
+    .auth-modal .toggle {
+      margin-top: 15px;
+      color: #58a6ff;
+      cursor: pointer;
+      display: inline-block;
+      font-size: 14px;
+    }
+
+    /* ===== Смена пароля ===== */
+    #changePasswordModal h2 {
+      margin-bottom: 18px;
+    }
+
+    /* ===== Бургер ===== */
+    @media (min-width: 769px) {
+      #burger { display: none; }
+    }
+
+    @media (max-width: 768px) {
+      #menu {
+        position: fixed;
+        top: 60px;
+        left: 0;
+        right: 0;
+        background: #111;
+        display: none;
+        flex-direction: column;
+        text-align: center;
+        z-index: 999;
+      }
+      #menu.active { display: flex; }
+      .menu-overlay {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: rgba(0,0,0,0.5);
+        display: none;
+        z-index: 998;
+      }
+      .menu-overlay.active { display: block; }
+    }
+
+    /* ===== Профиль ===== */
+    .profile-menu {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .profile-icon img {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+
+    .profile-icon:hover img {
+      transform: scale(1.05);
+    }
+
+    .profile-dropdown {
+      position: absolute;
+      top: 45px;
+      right: 0;
+      background: rgba(24,24,24,0.98);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+      display: none;
+      flex-direction: column;
+      min-width: 180px;
+      z-index: 1000;
+      animation: fadeIn 0.2s ease;
+    }
+
+    .profile-dropdown.show {
+      display: flex;
+    }
+
+    .profile-dropdown a {
+      color: #fff;
+      text-decoration: none;
+      padding: 10px 14px;
+      font-size: 14px;
+      transition: background 0.2s;
+    }
+
+    .profile-dropdown a:hover {
+      background: rgba(255,255,255,0.1);
+    }
+
+    .profile-dropdown a.danger {
+      color: #ff5555;
+    }
+
+    /* ===== Кабинет ===== */
+    .cabinet {
+      padding: 40px 20px;
+    }
+
+    .ad-card {
+      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.05);
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 15px;
+      color: #fff;
+    }
+
+    .ad-card button {
+      margin-top: 5px;
+      margin-right: 5px;
+      background: #30363d;
+    }
+  </style>
 </head>
 <body>
   <header class="header">
-      <div class="container">
-        <div class="logo"><img src="images/logo.png" alt="Logo"></div>
+    <div class="container">
+      <div class="logo"><img src="images/logo.png" alt="Logo"></div>
 
-        <!-- Бургер -->
-        <button class="burger" id="burger">
-          <span></span><span></span><span></span>
-        </button>
+      <!-- Бургер -->
+      <button class="burger" id="burger">
+        <span></span><span></span><span></span>
+      </button>
 
-        <nav class="menu" id="menu">
-          <ul>
-            <li><a href="#cars">НАШ автопарк</a></li>
-            <li><a href="order.html">Забронировать</a></li>
-            <li><a href="contacts.html">Контакты</a></li>
-          </ul>
-        </nav>
-      
+      <nav class="menu" id="menu">
+        <ul>
+          <li><a href="#cars">НАШ автопарк</a></li>
+          <li><a href="order.html">Забронировать</a></li>
+          <li><a href="contacts.html">Контакты</a></li>
+        </ul>
+      </nav>
+
       <!-- Иконка профиля -->
       <div class="profile-menu">
         <div class="profile-icon" id="profileIcon" title="Профиль">
           <img src="images/images.png" alt="Профиль" />
         </div>
 
-        <div class="profile-dropdown" id="profileDropdown">
-          <a href="#" id="loginLink">Войти</a>
-          <a href="#" id="registerLink">Зарегистрироваться</a>
-          <a href="#" id="changePassLink">Сменить пароль</a>
-          <a href="#" id="logoutLink">Выйти</a>
-          <a href="#" id="deleteAccLink" class="danger">Удалить аккаунт</a>
-        </div>
+        <div class="profile-dropdown" id="profileDropdown"></div>
       </div>
-     </div>
-    </header>
-
+    </div>
+  </header>
 
   <section class="cabinet">
     <div class="container">
@@ -49,16 +259,22 @@
       <div id="cabinetContent">
         <p>Содержимое появится после входа...</p>
       </div>
+      <div id="userControls"></div>
     </div>
   </section>
-  <!-- Модалка авторизации -->
+
+  <!-- === Модалки === -->
+
+  <!-- Авторизация -->
   <div id="authModal" class="modal-overlay">
     <div id="loginModal" class="auth-modal">
       <h2>Вход</h2>
       <form id="loginForm">
         <input type="text" name="username" placeholder="Имя пользователя" required>
-        <input type="password" name="password" placeholder="Пароль" required>
-         <span class="toggle-password">👁️</span>
+        <div style="position:relative;">
+          <input type="password" name="password" placeholder="Пароль" required>
+          <span class="toggle-password">👁️</span>
+        </div>
         <button type="submit">Войти</button>
       </form>
       <div class="toggle" id="toRegister">Нет аккаунта? Зарегистрироваться</div>
@@ -69,13 +285,29 @@
       <form id="registerForm">
         <input type="text" name="username" placeholder="Имя пользователя" required>
         <input type="email" name="email" placeholder="Email" required>
-        <input type="password" name="password" placeholder="Пароль" required>
-         <span class="toggle-password">👁️</span>
+        <div style="position:relative;">
+          <input type="password" name="password" placeholder="Пароль" required>
+          <span class="toggle-password">👁️</span>
+        </div>
         <button type="submit">Создать аккаунт</button>
       </form>
       <div class="toggle" id="toLogin">Уже есть аккаунт? Войти</div>
     </div>
   </div>
+
+  <!-- Смена пароля -->
+  <div id="changePasswordModal" class="modal-overlay">
+    <div class="auth-modal">
+      <h2>Смена пароля</h2>
+      <form id="changePasswordForm">
+        <input type="password" name="oldPassword" placeholder="Старый пароль" required>
+        <input type="password" name="newPassword" placeholder="Новый пароль" required>
+        <button type="submit">Сменить</button>
+        <div class="toggle" onclick="closeChangePasswordModal()">Отмена</div>
+      </form>
+    </div>
+  </div>
+
   <footer class="footer">
     <div class="container">
       <div class="logo"><img src="images/logo.png" alt="Logo"></div>
@@ -84,5 +316,50 @@
   </footer>
 
   <script src="auth-modal.js"></script>
+  <script>
+    // === Модалка смены пароля ===
+    const changePasswordModal = document.getElementById('changePasswordModal');
+    const changePasswordForm = document.getElementById('changePasswordForm');
+
+    function openChangePasswordModal() {
+      changePasswordModal.classList.add('active');
+      document.body.classList.add('modal-open');
+    }
+
+    function closeChangePasswordModal() {
+      changePasswordModal.classList.remove('active');
+      document.body.classList.remove('modal-open');
+    }
+
+    if (changePasswordForm) {
+      changePasswordForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const oldPassword = changePasswordForm.oldPassword.value;
+        const newPassword = changePasswordForm.newPassword.value;
+
+        if (newPassword.length < 6) {
+          alert('Пароль должен быть не короче 6 символов');
+          return;
+        }
+
+        try {
+          const res = await fetch('https://cars-api-ur5t.onrender.com/api/auth/change-password', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer ' + localStorage.getItem('authToken')
+            },
+            body: JSON.stringify({ oldPassword, newPassword })
+          });
+
+          if (!res.ok) throw new Error(await res.text());
+          alert('Пароль успешно изменён');
+          closeChangePasswordModal();
+        } catch (err) {
+          alert('Ошибка: ' + err.message);
+        }
+      });
+    }
+  </script>
 </body>
 </html>
