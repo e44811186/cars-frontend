@@ -9,7 +9,6 @@ const loginForm = document.getElementById('loginForm');
 const registerForm = document.getElementById('registerForm');
 const toRegister = document.getElementById('toRegister');
 const toLogin = document.getElementById('toLogin');
-const userControls = document.getElementById('userControls');
 const cabinetContent = document.getElementById('cabinetContent');
 
 // === Переключение форм ===
@@ -28,11 +27,8 @@ if (toLogin) {
 
 // === Проверка токена ===
 const token = localStorage.getItem('authToken');
-if (!token) {
-  openAuthModal();
-} else {
+if (token) {
   showCabinet();
-  updateProfileMenu();
 }
 
 // === Открыть / закрыть модалку ===
@@ -91,7 +87,7 @@ if (loginForm) {
       localStorage.setItem('authToken', result.token);
       closeAuthModal();
       showCabinet();
-      updateProfileMenu();
+      if (typeof updateProfileMenu === "function") updateProfileMenu();
     } catch (err) {
       alert(err.message);
     }
@@ -124,7 +120,7 @@ if (registerForm) {
       localStorage.setItem('authToken', result.token);
       closeAuthModal();
       showCabinet();
-      updateProfileMenu();
+      if (typeof updateProfileMenu === "function") updateProfileMenu();
     } catch (err) {
       alert(err.message);
     }
@@ -192,48 +188,22 @@ function showCabinet() {
     <button id="addAd" class="button small-btn">Добавить объявление</button>
   `;
 
-  if (userControls) {
-    userControls.innerHTML = `
-      <button class="button small-btn" onclick="changePassword()">Сменить пароль</button>
-      <button class="button small-btn" onclick="logout()">Выйти</button>
-    `;
-  }
-
   loadUserAds();
 }
 
-// === Меню профиля ===
-function updateProfileMenu() {
-  const token = localStorage.getItem('authToken');
-  const profileDropdown = document.getElementById('profileDropdown');
-  if (!profileDropdown) return;
-
-  if (token) {
-    profileDropdown.innerHTML = `
-      <a href="cabinet.html">Профиль</a>
-      <a href="#" onclick="changePassword()">Сменить пароль</a>
-      <a href="#" onclick="logout()">Выйти</a>
-      <a href="#" class="danger" onclick="deleteAccount()">Удалить аккаунт</a>
-    `;
-  } else {
-    profileDropdown.innerHTML = `
-      <a href="#" onclick="openAuthModal()">Войти</a>
-      <a href="#" onclick="openAuthModal()">Регистрация</a>
-    `;
-  }
-}
-
-// === Загрузка объявлений ===
+// === Загрузка объявлений пользователя ===
 async function loadUserAds() {
   const adsContainer = document.getElementById('myAds');
   if (!adsContainer) return;
   adsContainer.innerHTML = "<p>Загрузка...</p>";
+
   try {
     const res = await fetch(`https://cars-api-ur5t.onrender.com/api/cars/my`, {
       headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` }
     });
     if (!res.ok) throw new Error("Ошибка загрузки объявлений");
     const cars = await res.json();
+
     adsContainer.innerHTML = cars.length
       ? cars.map(c => `
           <div class="ad-card">
@@ -241,44 +211,10 @@ async function loadUserAds() {
             <p>${c.price} ₽</p>
             <button onclick="editAd(${c.id})">Редактировать</button>
             <button onclick="deleteAd(${c.id})">Удалить</button>
-          </div>`).join('')
+          </div>`
+        ).join('')
       : "<p>Пока нет объявлений</p>";
   } catch (e) {
     adsContainer.innerHTML = `<p>Ошибка: ${e.message}</p>`;
   }
-}
-
-// === Бургер-меню ===
-const burger = document.getElementById("burger");
-const menu = document.getElementById("menu");
-const overlay = document.querySelector(".menu-overlay");
-
-function toggleMenu() {
-  if (!burger || !menu || !overlay) return;
-  burger.classList.toggle("active");
-  menu.classList.toggle("active");
-  overlay.classList.toggle("active");
-  if (window.innerWidth <= 768) document.body.classList.toggle("no-scroll");
-}
-
-if (burger && overlay && menu) {
-  burger.addEventListener("click", toggleMenu);
-  overlay.addEventListener("click", toggleMenu);
-  menu.querySelectorAll("a").forEach(link => link.addEventListener("click", toggleMenu));
-}
-
-// === Иконка профиля ===
-const profileIcon = document.getElementById('profileIcon');
-const profileDropdown = document.getElementById('profileDropdown');
-
-if (profileIcon && profileDropdown) {
-  profileIcon.addEventListener('click', (e) => {
-    e.stopPropagation();
-    profileDropdown.classList.toggle('show');
-  });
-  document.addEventListener('click', (e) => {
-    if (!profileDropdown.contains(e.target) && e.target !== profileIcon) {
-      profileDropdown.classList.remove('show');
-    }
-  });
 }
