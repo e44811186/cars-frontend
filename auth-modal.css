@@ -1,9 +1,42 @@
-body.modal-open { overflow: hidden; }
+/* ====== HEADER ====== */
+.header {
+  background: #111;
+  padding: 12px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #fff;
+}
 
-/* === Профильная иконка в шапке === */
+.header .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.logo {
+  font-weight: bold;
+  font-size: 20px;
+  color: #fff;
+  text-decoration: none;
+}
+
+.nav a {
+  color: #ccc;
+  margin-left: 20px;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.nav a:hover {
+  color: #fff;
+}
+
+/* ====== PROFILE ICON ====== */
 .profile-menu {
   position: relative;
-  display: inline-block;
+  z-index: 2000;
 }
 
 .profile-icon {
@@ -13,150 +46,160 @@ body.modal-open { overflow: hidden; }
   border-radius: 50%;
   padding: 8px;
   transition: background 0.3s;
-  user-select: none;
+  position: relative;
 }
 
 .profile-icon:hover {
   background: rgba(255, 255, 255, 0.15);
 }
 
-/* === Выпадающее меню === */
+.status-dot {
+  position: absolute;
+  bottom: 4px;
+  right: 4px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #777;
+  border: 2px solid #111;
+}
+
+.status-dot.active {
+  background: #4caf50;
+}
+
+/* ====== DROPDOWN MENU ====== */
 .profile-dropdown {
-  display: none;
   position: absolute;
   right: 0;
   top: 45px;
-  background: rgba(20, 20, 20, 0.7);
-  backdrop-filter: blur(10px);
+  background: rgba(20, 20, 20, 0.9);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.1);
   border-radius: 12px;
   padding: 8px 0;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
-  z-index: 10;
-  width: 180px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.6);
+  width: 190px;
+  display: none;
+  flex-direction: column;
+  animation: fadeIn 0.2s ease;
+}
+
+.profile-dropdown.show {
+  display: flex;
 }
 
 .profile-dropdown a {
   display: block;
   padding: 10px 16px;
-  color: white;
+  color: #fff;
   text-decoration: none;
   font-size: 14px;
-  transition: background 0.3s;
+  transition: background 0.25s;
 }
 
 .profile-dropdown a:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.12);
 }
 
 .profile-dropdown a.danger {
   color: #ff6b6b;
 }
 
-.profile-menu:hover .profile-dropdown {
-  display: block;
-}
-.auth-modal {
-  position: relative;
-}
-.toggle-password {
-  position: absolute;
-  right: 35px;
-  margin-top: -44px;
-  cursor: pointer;
-  font-size: 18px;
-  user-select: none;
-}
-
+/* ====== MODAL AUTH ====== */
 .modal-overlay {
   position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.65);
-  backdrop-filter: blur(10px);
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.7);
+  backdrop-filter: blur(5px);
   display: none;
   justify-content: center;
   align-items: center;
-  z-index: 9999;
+  z-index: 3000;
 }
 
-.modal-overlay.active { display: flex; }
-
-.auth-modal {
-  background: rgba(24, 24, 24, 0.95);
-  border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 10px;
-  width: 340px;
-  padding: 30px 25px;
-  text-align: center;
-  color: #fff;
-  box-shadow: 0 0 25px rgba(0,0,0,0.4);
-}
-
-.auth-modal input {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 14px;
-  border-radius: 6px;
-  border: 1px solid rgba(255,255,255,0.2);
-  background: rgba(255,255,255,0.08);
-  color: #fff;
-  font-size: 15px;
-}
-
-.auth-modal button {
-  width: 100%;
-  padding: 10px;
-  background: #238636;
-  border: none;
-  border-radius: 6px;
-  color: #fff;
-  font-weight: 600;
-  cursor: pointer;
-  transition: 0.2s;
-  font-size: 15px;
-}
-
-.auth-modal button:hover { background: #2ea043; }
-.auth-form {
-  width: 100%;
+.modal-overlay.show {
   display: flex;
-  flex-direction: column;
-  align-items: center;
 }
 
-.auth-form input {
+.modal-content {
+  background: rgba(20,20,20,0.85);
+  backdrop-filter: blur(12px);
+  border-radius: 15px;
+  padding: 30px;
+  width: 350px;
+  color: #fff;
+  position: relative;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.modal-content h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.modal-content input {
   width: 100%;
-  max-width: 320px;
-  padding: 12px;
+  padding: 10px;
   margin: 8px 0;
-  border-radius: 8px;
   border: none;
-  background: rgba(255,255,255,0.1);
-  color: white;
-  font-size: 15px;
+  border-radius: 6px;
   outline: none;
 }
 
-.auth-form button {
+.modal-content button {
   width: 100%;
-  max-width: 320px;
-  padding: 12px;
-  margin-top: 10px;
-  background: #00aaff;
+  background: #007bff;
+  color: #fff;
   border: none;
-  border-radius: 8px;
-  color: white;
-  font-size: 15px;
+  padding: 10px;
+  border-radius: 6px;
   cursor: pointer;
   transition: background 0.3s;
 }
 
-.auth-form button:hover {
-  background: #0088dd;
+.modal-content button:hover {
+  background: #0056b3;
 }
 
-.toggle {
-  margin-top: 15px;
-  color: #58a6ff;
+.show-pass {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #ccc;
+  margin-bottom: 10px;
+}
+
+.switch-form {
+  text-align: center;
+  margin-top: 10px;
+}
+
+.switch-form a {
+  color: #00b7ff;
+  text-decoration: none;
+}
+
+.switch-form a:hover {
+  text-decoration: underline;
+}
+
+.close-btn {
+  position: absolute;
+  right: 15px;
+  top: 10px;
+  background: transparent;
+  border: none;
+  color: #fff;
+  font-size: 22px;
   cursor: pointer;
-  font-size: 14px;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
 }
