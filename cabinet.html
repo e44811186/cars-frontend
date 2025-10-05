@@ -9,16 +9,23 @@
 </head>
 <body>
   <header class="header">
-  <div class="container">
-    <a href="/" class="logo">CarsHub</a>
+      <div class="container">
+        <div class="logo"><img src="images/logo.png" alt="Logo"></div>
 
-    <nav class="nav">
-      <a href="/">Главная</a>
-      <a href="/catalog.html">Каталог</a>
-      <a href="/about.html">О нас</a>
-    </nav>
+        <!-- Бургер -->
+        <button class="burger" id="burger">
+          <span></span><span></span><span></span>
+        </button>
 
-   <!-- Иконка профиля -->
+        <nav class="menu" id="menu">
+          <ul>
+            <li><a href="#cars">НАШ автопарк</a></li>
+            <li><a href="order.html">Забронировать</a></li>
+            <li><a href="contacts.html">Контакты</a></li>
+          </ul>
+        </nav>
+      
+      <!-- Иконка профиля -->
       <div class="profile-menu">
         <div class="profile-icon" id="profileIcon" title="Профиль">
           <img src="images/images.png" alt="Профиль" />
@@ -32,8 +39,8 @@
           <a href="#" id="deleteAccLink" class="danger">Удалить аккаунт</a>
         </div>
       </div>
-  </div>
-</header>
+     </div>
+    </header>
 
 
   <section class="cabinet">
