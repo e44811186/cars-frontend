@@ -1,130 +1,74 @@
-// === profile-menu.js ===
-// Централизованное управление иконкой профиля, выпадающим меню и авторизацией
+// profile-menu.js
+(function () {
+  const profileIcon = document.getElementById('profileIcon');
+  const profileDropdown = document.getElementById('profileDropdown');
 
-const API_URL = "https://cars-api-ur5t.onrender.com/api/auth";
+  if (!profileIcon || !profileDropdown) {
+    // экспорт пустой функции, чтобы другие файлы могли вызывать updateProfileMenu()
+    window.updateProfileMenu = window.updateProfileMenu || function () {};
+    return;
+  }
 
-// ======== Элементы ========
-const profileIcon = document.getElementById('profileIcon');
-const profileDropdown = document.getElementById('profileDropdown');
-const loginLink = document.getElementById('loginLink');
-const registerLink = document.getElementById('registerLink');
-const changePassLink = document.getElementById('changePassLink');
-const logoutLink = document.getElementById('logoutLink');
-const deleteAccLink = document.getElementById('deleteAccLink');
-const profileLink = document.getElementById('profileLink');
-
-// ======== Токен ========
-const token = localStorage.getItem('authToken');
-
-// ======== Показ меню при клике на иконку ========
-if (profileIcon && profileDropdown) {
+  // Показываем/скрываем меню при клике на иконку
   profileIcon.addEventListener('click', (e) => {
     e.stopPropagation();
     profileDropdown.classList.toggle('show');
   });
 
+  // Скрыть при клике вне
   document.addEventListener('click', (e) => {
     if (!profileDropdown.contains(e.target) && e.target !== profileIcon) {
       profileDropdown.classList.remove('show');
     }
   });
-}
 
-// ======== Обновление видимости пунктов меню ========
-function updateProfileMenu() {
-  const loggedIn = !!localStorage.getItem('authToken');
-  if (!profileDropdown) return;
+  // Делегируем клики внутри меню, предотвращаем переход по href
+  profileDropdown.addEventListener('click', (e) => {
+    const a = e.target.closest('a');
+    if (!a) return;
+    e.preventDefault();
+    const id = a.id;
 
-  profileLink && (profileLink.style.display = loggedIn ? 'block' : 'none');
-  changePassLink && (changePassLink.style.display = loggedIn ? 'block' : 'none');
-  logoutLink && (logoutLink.style.display = loggedIn ? 'block' : 'none');
-  deleteAccLink && (deleteAccLink.style.display = loggedIn ? 'block' : 'none');
-  loginLink && (loginLink.style.display = loggedIn ? 'none' : 'block');
-  registerLink && (registerLink.style.display = loggedIn ? 'none' : 'block');
-}
-updateProfileMenu();
+    // открытие модалки для входа/регистрации реализует auth-modal.js
+    if (id === 'loginLink') {
+      if (window.openAuthModal) window.openAuthModal('login');
+    } else if (id === 'registerLink') {
+      if (window.openAuthModal) window.openAuthModal('register');
+    } else if (id === 'logoutLink') {
+      if (window.logout) window.logout();
+      else { localStorage.removeItem('authToken'); location.reload(); }
+    } else if (id === 'changePassLink') {
+      if (window.changePassword) window.changePassword();
+    } else if (id === 'deleteAccLink') {
+      if (window.deleteAccount) window.deleteAccount();
+    } else if (a.dataset && a.dataset.href) {
+      // если в разметке указано data-href, разрешаем навигацию через js
+      window.location.href = a.dataset.href;
+    }
 
-// ======== Войти ========
-loginLink && loginLink.addEventListener('click', (e) => {
-  e.preventDefault();
-  if (typeof openAuthModal === "function") {
-    openAuthModal();
-    // показать именно форму логина
-    document.getElementById('loginModal').style.display = 'block';
-    document.getElementById('registerModal').style.display = 'none';
-  } else {
-    window.location.href = "cabinet.html";
-  }
-});
+    profileDropdown.classList.remove('show');
+  });
 
-// ======== Зарегистрироваться ========
-registerLink && registerLink.addEventListener('click', (e) => {
-  e.preventDefault();
-  if (typeof openAuthModal === "function") {
-    openAuthModal();
-    // показать именно форму регистрации
-    document.getElementById('registerModal').style.display = 'block';
-    document.getElementById('loginModal').style.display = 'none';
-  } else {
-    window.location.href = "cabinet.html";
-  }
-});
+  // Функция обновления меню (вид для залогиненного/гостя).
+  // auth-modal.js будет вызывать window.updateProfileMenu() после логина/логаута.
+  window.updateProfileMenu = function () {
+    const token = localStorage.getItem('authToken');
 
-// ======== Сменить пароль ========
-changePassLink && changePassLink.addEventListener('click', async (e) => {
-  e.preventDefault();
-  const token = localStorage.getItem('authToken');
-  if (!token) return alert("Сначала войдите в аккаунт");
+    if (token) {
+      profileDropdown.innerHTML = `
+        <a href="#" id="openCabinet" data-href="cabinet.html">Профиль</a>
+        <a href="#" id="changePassLink">Сменить пароль</a>
+        <a href="#" id="logoutLink">Выйти</a>
+        <a href="#" id="deleteAccLink" class="danger">Удалить аккаунт</a>
+      `;
+    } else {
+      profileDropdown.innerHTML = `
+        <a href="#" id="loginLink">Войти</a>
+        <a href="#" id="registerLink">Зарегистрироваться</a>
+      `;
+    }
+  };
 
-  const oldPassword = prompt("Введите старый пароль:");
-  const newPassword = prompt("Введите новый пароль (минимум 6 символов):");
-  if (!oldPassword || !newPassword) return;
-  if (newPassword.length < 6) return alert("Слишком короткий пароль!");
-
-  try {
-    const res = await fetch(`${API_URL}/change-password`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      },
-      body: JSON.stringify({ oldPassword, newPassword })
-    });
-    if (!res.ok) throw new Error(await res.text());
-    alert("Пароль успешно изменён");
-  } catch (err) {
-    alert("Ошибка: " + err.message);
-  }
-});
-
-// ======== Выход ========
-logoutLink && logoutLink.addEventListener('click', (e) => {
-  e.preventDefault();
-  localStorage.removeItem('authToken');
-  alert("Вы вышли из аккаунта");
-  updateProfileMenu();
-  window.location.reload();
-});
-
-// ======== Удаление аккаунта ========
-deleteAccLink && deleteAccLink.addEventListener('click', async (e) => {
-  e.preventDefault();
-  if (!confirm("Удалить аккаунт безвозвратно?")) return;
-
-  const token = localStorage.getItem('authToken');
-  if (!token) return alert("Вы не вошли в систему");
-
-  try {
-    const res = await fetch(`${API_URL}/delete`, {
-      method: 'DELETE',
-      headers: { 'Authorization': `Bearer ${token}` }
-    });
-    if (!res.ok) throw new Error(await res.text());
-
-    localStorage.removeItem('authToken');
-    alert("Аккаунт удалён");
-    window.location.reload();
-  } catch (err) {
-    alert("Ошибка удаления: " + err.message);
-  }
-});
+  // инициализация
+  window.updateProfileMenu();
+})();
