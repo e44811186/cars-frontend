@@ -400,7 +400,7 @@ button[disabled] {
   .order form { margin-left:0; max-width:100%; }
 }
 @media(max-width:768px){
-.burger { display: none; margin-left: auto; background: none; border: 0; cursor: pointer; padding: 0; }
+.burger { margin-right: 30px; display: none; margin-left: auto; background: none; border: 0; cursor: pointer; padding: 0; }
 .burger span { display: block; width: 30px; height: 3px; background: #f8ff23; border-radius: 2px; transition: transform .3s, opacity .3s; }
 .burger span + span { margin-top: 6px; }
 .burger.active span:nth-child(1) { transform: translateY(9px) rotate(45deg); }
