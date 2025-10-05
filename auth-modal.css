@@ -1,5 +1,17 @@
 body.modal-open { overflow: hidden; }
 
+.auth-modal {
+  position: relative;
+}
+.toggle-password {
+  position: absolute;
+  right: 35px;
+  margin-top: -44px;
+  cursor: pointer;
+  font-size: 18px;
+  user-select: none;
+}
+
 .modal-overlay {
   position: fixed;
   inset: 0;
