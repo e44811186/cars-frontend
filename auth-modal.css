@@ -1,5 +1,60 @@
 body.modal-open { overflow: hidden; }
 
+/* === Профильная иконка в шапке === */
+.profile-menu {
+  position: relative;
+  display: inline-block;
+}
+
+.profile-icon {
+  font-size: 22px;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 50%;
+  padding: 8px;
+  transition: background 0.3s;
+  user-select: none;
+}
+
+.profile-icon:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* === Выпадающее меню === */
+.profile-dropdown {
+  display: none;
+  position: absolute;
+  right: 0;
+  top: 45px;
+  background: rgba(20, 20, 20, 0.7);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  padding: 8px 0;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  z-index: 10;
+  width: 180px;
+}
+
+.profile-dropdown a {
+  display: block;
+  padding: 10px 16px;
+  color: white;
+  text-decoration: none;
+  font-size: 14px;
+  transition: background 0.3s;
+}
+
+.profile-dropdown a:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.profile-dropdown a.danger {
+  color: #ff6b6b;
+}
+
+.profile-menu:hover .profile-dropdown {
+  display: block;
+}
 .auth-modal {
   position: relative;
 }
