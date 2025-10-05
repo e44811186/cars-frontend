@@ -9,13 +9,33 @@
 </head>
 <body>
   <header class="header">
-    <div class="container header-row">
-      <a href="index.html" class="logo">
-        <img src="images/logo.png" alt="Logo">
-      </a>
-      <div id="userControls"></div>
+  <div class="container">
+    <a href="/" class="logo">CarsHub</a>
+
+    <nav class="nav">
+      <a href="/">Главная</a>
+      <a href="/catalog.html">Каталог</a>
+      <a href="/about.html">О нас</a>
+    </nav>
+
+    <div class="profile-menu">
+      <div id="profileIcon" class="profile-icon" title="Профиль">
+        <i class="fas fa-user"></i>
+        <span id="userStatusDot" class="status-dot"></span>
+      </div>
+
+      <div id="profileDropdown" class="profile-dropdown">
+        <a href="#" id="loginLink">Войти</a>
+        <a href="#" id="registerLink">Зарегистрироваться</a>
+        <a href="#" id="changePassLink">Сменить пароль</a>
+        <a href="#" id="logoutLink" class="danger">Выйти</a>
+        <hr style="border: none; border-top: 1px solid rgba(255,255,255,0.1); margin: 5px 0;">
+        <a href="#" id="deleteAccLink" class="danger">Удалить аккаунт</a>
+      </div>
     </div>
-  </header>
+  </div>
+</header>
+
 
   <section class="cabinet">
     <div class="container">
