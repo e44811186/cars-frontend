@@ -418,7 +418,7 @@ button[disabled] {
   .main-info h1 { font-size: 30px; }
   .main-info p { font-size: 18px; max-width: 100%; }
   .car img { max-width: 100%; }
-  .button { font-size: 16px; height: auto; padding: 10px; }
+  .button { font-size: 18px; height: auto; padding: 10px; }
   .order-form input { height: 50px; padding: 15px; font-size: 14px; }
   .cars h2 { font-size: 40px; }
   .order h3 { font-size: 40px; }
