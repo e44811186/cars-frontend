@@ -193,6 +193,24 @@ async function loadUserAds() {
     adsContainer.innerHTML = `<p>Ошибка: ${e.message}</p>`;
   }
 }
+// ==== Бургер/меню ====
+  const burger = document.getElementById("burger");
+  const menu = document.getElementById("menu");
+  const overlay = document.querySelector(".menu-overlay");
+
+  function toggleMenu() {
+    if (!burger || !menu || !overlay) return;
+    burger.classList.toggle("active");
+    menu.classList.toggle("active");
+    overlay.classList.toggle("active");
+    if (window.innerWidth <= 768) document.body.classList.toggle("no-scroll");
+  }
+
+  if (burger && overlay && menu) {
+    burger.addEventListener("click", toggleMenu);
+    overlay.addEventListener("click", toggleMenu);
+    menu.querySelectorAll("a").forEach(link => link.addEventListener("click", toggleMenu));
+  }
 // ======== ИКОНКА ПРОФИЛЯ ========
 const profileIcon = document.getElementById('profileIcon');
 const profileDropdown = document.getElementById('profileDropdown');
