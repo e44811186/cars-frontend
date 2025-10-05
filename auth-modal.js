@@ -1,3 +1,34 @@
+// === ВСТАВЬ ЭТО В НАЧАЛО auth-modal.js ===
+(function ensureAuthModalExists() {
+  if (!document.getElementById('authModal')) {
+    const modalHTML = `
+      <div id="authModal" class="modal-overlay">
+        <div id="loginModal" class="auth-modal">
+          <h2>Вход</h2>
+          <form id="loginForm">
+            <input type="text" name="username" placeholder="Имя пользователя" required>
+            <input type="password" name="password" placeholder="Пароль" required>
+            <span class="toggle-password">👁️</span>
+            <button type="submit">Войти</button>
+          </form>
+          <div class="toggle" id="toRegister">Нет аккаунта? Зарегистрироваться</div>
+        </div>
+        <div id="registerModal" class="auth-modal" style="display:none;">
+          <h2>Регистрация</h2>
+          <form id="registerForm">
+            <input type="text" name="username" placeholder="Имя пользователя" required>
+            <input type="email" name="email" placeholder="Email" required>
+            <input type="password" name="password" placeholder="Пароль" required>
+            <span class="toggle-password">👁️</span>
+            <button type="submit">Создать аккаунт</button>
+          </form>
+          <div class="toggle" id="toLogin">Уже есть аккаунт? Войти</div>
+        </div>
+      </div>
+    `;
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
+  }
+})();
 // auth-modal.js
 (function () {
   const API_URL = "https://cars-api-ur5t.onrender.com/api/auth";
