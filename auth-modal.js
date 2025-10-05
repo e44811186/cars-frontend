@@ -193,3 +193,45 @@ async function loadUserAds() {
     adsContainer.innerHTML = `<p>Ошибка: ${e.message}</p>`;
   }
 }
+// ======== ИКОНКА ПРОФИЛЯ ========
+const profileIcon = document.getElementById('profileIcon');
+const profileDropdown = document.getElementById('profileDropdown');
+
+if (profileIcon) {
+  profileIcon.addEventListener('click', (e) => {
+    e.stopPropagation();
+    profileDropdown.classList.toggle('show');
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!profileDropdown.contains(e.target) && e.target !== profileIcon) {
+      profileDropdown.classList.remove('show');
+    }
+  });
+}
+
+// ======== ВЫХОД / УДАЛЕНИЕ ========
+document.getElementById('logoutLink')?.addEventListener('click', () => {
+  localStorage.removeItem('authToken');
+  alert('Вы вышли из аккаунта.');
+  location.reload();
+});
+
+document.getElementById('deleteAccLink')?.addEventListener('click', async () => {
+  if (confirm('Удалить аккаунт безвозвратно?')) {
+    const token = localStorage.getItem('authToken');
+    if (!token) return alert('Вы не вошли в систему.');
+
+    const res = await fetch('/api/auth/delete', {
+      method: 'DELETE',
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    if (res.ok) {
+      localStorage.removeItem('authToken');
+      alert('Аккаунт удалён.');
+      location.reload();
+    } else {
+      alert('Ошибка при удалении.');
+    }
+  }
+});
